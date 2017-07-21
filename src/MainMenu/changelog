@@ -1,0 +1,12 @@
+v0.1.0 - Initial Release. July 2016.
+v0.2.0 - Can now issue :CD command to move to next record. August 2016.
+v0.3.0 - Entire data dump implemented, but this is still shoddy work. August 2016.
+v0.4.0 - Clean up old modules and methods. Implement this changelog.txt file. August 15 2016.
+v0.4.1 - Switched temperature/humidity/pressure avg. and max. columns; I had them labeled incorrectly. September 12 2016.
+v0.5.0 - Refined many of the functions; software should no longer lock when issuing :CD/:CM commands. September 15 2016.
+v0.5.1 - Improved file-naming method, which will include the Recon's serial#, start date of the test, and a file counter. October 7 2016.
+v0.5.2 - Added underscore between serial number and date in the XLS file. Records per sample column should now display properly. Added two instrument settings from header file to TXT file. October 11 2016.
+v0.5.3 - Added counts per hour for each chamber to the spreadsheet. November 4 2016.
+v0.5.4 - Reduced thread sleeps by 50%, which should increase data transfer speed accordingly (provided stuff doesn't start to break!). 10-Nov-2016
+v0.5.5 - Further sanitized code, removing a few more artifacts from the Scout Quick Cal program. Added a basic config menu, with company information. Reduced thread sleeps by another 50%. 18-Jul-2017
+v0.5.6 - Added radon concentrations to the spreadsheet, in addition to a CheckCalibrationFactors method to pull CF1 and CF2 from the Recon. 21-Jul-2017
