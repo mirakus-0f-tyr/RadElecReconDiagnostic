@@ -1,4 +1,6 @@
 data
 config
 lib
-RadElecRecon_Diagnostic.jar
+/dist/
+/build/
+*.swp
