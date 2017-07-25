@@ -4,3 +4,5 @@ lib
 /dist/
 /build/
 *.swp
+nbproject
+build.xml
