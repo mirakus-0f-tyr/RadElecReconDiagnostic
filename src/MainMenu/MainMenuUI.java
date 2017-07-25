@@ -36,12 +36,27 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String strAddress3 = "Address Line #3";
     public static double targetRnCAvg;
 
+    // variables for config.txt file values
+    // These values will be the last set preferences
+    // and populate the configuration fields.
+    // DiagMode - diagnostic mode on or off
+    // UnitType - last set to device, US or SI units
+    // WaitTime - last set to device, wait time
+    // TestDur  - last set to device, test duration
+    // DispRes  - last set to device, disp results on/off
+    public static boolean diagnosticMode;
+    public static String unitType;
+    public static int waitTime;
+    public static int testDuration;
+    public static boolean displayStatus;
+
     /**
      * Creates new form MainMenuUI
      */
     public MainMenuUI() {
         //Auto-generated GUI builder
         parseCompanyTXT();
+	parseConfigTXT();
         initComponents();
         
         //Invis certain labels on load
@@ -393,6 +408,52 @@ public static void parseCompanyTXT() {
     }
 }
 
+public static void parseConfigTXT() {
+    // set name of config text file
+    String configTextFile = "config/config.txt";
+
+    // int to bool conversion values
+    int diagModeRawValue;
+    int displayStatusRawValue;
+
+    // try to parse the config file
+    try {
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
+
+        // get DiagMode
+        diagModeRawValue = Integer.parseInt(br.readLine().substring(9));
+        if (diagModeRawValue == 0)
+	    diagnosticMode = false;
+	else
+	    diagnosticMode = true;
+
+        // get UnitType
+	unitType = br.readLine().substring(9);
+
+        // get WaitTime
+	waitTime = Integer.parseInt(br.readLine().substring(9));
+
+	// get TestDur
+	testDuration = Integer.parseInt(br.readLine().substring(8));
+
+	// get DispRes (display mode - results on or off)
+	displayStatusRawValue = Integer.parseInt(br.readLine().substring(8));
+	if (displayStatusRawValue == 0)
+	    displayStatus = false;
+	else
+	    displayStatus = true;
+
+	// cleanup buffered reader
+	br.close();
+	}
+
+	// if error, print error and show stack trace
+	catch (IOException e){
+	    System.out.println("ERROR: Unable to parse config.txt file.");
+	    e.printStackTrace();
+	}
+}
+
 private class MySwingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
@@ -407,10 +468,17 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
       System.out.println("Connect button pressed.");
       CRM_Parameters = ScanComm.run(1);
       if(CRM_Parameters[0].equals("true")){
+
+      if (diagnosticMode) {
           btnCreateTXT.setVisible(true);
           btnClearMemory.setVisible(true);
           btnClearSession.setVisible(true);
           btnAllDataDump.setVisible(true);
+      }
+      else {
+          btnClearMemory.setVisible(true);
+	  btnClearSession.setVisible(true);
+      }
       }
       btnConnect.setEnabled(true);
       return null;
