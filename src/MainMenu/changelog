@@ -12,3 +12,4 @@ v0.5.5 - Further sanitized code, removing a few more artifacts from the Scout Qu
 v0.5.6 - Added radon concentrations to the spreadsheet, in addition to a CheckCalibrationFactors method to pull CF1 and CF2 from the Recon. 21-Jul-2017
 v0.5.7 - Created framework for config.txt and company.txt, which allows user to toggle between "end-user" and "diagnostic" modes (config.txt) and to read company information (company.txt). 24-July-2017
 v0.5.8 - Added some buttons for the end-user mode (no functionality implemented), and a text area for the test site information. 25-July-2017
+v0.5.9 - Initial overhaul of the Config menu, adding two tabs. Company settings will now be saved, and the AppMode can be selected. 26-July-2017.

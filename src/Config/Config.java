@@ -7,6 +7,7 @@ package Config;
 
 import MainMenu.MainMenuUI;
 import java.io.*;
+import java.lang.Object;
 
 /**
  *
@@ -21,6 +22,8 @@ public class Config extends javax.swing.JFrame {
         initComponents();
         String company_info = "config/company.txt";
         try {
+            //Let's start off by parsing the company.txt file, and pulling those values into the company tab.
+            //Note that currently this data will only be saved when the Config window is closed.
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(company_info)));
             String strCompanyName;
             String strAddress1;
@@ -35,9 +38,14 @@ public class Config extends javax.swing.JFrame {
             txtAddress1.setText(strAddress1);
             txtAddress2.setText(strAddress2);
             txtAddress3.setText(strAddress3);
+            //The following will find appropriate config parameters; it should work regardless of where the specific line
+            //is located in the config.txt file.
+            String strAppMode;
+            strAppMode = findAppMode();
+            cboAppMode.setSelectedItem(strAppMode);
+            
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse company.txt (to gather company information).");
-            e.printStackTrace();
+            System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
         }
     }
 
@@ -50,18 +58,22 @@ public class Config extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        lblCompanyName = new javax.swing.JLabel();
-        txtCompanyName = new javax.swing.JTextField();
-        lblCompanyAddress = new javax.swing.JLabel();
-        txtAddress1 = new javax.swing.JTextField();
-        txtAddress2 = new javax.swing.JTextField();
-        txtAddress3 = new javax.swing.JTextField();
+        tabConfig = new javax.swing.JTabbedPane();
+        pnlCompany = new java.awt.Panel();
+        lblCompanyName = new java.awt.Label();
+        txtCompanyName = new java.awt.TextField();
+        lblCompanyAddress = new java.awt.Label();
+        txtAddress1 = new java.awt.TextField();
+        txtAddress2 = new java.awt.TextField();
+        txtAddress3 = new java.awt.TextField();
+        pnlSettings = new java.awt.Panel();
+        cboAppMode = new javax.swing.JComboBox();
+        lblAppMode = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Config");
         setAlwaysOnTop(true);
         setName("frmOptions"); // NOI18N
-        setType(java.awt.Window.Type.POPUP);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
@@ -71,56 +83,130 @@ public class Config extends javax.swing.JFrame {
             }
         });
 
+        pnlCompany.setBackground(new java.awt.Color(204, 204, 204));
+        pnlCompany.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+
+        lblCompanyName.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblCompanyName.setText("Company Name");
 
-        txtCompanyName.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtCompanyName.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtCompanyName.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtCompanyName.setName(""); // NOI18N
 
-        lblCompanyAddress.setText("Address");
+        lblCompanyAddress.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblCompanyAddress.setText("Company Address & Details");
 
-        txtAddress1.setHorizontalAlignment(javax.swing.JTextField.LEFT);
-        txtAddress1.setToolTipText("");
+        txtAddress1.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtAddress1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtAddress1.setName(""); // NOI18N
 
-        txtAddress2.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtAddress2.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtAddress2.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtAddress2.setName(""); // NOI18N
 
-        txtAddress3.setHorizontalAlignment(javax.swing.JTextField.LEFT);
+        txtAddress3.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtAddress3.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtAddress3.setName(""); // NOI18N
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        javax.swing.GroupLayout pnlCompanyLayout = new javax.swing.GroupLayout(pnlCompany);
+        pnlCompany.setLayout(pnlCompanyLayout);
+        pnlCompanyLayout.setHorizontalGroup(
+            pnlCompanyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCompanyLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(lblCompanyName)
-                    .addComponent(txtCompanyName)
-                    .addComponent(lblCompanyAddress)
-                    .addComponent(txtAddress1, javax.swing.GroupLayout.DEFAULT_SIZE, 356, Short.MAX_VALUE)
-                    .addComponent(txtAddress2)
-                    .addComponent(txtAddress3))
-                .addContainerGap(34, Short.MAX_VALUE))
+                .addGroup(pnlCompanyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblCompanyAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtAddress3, javax.swing.GroupLayout.PREFERRED_SIZE, 350, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(37, Short.MAX_VALUE))
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        pnlCompanyLayout.setVerticalGroup(
+            pnlCompanyLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlCompanyLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblCompanyName)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
                 .addComponent(txtCompanyName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(lblCompanyAddress)
+                .addComponent(lblCompanyAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(153, Short.MAX_VALUE))
+                .addContainerGap(102, Short.MAX_VALUE))
+        );
+
+        tabConfig.addTab("Company", pnlCompany);
+
+        pnlSettings.setBackground(new java.awt.Color(204, 204, 204));
+
+        cboAppMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "End-User", "Diagnostic" }));
+
+        lblAppMode.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblAppMode.setText("App Mode");
+
+        javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
+        pnlSettings.setLayout(pnlSettingsLayout);
+        pnlSettingsLayout.setHorizontalGroup(
+            pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettingsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(262, Short.MAX_VALUE))
+        );
+        pnlSettingsLayout.setVerticalGroup(
+            pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettingsLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(219, Short.MAX_VALUE))
+        );
+
+        lblAppMode.getAccessibleContext().setAccessibleName("App Mode");
+
+        tabConfig.addTab("Settings", pnlSettings);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tabConfig)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(tabConfig)
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        String company_info = "config/company.txt";
+        try {
+            System.out.println("Attempting to update config and company files...");
+            FileWriter fw = new FileWriter(company_info, false);
+            BufferedWriter bw = new BufferedWriter(fw);
+            PrintWriter pw = new PrintWriter(bw);
+            pw.println(txtCompanyName.getText());
+            pw.println(txtAddress1.getText());
+            pw.println(txtAddress2.getText());
+            pw.println(txtAddress3.getText());
+            pw.close();
+            //Let's surgically write our config parameters.
+            writeConfig();
+            
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to write to company.txt (to store updated company information).");
+        }
         MainMenuUI.btnConfig.setEnabled(true);
     }//GEN-LAST:event_formWindowClosed
 
@@ -128,6 +214,78 @@ public class Config extends javax.swing.JFrame {
         MainMenuUI.btnConfig.setEnabled(false);
     }//GEN-LAST:event_formWindowOpened
 
+    private String findAppMode() {
+        String config_info = "config/config.txt";
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
+            //Although this means that the order of the configuration parameters is unimportant, a single blank
+            //line will terminate the for loop (and halt the parsing process).
+            //For unexpected values in DiagMode value (or if it's missing), we default to an End-User model.
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("DiagMode=")) {
+                    //Cool, we've found what we're looking for...
+                    if(strLine.endsWith("1")) {
+                        br.close();
+                        return "Diagnostic";
+                    } else {
+                        br.close();
+                        return "End-User";
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
+        }
+        return "End-User";
+    }
+    
+private void writeConfig() {
+    try {
+        //This should suffice to write any parameter to the config file.
+        //Can be expanded as needed.
+        String config_info = "config/config.txt";
+        BufferedReader br = new BufferedReader(new FileReader(config_info));
+        String strLine;
+        StringBuffer inputBuffer = new StringBuffer();
+
+        while ((strLine = br.readLine()) != null) {
+            inputBuffer.append(strLine);
+            inputBuffer.append('\n');
+        }
+        String strInput = inputBuffer.toString();
+        br.close();
+        
+        //Only rewrite to the config file if there was a change.
+        if (cboAppMode.getSelectedItem().equals("Diagnostic")) {
+            strInput = strInput.replace("DiagMode=0", "DiagMode=1");
+        }
+        else {
+            strInput = strInput.replace("DiagMode=1", "DiagMode=0");
+        } 
+
+        FileOutputStream fileOut = new FileOutputStream(config_info);
+        fileOut.write(strInput.getBytes());
+        fileOut.close();
+        
+        //Display the new config settings in the console.
+        br = new BufferedReader(new FileReader(config_info));
+        //We'll need to clear the buffer, or else it will still contain the original config parameters.
+        inputBuffer.delete(0, inputBuffer.length());
+        while ((strLine = br.readLine()) != null) {
+            inputBuffer.append(strLine);
+            inputBuffer.append('\n');
+        }
+        strInput = inputBuffer.toString();
+        System.out.println(strInput);
+        br.close();
+
+    } catch (Exception e) {
+        System.out.println("ERROR: Unable to update config.txt file.");
+    }
+}
+    
     /**
      * @param args the command line arguments
      */
@@ -165,11 +323,16 @@ public class Config extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel lblCompanyAddress;
-    private javax.swing.JLabel lblCompanyName;
-    private javax.swing.JTextField txtAddress1;
-    private javax.swing.JTextField txtAddress2;
-    private javax.swing.JTextField txtAddress3;
-    private javax.swing.JTextField txtCompanyName;
+    private javax.swing.JComboBox cboAppMode;
+    private java.awt.Label lblAppMode;
+    private java.awt.Label lblCompanyAddress;
+    private java.awt.Label lblCompanyName;
+    private java.awt.Panel pnlCompany;
+    private java.awt.Panel pnlSettings;
+    private javax.swing.JTabbedPane tabConfig;
+    private java.awt.TextField txtAddress1;
+    private java.awt.TextField txtAddress2;
+    private java.awt.TextField txtAddress3;
+    private java.awt.TextField txtCompanyName;
     // End of variables declaration//GEN-END:variables
 }
