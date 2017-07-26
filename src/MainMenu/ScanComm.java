@@ -81,6 +81,8 @@ public class ScanComm {
     //2 = Create Text File from current record
     //3 = Move to Next Record
     //4 = Clear All Memory (Remove all pointers)
+    //5 = Clear Memory and All Data Dump
+    //6 = Download end-user text file - do not generate spreadsheet
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
         System.out.println("Beginning to scan Comm ports...");
@@ -105,7 +107,7 @@ public class ScanComm {
                     foundRecon = true;
                     if(OptArgs == 1){
                         System.out.println("Rad Elec Recon CRM found!");
-                        MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!");
+                        MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!"); // Comment from John: TODO - name Linux device nodes such as ttyACM0
                         String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                         //A bit of error-handling, just in case the serial number doesn't exist.
                         if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
@@ -142,7 +144,14 @@ public class ScanComm {
                         System.out.println("Clearing memory and dumping all data...");
                         DumpAllData(scannedPort);
                         CheckReconProtocol(scannedPort);
-                    }
+                    } else if(OptArgs == 6) {
+		        System.out.println("Checking for records...");
+			MainMenuUI.displayProgressLabel("Checking for records...");
+			if(CheckForNewRecords(scannedPort)==true) {
+			    System.out.println("Begin downloading session...");
+			    DownloadNewRecord(scannedPort);
+			}
+		    }
                 }
             scannedPort.closePort();
             }   
@@ -244,7 +253,47 @@ public class ScanComm {
             boolean DoesReconFileExist = true;
             boolean TXT_exists = false;
             boolean XLS_exists = false;
-            //End declarations
+
+            // declaration and null assignment for pointers used in spreadsheet creation
+	    // App will not compile when these are declared/assigned in blocks
+	    // controlled by a conditional (diagnosticMode) below.
+            WritableWorkbook XLfile = null;
+            WritableSheet sheet = null;
+	    WritableCellFormat XL_Decimal10_Format = null;
+            WritableCellFormat XL_Decimal100_Format = null;
+	    Number Recon_RecordNumber = null;
+	    Label Recon_Flag = null;
+	    Number Recon_Year = null;
+	    Number Recon_Month = null;
+	    Number Recon_Day = null;
+	    Number Recon_Hour = null;
+	    Number Recon_Minute = null;
+	    Number Recon_Second = null;
+	    Number Recon_Chamber1Count = null;
+	    Number Recon_Chamber2Count = null;
+	    Formula Recon_Chamber1CountPerHour = null;
+	    Formula Recon_Chamber2CountPerHour = null;
+	    Formula Recon_Chamber1RadonConc = null;
+	    Formula Recon_Chamber2RadonConc = null;
+	    Number Recon_MainInputVoltage = null;
+	    Number Recon_BattVoltage = null;
+	    Number Recon_HumidityMin = null;
+	    Number Recon_HumidityAvg = null;
+	    Number Recon_HumidityMax = null;
+	    Number Recon_PressureMin = null;
+	    Number Recon_PressureAvg = null;
+	    Number Recon_PressureMax = null;
+	    Number Recon_TemperatureMin = null;
+	    Number Recon_TemperatureAvg = null;
+	    Number Recon_TemperatureMax = null;
+	    Number Recon_Movements = null;
+	    Number Recon_CurrentAvg = null;
+	    Number Recon_HVSupply = null;
+	    Number Recon_RecordsInSample = null;
+	    Number Recon_CF1 = null;
+	    Number Recon_CF2 = null;
+
+	    //End declarations
             
             Thread.sleep(10);
             WriteComm.main(scannedPort, ReconConfirm); //Check the Recon to see if a new record exists.
@@ -294,16 +343,18 @@ public class ScanComm {
             //writer.println(DeviceResponse);
             
             //For Excel spreadsheet. Ye gods, this sub is turning into a bloody hornet's nest...
-            Workbook workbook = Workbook.getWorkbook(new File("ReconTemplate.xls"));
-            WritableWorkbook XLfile = Workbook.createWorkbook(new File("data/Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls"), workbook);
+            if (MainMenuUI.diagnosticMode) {
+	    Workbook workbook = Workbook.getWorkbook(new File("ReconTemplate.xls"));
+            XLfile = Workbook.createWorkbook(new File("data/Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls"), workbook);
             workbook.close();
-            WritableSheet sheet = XLfile.getSheet(0);
+            sheet = XLfile.getSheet(0);
             //Excel formats, so everything doesn't get passed over as a lousy string.
             //We'll likely need to catch errors in a future version, but I don't have the time to deal with that now.
-            WritableCellFormat XL_Decimal10_Format = new WritableCellFormat(new NumberFormat("0.0"));
+            XL_Decimal10_Format = new WritableCellFormat(new NumberFormat("0.0"));
             XL_Decimal10_Format.setAlignment(Alignment.CENTRE);
-            WritableCellFormat XL_Decimal100_Format = new WritableCellFormat(new NumberFormat("0.00"));
+            XL_Decimal100_Format = new WritableCellFormat(new NumberFormat("0.00"));
             XL_Decimal100_Format.setAlignment(Alignment.CENTRE);
+	    } // end !diagnosticMode omission
             
             Thread.sleep(10);
             WriteComm.main(scannedPort, CheckNewRecord); //Check the Recon to see if a new record exists.
@@ -343,7 +394,9 @@ public class ScanComm {
                 
                 //Spreadsheet Stuff
                 //Move this to another method so we can have a semblance of order...
-                if(!(DeviceResponse_parsed[2].equals("Z"))){
+                if (MainMenuUI.diagnosticMode) {
+
+		if(!(DeviceResponse_parsed[2].equals("Z"))){
                     int rows_total=sheet.getRows();
                     sheet.insertRow(rows_total+1);
                     //This i incrementer is used for determining when to record the counts per hour.
@@ -351,86 +404,91 @@ public class ScanComm {
                         i++;
                     }
                     System.out.println(i);
-                    Number Recon_RecordNumber = new Number(0, rows_total, Long.parseLong(DeviceResponse_parsed[1]));
+                    Recon_RecordNumber = new Number(0, rows_total, Long.parseLong(DeviceResponse_parsed[1]));
                     sheet.addCell(Recon_RecordNumber);
-                    Label Recon_Flag = new Label(1, rows_total, DeviceResponse_parsed[2]);
+                    Recon_Flag = new Label(1, rows_total, DeviceResponse_parsed[2]);
                     sheet.addCell(Recon_Flag);
-                    Number Recon_Year = new Number(2, rows_total, Long.parseLong(DeviceResponse_parsed[3]));
+                    Recon_Year = new Number(2, rows_total, Long.parseLong(DeviceResponse_parsed[3]));
                     sheet.addCell(Recon_Year);
-                    Number Recon_Month = new Number(3, rows_total, Long.parseLong(DeviceResponse_parsed[4]));
+                    Recon_Month = new Number(3, rows_total, Long.parseLong(DeviceResponse_parsed[4]));
                     sheet.addCell(Recon_Month);
-                    Number Recon_Day = new Number(4, rows_total, Long.parseLong(DeviceResponse_parsed[5]));
+                    Recon_Day = new Number(4, rows_total, Long.parseLong(DeviceResponse_parsed[5]));
                     sheet.addCell(Recon_Day);
-                    Number Recon_Hour = new Number(5, rows_total, Long.parseLong(DeviceResponse_parsed[6]));
+                    Recon_Hour = new Number(5, rows_total, Long.parseLong(DeviceResponse_parsed[6]));
                     sheet.addCell(Recon_Hour);
-                    Number Recon_Minute = new Number(6, rows_total, Long.parseLong(DeviceResponse_parsed[7]));
+                    Recon_Minute = new Number(6, rows_total, Long.parseLong(DeviceResponse_parsed[7]));
                     sheet.addCell(Recon_Minute);
-                    Number Recon_Second = new Number(7, rows_total, Long.parseLong(DeviceResponse_parsed[8]));
+                    Recon_Second = new Number(7, rows_total, Long.parseLong(DeviceResponse_parsed[8]));
                     sheet.addCell(Recon_Second);
-                    Number Recon_Movements = new Number(8, rows_total, Long.parseLong(DeviceResponse_parsed[9]));
+                    Recon_Movements = new Number(8, rows_total, Long.parseLong(DeviceResponse_parsed[9]));
                     sheet.addCell(Recon_Movements);
-                    Number Recon_Chamber1Count = new Number(9, rows_total, Long.parseLong(DeviceResponse_parsed[10]));
+                    Recon_Chamber1Count = new Number(9, rows_total, Long.parseLong(DeviceResponse_parsed[10]));
                     sheet.addCell(Recon_Chamber1Count);
                     //Calculate counts per hour, discarding the first two rows in any spreadsheet.
                     //I had originally used the modulus function (i.e. rows_total%6), but this didn't account for
                     //the variable number of "W" flags a given data session may have.
                     if((rows_total>7)&&(i>=6)) {
-                        Formula Recon_Chamber1CountPerHour = new Formula(10, rows_total, "SUM(J" + (rows_total-4) + ":J" + (rows_total+1) + ")");
+                        Recon_Chamber1CountPerHour = new Formula(10, rows_total, "SUM(J" + (rows_total-4) + ":J" + (rows_total+1) + ")");
                         sheet.addCell(Recon_Chamber1CountPerHour);
-                        Formula Recon_Chamber1RadonConc = new Formula(11, rows_total, "K" + (rows_total+1) + "/$AE$2");
+                        Recon_Chamber1RadonConc = new Formula(11, rows_total, "K" + (rows_total+1) + "/$AE$2");
                         sheet.addCell(Recon_Chamber1RadonConc);
-                        Formula Recon_Chamber2CountPerHour = new Formula(13, rows_total, "SUM(M" + (rows_total-4) + ":M" + (rows_total+1) + ")");
+                        Recon_Chamber2CountPerHour = new Formula(13, rows_total, "SUM(M" + (rows_total-4) + ":M" + (rows_total+1) + ")");
                         sheet.addCell(Recon_Chamber2CountPerHour);
-                        Formula Recon_Chamber2RadonConc = new Formula(14, rows_total, "N" + (rows_total+1) + "/$AF$2");
+                        Recon_Chamber2RadonConc = new Formula(14, rows_total, "N" + (rows_total+1) + "/$AF$2");
                         sheet.addCell(Recon_Chamber2RadonConc);
                         i=0;
                     }
-                    Number Recon_Chamber2Count = new Number(12, rows_total, Long.parseLong(DeviceResponse_parsed[11]));
+                    Recon_Chamber2Count = new Number(12, rows_total, Long.parseLong(DeviceResponse_parsed[11]));
                     sheet.addCell(Recon_Chamber2Count);
-                    Number Recon_MainInputVoltage = new Number(15, rows_total, Double.parseDouble(DeviceResponse_parsed[12]), XL_Decimal100_Format);
+                    Recon_MainInputVoltage = new Number(15, rows_total, Double.parseDouble(DeviceResponse_parsed[12]), XL_Decimal100_Format);
                     sheet.addCell(Recon_MainInputVoltage);
-                    Number Recon_BattVoltage = new Number(16, rows_total, Double.parseDouble(DeviceResponse_parsed[13]), XL_Decimal100_Format);
+                    Recon_BattVoltage = new Number(16, rows_total, Double.parseDouble(DeviceResponse_parsed[13]), XL_Decimal100_Format);
                     sheet.addCell(Recon_BattVoltage);
-                    Number Recon_HumidityMin = new Number(17, rows_total, Double.parseDouble(DeviceResponse_parsed[14]), XL_Decimal10_Format);
+                    Recon_HumidityMin = new Number(17, rows_total, Double.parseDouble(DeviceResponse_parsed[14]), XL_Decimal10_Format);
                     sheet.addCell(Recon_HumidityMin);
-                    Number Recon_HumidityAvg = new Number(18, rows_total, Double.parseDouble(DeviceResponse_parsed[15]), XL_Decimal10_Format);
+                    Recon_HumidityAvg = new Number(18, rows_total, Double.parseDouble(DeviceResponse_parsed[15]), XL_Decimal10_Format);
                     sheet.addCell(Recon_HumidityAvg);
-                    Number Recon_HumidityMax = new Number(19, rows_total, Double.parseDouble(DeviceResponse_parsed[16]), XL_Decimal10_Format);
+                    Recon_HumidityMax = new Number(19, rows_total, Double.parseDouble(DeviceResponse_parsed[16]), XL_Decimal10_Format);
                     sheet.addCell(Recon_HumidityMax);
-                    Number Recon_PressureMin = new Number(20, rows_total, Double.parseDouble(DeviceResponse_parsed[17]), XL_Decimal10_Format);
+                    Recon_PressureMin = new Number(20, rows_total, Double.parseDouble(DeviceResponse_parsed[17]), XL_Decimal10_Format);
                     sheet.addCell(Recon_PressureMin);
-                    Number Recon_PressureAvg = new Number(21, rows_total, Double.parseDouble(DeviceResponse_parsed[18]), XL_Decimal10_Format);
+                    Recon_PressureAvg = new Number(21, rows_total, Double.parseDouble(DeviceResponse_parsed[18]), XL_Decimal10_Format);
                     sheet.addCell(Recon_PressureAvg);
-                    Number Recon_PressureMax = new Number(22, rows_total, Double.parseDouble(DeviceResponse_parsed[19]), XL_Decimal10_Format);
+                    Recon_PressureMax = new Number(22, rows_total, Double.parseDouble(DeviceResponse_parsed[19]), XL_Decimal10_Format);
                     sheet.addCell(Recon_PressureMax);
-                    Number Recon_TemperatureMin = new Number(23, rows_total, Double.parseDouble(DeviceResponse_parsed[20]), XL_Decimal100_Format);
+                    Recon_TemperatureMin = new Number(23, rows_total, Double.parseDouble(DeviceResponse_parsed[20]), XL_Decimal100_Format);
                     sheet.addCell(Recon_TemperatureMin);
-                    Number Recon_TemperatureAvg = new Number(24, rows_total, Double.parseDouble(DeviceResponse_parsed[21]), XL_Decimal100_Format);
+                    Recon_TemperatureAvg = new Number(24, rows_total, Double.parseDouble(DeviceResponse_parsed[21]), XL_Decimal100_Format);
                     sheet.addCell(Recon_TemperatureAvg);
-                    Number Recon_TemperatureMax = new Number(25, rows_total, Double.parseDouble(DeviceResponse_parsed[22]), XL_Decimal100_Format);
+                    Recon_TemperatureMax = new Number(25, rows_total, Double.parseDouble(DeviceResponse_parsed[22]), XL_Decimal100_Format);
                     sheet.addCell(Recon_TemperatureMax);
-                    Number Recon_CurrentAvg = new Number(26, rows_total, Long.parseLong(DeviceResponse_parsed[23]));
+                    Recon_CurrentAvg = new Number(26, rows_total, Long.parseLong(DeviceResponse_parsed[23]));
                     sheet.addCell(Recon_CurrentAvg);
-                    Number Recon_HVSupply = new Number(27, rows_total, Long.parseLong(DeviceResponse_parsed[24]));
+                    Recon_HVSupply = new Number(27, rows_total, Long.parseLong(DeviceResponse_parsed[24]));
                     sheet.addCell(Recon_HVSupply);
                     //Note: we need to strip the carriage return at the end of the DeviceResponse_parsed array, by using the replaceAll function call shown below.
-                    Number Recon_RecordsInSample = new Number(28, rows_total, Long.parseLong(DeviceResponse_parsed[25].replaceAll("[\n\r]", "")));
+                    Recon_RecordsInSample = new Number(28, rows_total, Long.parseLong(DeviceResponse_parsed[25].replaceAll("[\n\r]", "")));
                     sheet.addCell(Recon_RecordsInSample);
                     //The following is a bit of a hack, but it should work for adding CF1 and CF2 to the first row only, to serve as a constant.
                     if(rows_total==1) {
-                        Number Recon_CF1 = new Number(30, rows_total, CF1);
+                        Recon_CF1 = new Number(30, rows_total, CF1);
                         sheet.addCell(Recon_CF1);
-                        Number Recon_CF2 = new Number(31, rows_total, CF2);
+                        Recon_CF2 = new Number(31, rows_total, CF2);
                         sheet.addCell(Recon_CF2);
                     }
                 }
-                //End Spreadsheet Row Additions   
+                //End Spreadsheet Row Additions
+		} // end !diagnosticMode omission
             }
+
             //Created Named Ranges for spreadsheet graph
-            XLfile.addNameArea("Ch1Counts", sheet, 9, 1, 9, sheet.getRows()-1);
-            XLfile.addNameArea("Ch2Counts", sheet, 11, 1, 11, sheet.getRows()-1);
+	    if (MainMenuUI.diagnosticMode) {
+                XLfile.addNameArea("Ch1Counts", sheet, 9, 1, 9, sheet.getRows()-1);
+                XLfile.addNameArea("Ch2Counts", sheet, 11, 1, 11, sheet.getRows()-1);
+	    }
             
-            if(BeginAveraging==true) {
+	    // do this if we're in diagnostic mode
+	    if(BeginAveraging==true && MainMenuUI.diagnosticMode) {
                 writer.println("\r\n");
                 writer.println("SUMMARY:");
                 writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
@@ -450,10 +508,43 @@ public class ScanComm {
                 writer.println("Instrument Wait Setting = " + ReconWaitTime);
                 writer.println("Instrument Duration Setting = " + ReconDurationSetting);
             }
+
+	    // or this if we're in regular user mode
+	    else if (BeginAveraging == true) {
+	        writer.println("\r\n");
+		writer.println("Test site:");
+
+		// had to make txtTestSiteInfo public to do this
+		// maybe there is a better way?
+		writer.println(MainMenuUI.txtTestSiteInfo.getText());
+		writer.println("\r\n");
+		writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
+		writer.println("End Date/Time: " + EndDate.format(DateTimeDisplay));
+
+		// format time data
+		Duration radonDuration = Duration.between(StartDate, EndDate);
+                totalSeconds = radonDuration.getSeconds();
+                testHours = totalSeconds / 3600;
+                testMinutes = ((totalSeconds % 3600) / 60);
+                testSeconds = (totalSeconds % 60);
+
+                writer.println("Total Test Duration: " + testHours + " hours, " + testMinutes + " minutes, " + testSeconds + " seconds");
+		writer.println("Total Movements: " + TotalMovements);
+                writer.println("Avg. Humidity = " + RoundAvg.format(AvgHumidity/ActiveRecordCounts) + "%");
+                writer.println("Avg. Pressure = " + RoundAvg.format(AvgPressure/ActiveRecordCounts) + " mmHg");
+                writer.println("Avg. Temperature = " + RoundAvg.format(AvgTemperature/ActiveRecordCounts) + "C");
+		writer.println("Chamber 1 avg pCi/L = ");
+		writer.println("Chamber 2 avg pCi/L = ");
+		writer.println("Average pCi/L = ");
+	    }
             
             writer.close();
-            XLfile.write();
-            XLfile.close();
+
+	    if (MainMenuUI.diagnosticMode) {
+                XLfile.write();
+                XLfile.close();
+            }
+
             MainMenuUI.displayProgressLabel("TXT/XLS files created.");
             System.out.println("TXT/XLS files created.");
         }

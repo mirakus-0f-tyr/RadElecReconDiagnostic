@@ -483,7 +483,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static javax.swing.JLabel lblSystemConsole;
     private javax.swing.JLabel lblTestSiteInfo;
     public static javax.swing.JLabel lblVersion;
-    private javax.swing.JTextArea txtTestSiteInfo;
+    public static javax.swing.JTextArea txtTestSiteInfo;
     // End of variables declaration//GEN-END:variables
 
 //Returns today's date as the default calibration date.
