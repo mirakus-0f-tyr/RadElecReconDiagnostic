@@ -209,23 +209,47 @@ public class MainMenuUI extends javax.swing.JFrame {
 
         btnDownloadSession.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnDownloadSession.setText("Download Session");
+        btnDownloadSession.setToolTipText("Download current session from Recon.");
+        btnDownloadSession.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDownloadSessionActionPerformed(evt);
+            }
+        });
 
         btnOpenSavedFile.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnOpenSavedFile.setText("Open Saved File");
+        btnOpenSavedFile.setToolTipText("Open previously downloaded data file.");
         btnOpenSavedFile.setName(""); // NOI18N
+        btnOpenSavedFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenSavedFileActionPerformed(evt);
+            }
+        });
 
         btnGeneratePDF.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        btnGeneratePDF.setToolTipText("Generate PDF from current results.");
         btnGeneratePDF.setLabel("Generate PDF");
         btnGeneratePDF.setMaximumSize(new java.awt.Dimension(136, 26));
         btnGeneratePDF.setMinimumSize(new java.awt.Dimension(136, 26));
         btnGeneratePDF.setName(""); // NOI18N
         btnGeneratePDF.setPreferredSize(new java.awt.Dimension(136, 26));
+        btnGeneratePDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGeneratePDFActionPerformed(evt);
+            }
+        });
 
         btnEraseReconData.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnEraseReconData.setText("Erase Recon Data");
+        btnEraseReconData.setToolTipText("Clear all test sessions from Recon.");
         btnEraseReconData.setMaximumSize(new java.awt.Dimension(136, 26));
         btnEraseReconData.setMinimumSize(new java.awt.Dimension(136, 26));
         btnEraseReconData.setPreferredSize(new java.awt.Dimension(136, 26));
+        btnEraseReconData.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEraseReconDataActionPerformed(evt);
+            }
+        });
 
         lblTestSiteInfo.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         lblTestSiteInfo.setText("Test Site Information");
@@ -379,6 +403,24 @@ public class MainMenuUI extends javax.swing.JFrame {
         frameOptions.setLocationRelativeTo(null);
         frameOptions.setVisible(true);
     }//GEN-LAST:event_btnConfigActionPerformed
+
+    private void btnDownloadSessionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDownloadSessionActionPerformed
+        DownloadSession worker = new DownloadSession();
+	worker.execute();
+    }//GEN-LAST:event_btnDownloadSessionActionPerformed
+
+    private void btnOpenSavedFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenSavedFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnOpenSavedFileActionPerformed
+
+    private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneratePDFActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnGeneratePDFActionPerformed
+
+    private void btnEraseReconDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEraseReconDataActionPerformed
+        ClearReconMemory worker = new ClearReconMemory();
+	worker.execute();
+    }//GEN-LAST:event_btnEraseReconDataActionPerformed
 
     /**
      * @param args the command line arguments
@@ -667,6 +709,26 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(true);
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
+      return null;
+    }
+    }
+
+private class DownloadSession extends SwingWorker<Void, Void>{
+    @Override
+    protected Void doInBackground() throws Exception {
+      // some buttons may be missed - check later
+
+      btnDownloadSession.setEnabled(false);
+      btnOpenSavedFile.setEnabled(false);
+      btnGeneratePDF.setEnabled(false);
+      btnEraseReconData.setEnabled(false);
+      System.out.println("Download Session button pressed.");
+      CRM_Parameters = ScanComm.run(6);
+      btnDownloadSession.setEnabled(true);
+      btnOpenSavedFile.setEnabled(true);
+      btnGeneratePDF.setEnabled(true);
+      btnEraseReconData.setEnabled(true);
+
       return null;
     }
     }
