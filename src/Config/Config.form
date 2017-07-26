@@ -183,6 +183,8 @@
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
                           <Component id="cboAppMode" min="-2" pref="123" max="-2" attributes="0"/>
+                          <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboUnitSystem" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace pref="262" max="32767" attributes="0"/>
                   </Group>
@@ -195,7 +197,11 @@
                       <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="cboAppMode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="219" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="lblUnits" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
+                      <Component id="cboUnitSystem" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="164" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -218,9 +224,24 @@
                 </Property>
                 <Property name="text" type="java.lang.String" value="App Mode"/>
               </Properties>
-              <AccessibilityProperties>
-                <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="App Mode"/>
-              </AccessibilityProperties>
+            </Component>
+            <Component class="java.awt.Label" name="lblUnits">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Calibri" size="12" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Unit System"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cboUnitSystem">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="US"/>
+                    <StringItem index="1" value="SI"/>
+                  </StringArray>
+                </Property>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

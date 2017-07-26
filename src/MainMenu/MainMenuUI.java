@@ -44,12 +44,12 @@ public class MainMenuUI extends javax.swing.JFrame {
     // WaitTime - last set to device, wait time
     // TestDur  - last set to device, test duration
     // DispRes  - last set to device, disp results on/off
-    public static boolean diagnosticMode;
-    public static String unitType;
-    public static int waitTime;
-    public static int testDuration;
-    public static boolean displayStatus;
-
+    public static boolean diagnosticMode = false;
+    public static String unitType = "US";
+    public static int waitTime = 0;
+    public static int testDuration = 48;
+    public static boolean displayStatus = false;
+    
     /**
      * Creates new form MainMenuUI
      */
@@ -257,6 +257,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         txtTestSiteInfo.setColumns(20);
         txtTestSiteInfo.setRows(5);
         txtTestSiteInfo.setTabSize(4);
+        txtTestSiteInfo.setBorder(null);
         jScrollPane1.setViewportView(txtTestSiteInfo);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -527,7 +528,7 @@ public static void displayDataSessions(String NumSessions) {
     //}
 }
 
-public static void parseCompanyTXT() {
+public void parseCompanyTXT() {
     String company_info = "config/company.txt";
     try {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(company_info)));
@@ -542,88 +543,132 @@ public static void parseCompanyTXT() {
     }
 }
 
-public static void parseConfigTXT() {
+public void parseConfigTXT() {
     // set name of config text file
     String configTextFile = "config/config.txt";
-
-    // int to bool conversion values
-    int diagModeRawValue;
-    int displayStatusRawValue;
-
+    
     // try to parse the config file
     try {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
-
-        // get DiagMode
-        diagModeRawValue = Integer.parseInt(br.readLine().substring(9));
-        if (diagModeRawValue == 0)
-	    diagnosticMode = false;
-	else
-	    diagnosticMode = true;
-
-        // get UnitType
-	unitType = br.readLine().substring(9);
-
-        // get WaitTime
-	waitTime = Integer.parseInt(br.readLine().substring(9));
-
-	// get TestDur
-	testDuration = Integer.parseInt(br.readLine().substring(8));
-
-	// get DispRes (display mode - results on or off)
-	displayStatusRawValue = Integer.parseInt(br.readLine().substring(8));
-	if (displayStatusRawValue == 0)
-	    displayStatus = false;
-	else
-	    displayStatus = true;
+   
+        for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+            if(strLine.contains("DiagMode=")) {
+                diagnosticMode = strLine.endsWith("1"); //Defaults to End-User mode, only switching to Diagnostic mode if properly applied in config.
+            } else if(strLine.contains("UnitType=")) { //Defaults to US units if anything unexpected appears.
+                if(strLine.contains("SI")) {
+                    unitType = "SI";
+                } else {
+                    unitType = "US";
+                }
+            } else if(strLine.contains("WaitTime=")) { //This should robustly parse WaitTime, and default to zero if there's gibberish.
+                String[] strSplitWaitTime = strLine.split("=");
+                if(strLine.length() < 10) { //If the length for WaitTime= is less than 10, then we know that no value follows the parameter in the config file. Default to zero.
+                    waitTime = 0;
+                } else {
+                    try {
+                        waitTime = Integer.parseInt(strSplitWaitTime[1]);
+                    } catch (NumberFormatException e) {
+                        waitTime = 0; //If we cannot make an integer out of what follows WaitTime=, then this should make sure it stays zero.
+                    }
+                }
+            } else if(strLine.contains("TestDur=")) {
+                String[] strSplitTestDur = strLine.split("=");
+                if(strLine.length() < 9) { //If the length for TestDur= is less than 9, then we know that no value follows the parameter in the config file. Default to zero.
+                    testDuration = 0;
+                } else {
+                    try {
+                        testDuration = Integer.parseInt(strSplitTestDur[1]);
+                    } catch (NumberFormatException e) {
+                        testDuration = 0; //If we cannot make an integer out of what follows TestDur=, default to zero.
+                    }
+                }
+            } else if(strLine.contains("DispRes=")) {
+                displayStatus = strLine.endsWith("1");
+            }
+        }
 
 	// cleanup buffered reader
 	br.close();
-	}
+    }
 
-	// if error, print error and show stack trace
-	catch (IOException e){
-	    System.out.println("ERROR: Unable to parse config.txt file.");
-	    e.printStackTrace();
-	}
+    // if error, print error and show stack trace
+    catch (IOException e){
+	System.out.println("ERROR: Unable to parse config.txt file.");
+	e.printStackTrace();
+    }
+    
+}
+
+public void DisplayModeButtons() {
+    if (connectButtonPressed) {
+        if (diagnosticMode) {
+            btnDownloadSession.setVisible(false);
+            btnOpenSavedFile.setVisible(false);
+            btnGeneratePDF.setVisible(false);
+            btnEraseReconData.setVisible(false);
+            btnCreateTXT.setVisible(true);
+            btnClearMemory.setVisible(true);
+            btnClearSession.setVisible(true);
+            btnAllDataDump.setVisible(true);
+        }
+        else {
+            btnCreateTXT.setVisible(false);
+            btnClearMemory.setVisible(false);
+            btnClearSession.setVisible(false);
+            btnAllDataDump.setVisible(false);            
+            btnDownloadSession.setVisible(true);
+            btnOpenSavedFile.setVisible(true);
+            btnGeneratePDF.setVisible(true);
+            btnEraseReconData.setVisible(true);
+        }
+    }
 }
 
 private class MySwingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-      btnConnect.setEnabled(false);
-      lblReconSN.setVisible(false);
-      lblFirmwareVersion.setVisible(false);
-      lblDataSessions.setVisible(false);
-      btnCreateTXT.setVisible(false);
-      btnClearMemory.setVisible(false);
-      btnClearSession.setVisible(false);
-      btnAllDataDump.setVisible(false);
-      btnDownloadSession.setVisible(false);
-      btnOpenSavedFile.setVisible(false);
-      btnGeneratePDF.setVisible(false);
-      btnEraseReconData.setVisible(false);
-      System.out.println("Connect button pressed.");
-      CRM_Parameters = ScanComm.run(1);
-      if(CRM_Parameters[0].equals("true")){
-
-      if (diagnosticMode) {
-          btnCreateTXT.setVisible(true);
-          btnClearMemory.setVisible(true);
-          btnClearSession.setVisible(true);
-          btnAllDataDump.setVisible(true);
-      }
-      else {
-          btnDownloadSession.setVisible(true);
-          btnOpenSavedFile.setVisible(true);
-          btnGeneratePDF.setVisible(true);
-          btnEraseReconData.setVisible(true);
-      }
-      }
-      btnConnect.setEnabled(true);
-      return null;
+        btnConnect.setEnabled(false);
+        lblReconSN.setVisible(false);
+        lblFirmwareVersion.setVisible(false);
+        lblDataSessions.setVisible(false);
+        btnCreateTXT.setVisible(false);
+        btnClearMemory.setVisible(false);
+        btnClearSession.setVisible(false);
+        btnAllDataDump.setVisible(false);
+        btnDownloadSession.setVisible(false);
+        btnOpenSavedFile.setVisible(false);
+        btnGeneratePDF.setVisible(false);
+        btnEraseReconData.setVisible(false);
+        System.out.println("Connect button pressed.");
+        CRM_Parameters = ScanComm.run(1);
+        if(CRM_Parameters[0].equals("true")) {
+            parseConfigTXT(); //Just in case these options have changed, let's recheck the config.txt and company.txt files.
+            parseCompanyTXT();
+            if (diagnosticMode) {
+                btnDownloadSession.setVisible(false);
+                btnOpenSavedFile.setVisible(false);
+                btnGeneratePDF.setVisible(false);
+                btnEraseReconData.setVisible(false);
+                btnCreateTXT.setVisible(true);
+                btnClearMemory.setVisible(true);
+                btnClearSession.setVisible(true);
+                btnAllDataDump.setVisible(true);
+            }
+            else {
+                btnCreateTXT.setVisible(false);
+                btnClearMemory.setVisible(false);
+                btnClearSession.setVisible(false);
+                btnAllDataDump.setVisible(false);            
+                btnDownloadSession.setVisible(true);
+                btnOpenSavedFile.setVisible(true);
+                btnGeneratePDF.setVisible(true);
+                btnEraseReconData.setVisible(true);
+            }
+        }
+        btnConnect.setEnabled(true);
+        return null;
     }
-    }
+}
 
 private class GenerateTXTDump extends SwingWorker<Void, Void>{
     @Override
@@ -633,9 +678,6 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
-      //lblReconSN.setVisible(false);
-      //lblFirmwareVersion.setVisible(false);
-      //lblDataSessions.setVisible(false);
       System.out.println("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
       btnConnect.setEnabled(true);
@@ -645,7 +687,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(true);
       return null;
     }
-    }
+}
 
 private class AllDataDump extends SwingWorker<Void, Void>{
     @Override
@@ -655,9 +697,6 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
-      //lblReconSN.setVisible(false);
-      //lblFirmwareVersion.setVisible(false);
-      //lblDataSessions.setVisible(false);
       System.out.println("AllDataDump button pressed.");
       CRM_Parameters = ScanComm.run(5);
       btnConnect.setEnabled(true);
@@ -667,7 +706,7 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(true);
       return null;
     }
-    }
+}
 
 private class ClearCurrentSession extends SwingWorker<Void, Void>{
     @Override
@@ -676,9 +715,6 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnCreateTXT.setEnabled(false);
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
-      //lblReconSN.setVisible(false);
-      //lblFirmwareVersion.setVisible(false);
-      //lblDataSessions.setVisible(false);
       btnAllDataDump.setEnabled(false);
       System.out.println("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
@@ -689,7 +725,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(true);
       return null;
     }
-    }
+}
 
 private class ClearReconMemory extends SwingWorker<Void, Void>{
     @Override
@@ -711,7 +747,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(true);
       return null;
     }
-    }
+}
 
 private class DownloadSession extends SwingWorker<Void, Void>{
     @Override
@@ -731,7 +767,7 @@ private class DownloadSession extends SwingWorker<Void, Void>{
 
       return null;
     }
-    }
+}
 
 }
 

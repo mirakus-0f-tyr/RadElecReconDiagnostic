@@ -13,3 +13,5 @@ v0.5.6 - Added radon concentrations to the spreadsheet, in addition to a CheckCa
 v0.5.7 - Created framework for config.txt and company.txt, which allows user to toggle between "end-user" and "diagnostic" modes (config.txt) and to read company information (company.txt). 24-July-2017
 v0.5.8 - Added some buttons for the end-user mode (no functionality implemented), and a text area for the test site information. 25-July-2017
 v0.5.9 - Initial overhaul of the Config menu, adding two tabs. Company settings will now be saved, and the AppMode can be selected. 26-July-2017.
+v0.5.10 - Got DownloadSession button working. Edited DownloadNewRecord() -- xls only created in Diagnostic mode. Test site info parsed from app window to text file. Averages in text file still need to be completed. 26-July-2017
+v0.5.11 - Added some error-handling to parseConfigTXT(). The config.txt file should now be able to be parsed in any order (as long as the syntax is still correct). Current config settings will now reload when Connect button is pressed. 26-July-2017

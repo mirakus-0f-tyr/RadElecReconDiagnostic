@@ -7,7 +7,6 @@ package Config;
 
 import MainMenu.MainMenuUI;
 import java.io.*;
-import java.lang.Object;
 
 /**
  *
@@ -41,8 +40,11 @@ public class Config extends javax.swing.JFrame {
             //The following will find appropriate config parameters; it should work regardless of where the specific line
             //is located in the config.txt file.
             String strAppMode;
+            String strUnitSystem;
             strAppMode = findAppMode();
+            strUnitSystem = findUnitSystem();
             cboAppMode.setSelectedItem(strAppMode);
+            cboUnitSystem.setSelectedItem(strUnitSystem);
             
         } catch (IOException e) {
             System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
@@ -69,6 +71,8 @@ public class Config extends javax.swing.JFrame {
         pnlSettings = new java.awt.Panel();
         cboAppMode = new javax.swing.JComboBox();
         lblAppMode = new java.awt.Label();
+        lblUnits = new java.awt.Label();
+        cboUnitSystem = new javax.swing.JComboBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Config");
@@ -150,6 +154,11 @@ public class Config extends javax.swing.JFrame {
         lblAppMode.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblAppMode.setText("App Mode");
 
+        lblUnits.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblUnits.setText("Unit System");
+
+        cboUnitSystem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "US", "SI" }));
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -158,7 +167,9 @@ public class Config extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(262, Short.MAX_VALUE))
         );
         pnlSettingsLayout.setVerticalGroup(
@@ -168,10 +179,12 @@ public class Config extends javax.swing.JFrame {
                 .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(219, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(1, 1, 1)
+                .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(164, Short.MAX_VALUE))
         );
-
-        lblAppMode.getAccessibleContext().setAccessibleName("App Mode");
 
         tabConfig.addTab("Settings", pnlSettings);
 
@@ -203,11 +216,10 @@ public class Config extends javax.swing.JFrame {
             pw.close();
             //Let's surgically write our config parameters.
             writeConfig();
-            
+            MainMenuUI.btnConfig.setEnabled(true);
         } catch (IOException e) {
             System.out.println("ERROR: Unable to write to company.txt (to store updated company information).");
         }
-        MainMenuUI.btnConfig.setEnabled(true);
     }//GEN-LAST:event_formWindowClosed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -241,6 +253,38 @@ public class Config extends javax.swing.JFrame {
         return "End-User";
     }
     
+    private String findUnitSystem() {
+        String config_info = "config/config.txt";
+        String[] strSplitUnitSystem;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
+            //Although this means that the order of the configuration parameters is unimportant, a single blank
+            //line will terminate the for loop (and halt the parsing process).
+            //For unexpected values in UnitType= (or if it's missing), we default to the imperial (US) system.
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("UnitType=")) {
+                    strSplitUnitSystem = strLine.split("=");
+                    if (strSplitUnitSystem.length < 10) { //If UnitType= has no value, default to US.
+                        return "US";
+                    }
+                    if (strSplitUnitSystem[1].equals("SI")) {
+                        br.close();
+                        return "SI";
+                    } else {
+                        br.close();
+                        return "US";
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
+        }
+        return "US";
+    }
+    
+    
 private void writeConfig() {
     try {
         //This should suffice to write any parameter to the config file.
@@ -258,12 +302,22 @@ private void writeConfig() {
         br.close();
         
         //Only rewrite to the config file if there was a change.
+        
+        //Handle Diagnostic Mode
         if (cboAppMode.getSelectedItem().equals("Diagnostic")) {
             strInput = strInput.replace("DiagMode=0", "DiagMode=1");
         }
         else {
             strInput = strInput.replace("DiagMode=1", "DiagMode=0");
-        } 
+        }
+        
+        //Handle Unit System
+        if (cboUnitSystem.getSelectedItem().equals("SI")) {
+            strInput = strInput.replace("UnitType=US", "UnitType=SI");
+        }
+        else {
+            strInput = strInput.replace("UnitType=SI", "UnitType=US");
+        }
 
         FileOutputStream fileOut = new FileOutputStream(config_info);
         fileOut.write(strInput.getBytes());
@@ -324,9 +378,11 @@ private void writeConfig() {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboAppMode;
+    private javax.swing.JComboBox cboUnitSystem;
     private java.awt.Label lblAppMode;
     private java.awt.Label lblCompanyAddress;
     private java.awt.Label lblCompanyName;
+    private java.awt.Label lblUnits;
     private java.awt.Panel pnlCompany;
     private java.awt.Panel pnlSettings;
     private javax.swing.JTabbedPane tabConfig;
