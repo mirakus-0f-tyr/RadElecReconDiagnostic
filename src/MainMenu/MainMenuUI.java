@@ -67,6 +67,10 @@ public class MainMenuUI extends javax.swing.JFrame {
         btnClearSession.setVisible(false);
         btnClearMemory.setVisible(false);
         btnAllDataDump.setVisible(false);
+        btnDownloadSession.setVisible(false);
+        btnOpenSavedFile.setVisible(false);
+        btnGeneratePDF.setVisible(false);
+        btnEraseReconData.setVisible(false);
         
         lblVersion.setText(version);
     }
@@ -94,6 +98,13 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblFirmwareVersion = new javax.swing.JLabel();
         lblDataSessions = new javax.swing.JLabel();
         btnConfig = new javax.swing.JButton();
+        btnDownloadSession = new javax.swing.JButton();
+        btnOpenSavedFile = new javax.swing.JButton();
+        btnGeneratePDF = new javax.swing.JButton();
+        btnEraseReconData = new javax.swing.JButton();
+        lblTestSiteInfo = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtTestSiteInfo = new javax.swing.JTextArea();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Diagnostic Tool");
@@ -131,6 +142,9 @@ public class MainMenuUI extends javax.swing.JFrame {
 
         btnCreateTXT.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnCreateTXT.setText("Create TXT/XLS");
+        btnCreateTXT.setMaximumSize(new java.awt.Dimension(125, 25));
+        btnCreateTXT.setMinimumSize(new java.awt.Dimension(125, 25));
+        btnCreateTXT.setPreferredSize(new java.awt.Dimension(125, 25));
         btnCreateTXT.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnCreateTXTActionPerformed(evt);
@@ -139,6 +153,9 @@ public class MainMenuUI extends javax.swing.JFrame {
 
         btnClearMemory.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnClearMemory.setText("Clear All Memory (:CM)");
+        btnClearMemory.setMaximumSize(new java.awt.Dimension(125, 25));
+        btnClearMemory.setMinimumSize(new java.awt.Dimension(125, 25));
+        btnClearMemory.setPreferredSize(new java.awt.Dimension(125, 25));
         btnClearMemory.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearMemoryActionPerformed(evt);
@@ -147,14 +164,20 @@ public class MainMenuUI extends javax.swing.JFrame {
 
         btnClearSession.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnClearSession.setText("Clear Current Session (:CD)");
+        btnClearSession.setMaximumSize(new java.awt.Dimension(125, 25));
+        btnClearSession.setMinimumSize(new java.awt.Dimension(125, 25));
+        btnClearSession.setPreferredSize(new java.awt.Dimension(125, 25));
         btnClearSession.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnClearSessionActionPerformed(evt);
             }
         });
 
-        btnAllDataDump.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        btnAllDataDump.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
         btnAllDataDump.setText("All Data Dump (debug)");
+        btnAllDataDump.setMaximumSize(new java.awt.Dimension(125, 25));
+        btnAllDataDump.setMinimumSize(new java.awt.Dimension(125, 25));
+        btnAllDataDump.setPreferredSize(new java.awt.Dimension(125, 25));
         btnAllDataDump.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAllDataDumpActionPerformed(evt);
@@ -169,7 +192,13 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblFirmwareVersion.setText("Firmware v");
 
         lblDataSessions.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblDataSessions.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDataSessions.setText("Data Sessions:");
+        lblDataSessions.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblDataSessions.setMaximumSize(new java.awt.Dimension(181, 16));
+        lblDataSessions.setMinimumSize(new java.awt.Dimension(181, 16));
+        lblDataSessions.setName(""); // NOI18N
+        lblDataSessions.setPreferredSize(new java.awt.Dimension(181, 16));
 
         btnConfig.setText("Config");
         btnConfig.addActionListener(new java.awt.event.ActionListener() {
@@ -178,42 +207,85 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
+        btnDownloadSession.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        btnDownloadSession.setText("Download Session");
+
+        btnOpenSavedFile.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        btnOpenSavedFile.setText("Open Saved File");
+        btnOpenSavedFile.setName(""); // NOI18N
+
+        btnGeneratePDF.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        btnGeneratePDF.setLabel("Generate PDF");
+        btnGeneratePDF.setMaximumSize(new java.awt.Dimension(136, 26));
+        btnGeneratePDF.setMinimumSize(new java.awt.Dimension(136, 26));
+        btnGeneratePDF.setName(""); // NOI18N
+        btnGeneratePDF.setPreferredSize(new java.awt.Dimension(136, 26));
+
+        btnEraseReconData.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        btnEraseReconData.setText("Erase Recon Data");
+        btnEraseReconData.setMaximumSize(new java.awt.Dimension(136, 26));
+        btnEraseReconData.setMinimumSize(new java.awt.Dimension(136, 26));
+        btnEraseReconData.setPreferredSize(new java.awt.Dimension(136, 26));
+
+        lblTestSiteInfo.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        lblTestSiteInfo.setText("Test Site Information");
+
+        txtTestSiteInfo.setColumns(20);
+        txtTestSiteInfo.setRows(5);
+        txtTestSiteInfo.setTabSize(4);
+        jScrollPane1.setViewportView(txtTestSiteInfo);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(121, 121, 121)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 521, Short.MAX_VALUE))
+                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblVersion))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblVersion))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGap(109, 109, 109)
+                                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 199, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
                                 .addGap(12, 12, 12)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(lblSystemConsole, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(lblSystemConsole, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(btnConnect, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblDataSessions, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                                     .addComponent(lblReconSN, javax.swing.GroupLayout.DEFAULT_SIZE, 104, Short.MAX_VALUE)
-                                    .addComponent(lblFirmwareVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblDataSessions, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(btnClearSession, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnClearMemory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnCreateTXT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(btnAllDataDump, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGap(96, 96, 96))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
+                                    .addComponent(lblFirmwareVersion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addComponent(btnEraseReconData, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnOpenSavedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnClearSession, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnDownloadSession, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnCreateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGap(8, 8, 8))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(jScrollPane1)
+                            .addComponent(lblTestSiteInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnCloseProgram, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
                             .addComponent(btnConfig, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
@@ -226,32 +298,45 @@ public class MainMenuUI extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblRadonScoutQuickCal)
                     .addComponent(lblVersion))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFirmwareVersion))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblReconSN)
+                            .addComponent(btnConnect, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblSystemConsole)
-                        .addGap(22, 22, 22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblDataSessions, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblReconSN)
-                            .addComponent(btnCreateTXT))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnClearSession)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnClearMemory)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnAllDataDump)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblDataSessions)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(btnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnCloseProgram, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnCreateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnDownloadSession, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblFirmwareVersion))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnClearSession, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnOpenSavedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnEraseReconData, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(btnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCloseProgram, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addComponent(lblTestSiteInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
 
@@ -343,13 +428,20 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static javax.swing.JButton btnConfig;
     private javax.swing.JButton btnConnect;
     private javax.swing.JButton btnCreateTXT;
+    private javax.swing.JButton btnDownloadSession;
+    private javax.swing.JButton btnEraseReconData;
+    private javax.swing.JButton btnGeneratePDF;
+    private javax.swing.JButton btnOpenSavedFile;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JLabel lblDataSessions;
     public static javax.swing.JLabel lblFirmwareVersion;
     private javax.swing.JLabel lblRadonScoutQuickCal;
     public static javax.swing.JLabel lblReconSN;
     public static javax.swing.JLabel lblSystemConsole;
+    private javax.swing.JLabel lblTestSiteInfo;
     public static javax.swing.JLabel lblVersion;
+    private javax.swing.JTextArea txtTestSiteInfo;
     // End of variables declaration//GEN-END:variables
 
 //Returns today's date as the default calibration date.
@@ -465,6 +557,10 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
       btnClearMemory.setVisible(false);
       btnClearSession.setVisible(false);
       btnAllDataDump.setVisible(false);
+      btnDownloadSession.setVisible(false);
+      btnOpenSavedFile.setVisible(false);
+      btnGeneratePDF.setVisible(false);
+      btnEraseReconData.setVisible(false);
       System.out.println("Connect button pressed.");
       CRM_Parameters = ScanComm.run(1);
       if(CRM_Parameters[0].equals("true")){
@@ -476,8 +572,10 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
           btnAllDataDump.setVisible(true);
       }
       else {
-          btnClearMemory.setVisible(true);
-	  btnClearSession.setVisible(true);
+          btnDownloadSession.setVisible(true);
+          btnOpenSavedFile.setVisible(true);
+          btnGeneratePDF.setVisible(true);
+          btnEraseReconData.setVisible(true);
       }
       }
       btnConnect.setEnabled(true);
