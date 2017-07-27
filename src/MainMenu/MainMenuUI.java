@@ -7,6 +7,7 @@ package MainMenu;
 
 import Config.Config;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 
 import java.io.IOException;
@@ -15,6 +16,8 @@ import java.time.*;
 import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 
 /**
  *
@@ -71,6 +74,8 @@ public class MainMenuUI extends javax.swing.JFrame {
         btnOpenSavedFile.setVisible(false);
         btnGeneratePDF.setVisible(false);
         btnEraseReconData.setVisible(false);
+        lblLoadedFile.setVisible(false);
+        lblLoadedFileName.setVisible(false);
         
         lblVersion.setText(version);
     }
@@ -105,6 +110,8 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblTestSiteInfo = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         txtTestSiteInfo = new javax.swing.JTextArea();
+        lblLoadedFile = new javax.swing.JLabel();
+        lblLoadedFileName = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Diagnostic Tool");
@@ -260,6 +267,24 @@ public class MainMenuUI extends javax.swing.JFrame {
         txtTestSiteInfo.setBorder(null);
         jScrollPane1.setViewportView(txtTestSiteInfo);
 
+        lblLoadedFile.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblLoadedFile.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblLoadedFile.setText("Loaded File");
+        lblLoadedFile.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblLoadedFile.setMaximumSize(new java.awt.Dimension(181, 16));
+        lblLoadedFile.setMinimumSize(new java.awt.Dimension(181, 16));
+        lblLoadedFile.setName(""); // NOI18N
+        lblLoadedFile.setPreferredSize(new java.awt.Dimension(181, 16));
+
+        lblLoadedFileName.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        lblLoadedFileName.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblLoadedFileName.setText("No File Loaded");
+        lblLoadedFileName.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        lblLoadedFileName.setMaximumSize(new java.awt.Dimension(181, 16));
+        lblLoadedFileName.setMinimumSize(new java.awt.Dimension(181, 16));
+        lblLoadedFileName.setName(""); // NOI18N
+        lblLoadedFileName.setPreferredSize(new java.awt.Dimension(181, 16));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -310,6 +335,10 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1)
                             .addComponent(lblTestSiteInfo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGap(63, 63, 63)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblLoadedFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(btnCloseProgram, javax.swing.GroupLayout.DEFAULT_SIZE, 92, Short.MAX_VALUE)
@@ -361,7 +390,12 @@ public class MainMenuUI extends javax.swing.JFrame {
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(lblTestSiteInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblLoadedFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
 
@@ -411,7 +445,21 @@ public class MainMenuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnDownloadSessionActionPerformed
 
     private void btnOpenSavedFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenSavedFileActionPerformed
-        // TODO add your handling code here:
+        JFileChooser SavedReconTXT_Dialog = new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt"); //This will set the filters we'll allow.
+        SavedReconTXT_Dialog.setFileFilter(filter); //Applies the filter to SavedReconTXTDialog
+        File workingDirectory = new File(System.getProperty("user.dir") + File.separator + "data"); //Default location of file dialog will be the data directory.
+        SavedReconTXT_Dialog.setCurrentDirectory(workingDirectory); //Sets default directory
+        int returnVal = SavedReconTXT_Dialog.showOpenDialog(null); //This instantiates the file dialog window.
+        if(returnVal == JFileChooser.APPROVE_OPTION) {
+            System.out.println("File loaded: " + SavedReconTXT_Dialog.getSelectedFile().getName()); //Lets us know if user selected a valid file.
+            lblLoadedFileName.setText(SavedReconTXT_Dialog.getSelectedFile().getName());
+            lblLoadedFile.setVisible(true);
+            lblLoadedFileName.setVisible(true);
+        } else {
+            lblLoadedFile.setVisible(false);
+            lblLoadedFileName.setVisible(false);
+        }
     }//GEN-LAST:event_btnOpenSavedFileActionPerformed
 
     private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneratePDFActionPerformed
@@ -479,6 +527,8 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     public static javax.swing.JLabel lblDataSessions;
     public static javax.swing.JLabel lblFirmwareVersion;
+    public static javax.swing.JLabel lblLoadedFile;
+    public static javax.swing.JLabel lblLoadedFileName;
     private javax.swing.JLabel lblRadonScoutQuickCal;
     public static javax.swing.JLabel lblReconSN;
     public static javax.swing.JLabel lblSystemConsole;
@@ -614,6 +664,8 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
         btnOpenSavedFile.setVisible(false);
         btnGeneratePDF.setVisible(false);
         btnEraseReconData.setVisible(false);
+        lblLoadedFile.setVisible(false);
+        lblLoadedFileName.setVisible(false);
         System.out.println("Connect button pressed.");
         CRM_Parameters = ScanComm.run(1);
         if(CRM_Parameters[0].equals("true")) {
@@ -709,9 +761,6 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnCreateTXT.setEnabled(false);
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
-      //lblReconSN.setVisible(false);
-      //lblFirmwareVersion.setVisible(false);
-      //lblDataSessions.setVisible(false);
       btnAllDataDump.setEnabled(false);
       System.out.println("Clear Memory button pressed.");
       CRM_Parameters = ScanComm.run(4);
