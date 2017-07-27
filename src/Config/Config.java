@@ -265,7 +265,7 @@ public class Config extends javax.swing.JFrame {
             for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
                 if(strLine.contains("UnitType=")) {
                     strSplitUnitSystem = strLine.split("=");
-                    if (strSplitUnitSystem.length < 10) { //If UnitType= has no value, default to US.
+                    if (strLine.length() < 10) { //If UnitType= has no value, default to US.
                         return "US";
                     }
                     if (strSplitUnitSystem[1].equals("SI")) {
