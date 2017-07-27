@@ -599,31 +599,6 @@ public void parseConfigTXT() {
     
 }
 
-public void DisplayModeButtons() {
-    if (connectButtonPressed) {
-        if (diagnosticMode) {
-            btnDownloadSession.setVisible(false);
-            btnOpenSavedFile.setVisible(false);
-            btnGeneratePDF.setVisible(false);
-            btnEraseReconData.setVisible(false);
-            btnCreateTXT.setVisible(true);
-            btnClearMemory.setVisible(true);
-            btnClearSession.setVisible(true);
-            btnAllDataDump.setVisible(true);
-        }
-        else {
-            btnCreateTXT.setVisible(false);
-            btnClearMemory.setVisible(false);
-            btnClearSession.setVisible(false);
-            btnAllDataDump.setVisible(false);            
-            btnDownloadSession.setVisible(true);
-            btnOpenSavedFile.setVisible(true);
-            btnGeneratePDF.setVisible(true);
-            btnEraseReconData.setVisible(true);
-        }
-    }
-}
-
 private class MySwingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
