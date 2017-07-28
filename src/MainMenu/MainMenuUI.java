@@ -14,6 +14,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -456,6 +458,11 @@ public class MainMenuUI extends javax.swing.JFrame {
             lblLoadedFileName.setText(SavedReconTXT_Dialog.getSelectedFile().getName());
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
+            try {
+                LoadSavedFile.main(SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath());
+            } catch (IOException ex) {
+                System.out.println("ERROR: Unable to determine file path for the loaded file!");
+            }
         } else {
             lblLoadedFile.setVisible(false);
             lblLoadedFileName.setVisible(false);
