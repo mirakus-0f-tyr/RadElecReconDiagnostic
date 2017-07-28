@@ -16,3 +16,4 @@ v0.5.9 - Initial overhaul of the Config menu, adding two tabs. Company settings 
 v0.5.10 - Got DownloadSession button working. Edited DownloadNewRecord() -- xls only created in Diagnostic mode. Test site info parsed from app window to text file. Averages in text file still need to be completed. 26-July-2017
 v0.5.11 - Added some error-handling to parseConfigTXT(). The config.txt file should now be able to be parsed in any order (as long as the syntax is still correct). Current config settings will now reload when Connect button is pressed. 26-July-2017
 v0.5.12 - End-User Mode: Open Saved File now pulls a text file and stores it in an ArrayList, ready to be turned into a graph. 28-Jul-2017.
+v0.5.13 - Primitive graph should now load, to display Ch1_Counts and Ch2_Counts (soon these will be updated into valid data; it's more proof-of-concept).
