@@ -73,7 +73,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         btnClearMemory.setVisible(false);
         btnAllDataDump.setVisible(false);
         btnDownloadSession.setVisible(false);
-        btnOpenSavedFile.setVisible(false);
+        btnOpenSavedFile.setVisible(true);
         btnGeneratePDF.setVisible(false);
         btnEraseReconData.setVisible(false);
         lblLoadedFile.setVisible(false);
@@ -458,6 +458,10 @@ public class MainMenuUI extends javax.swing.JFrame {
             lblLoadedFileName.setText(SavedReconTXT_Dialog.getSelectedFile().getName());
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
+
+	    // draw the GeneratePDF button
+	    btnGeneratePDF.setVisible(true);
+
             try {
                 LoadSavedFile.main(SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath());
             } catch (IOException ex) {
@@ -668,7 +672,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
         btnClearSession.setVisible(false);
         btnAllDataDump.setVisible(false);
         btnDownloadSession.setVisible(false);
-        btnOpenSavedFile.setVisible(false);
+        btnOpenSavedFile.setVisible(true);
         btnGeneratePDF.setVisible(false);
         btnEraseReconData.setVisible(false);
         lblLoadedFile.setVisible(false);
@@ -680,7 +684,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
             parseCompanyTXT();
             if (diagnosticMode) {
                 btnDownloadSession.setVisible(false);
-                btnOpenSavedFile.setVisible(false);
+                btnOpenSavedFile.setVisible(true);
                 btnGeneratePDF.setVisible(false);
                 btnEraseReconData.setVisible(false);
                 btnCreateTXT.setVisible(true);
@@ -695,7 +699,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
                 btnAllDataDump.setVisible(false);            
                 btnDownloadSession.setVisible(true);
                 btnOpenSavedFile.setVisible(true);
-                btnGeneratePDF.setVisible(true);
+                btnGeneratePDF.setVisible(false);
                 btnEraseReconData.setVisible(true);
             }
         }
