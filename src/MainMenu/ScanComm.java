@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -293,6 +294,20 @@ public class ScanComm {
 	    Number Recon_CF1 = null;
 	    Number Recon_CF2 = null;
 
+	    // variables needed for tallying hourly counts and calculating radon
+            int tenMinuteCounter = 0; //3 // used to determine when to stow away hourly count values
+	    LinkedList<CountContainer> AllHourlyCounts = new LinkedList(); // list which will hold groups of hourly counts
+	    int ch1Counter = 0;
+	    int ch2Counter = 0;
+	    double avgResult1 = 0;
+	    double avgResult2 = 0;
+
+	    // these are used for numerical formats at the final stage of writing to text
+	    // the DecimalFormat object has the ability to set properties such as rounding up or down
+	    // investigate later if we need more precision or if something is wrong
+	    DecimalFormat df = new DecimalFormat("#.#"); // decimal formatting object
+	    DecimalFormat si = new DecimalFormat("#");
+
 	    //End declarations
             
             Thread.sleep(10);
@@ -369,6 +384,10 @@ public class ScanComm {
                     TempYear = 2000 + Integer.parseInt(DeviceResponse_parsed[3]);
                     StartDate = LocalDateTime.of(TempYear, Integer.parseInt(DeviceResponse_parsed[4]), Integer.parseInt(DeviceResponse_parsed[5]), Integer.parseInt(DeviceResponse_parsed[6]), Integer.parseInt(DeviceResponse_parsed[7]), Integer.parseInt(DeviceResponse_parsed[8]));
                 }
+
+		if (DeviceResponse_parsed[2].equals("I"))
+		    tenMinuteCounter++;
+
                 if(DeviceResponse_parsed[2].equals("E")){
                     TempYear = 2000 + Integer.parseInt(DeviceResponse_parsed[3]);
                     EndDate = LocalDateTime.of(TempYear, Integer.parseInt(DeviceResponse_parsed[4]), Integer.parseInt(DeviceResponse_parsed[5]), Integer.parseInt(DeviceResponse_parsed[6]), Integer.parseInt(DeviceResponse_parsed[7]), Integer.parseInt(DeviceResponse_parsed[8]));
@@ -382,6 +401,21 @@ public class ScanComm {
                     AvgPressure = (AvgPressure + Double.parseDouble(DeviceResponse_parsed[18]));
                     AvgTemperature = (AvgTemperature + Double.parseDouble(DeviceResponse_parsed[21]));
                     //System.out.println("AvgHum=" + AvgHumidity + ", AvgPress=" + AvgPressure + ", AvgTemp=" + AvgTemperature);
+
+		    // section of code to tally counts and push hourly values into linked list for later analysis
+		    // if (!LTMode) - do not forget this won't work for LT mode!
+		    ch1Counter += Integer.parseInt(DeviceResponse_parsed[10]);
+		    ch2Counter += Integer.parseInt(DeviceResponse_parsed[11]);
+
+		    if (tenMinuteCounter == 6)
+		    {
+			AllHourlyCounts.addLast(new CountContainer(ch1Counter, ch2Counter)); // add new grouping of hourly totals to the list
+
+			// clear chamber counters
+			ch1Counter = 0;
+			ch2Counter = 0;
+			tenMinuteCounter = 0;
+		    }
                 }
                 
                 Thread.sleep(10);
@@ -403,7 +437,6 @@ public class ScanComm {
                     if((DeviceResponse_parsed[2].equals("S"))||(DeviceResponse_parsed[2].equals("I"))){
                         i++;
                     }
-                    System.out.println(i);
                     Recon_RecordNumber = new Number(0, rows_total, Long.parseLong(DeviceResponse_parsed[1]));
                     sheet.addCell(Recon_RecordNumber);
                     Recon_Flag = new Label(1, rows_total, DeviceResponse_parsed[2]);
@@ -533,12 +566,56 @@ public class ScanComm {
                 writer.println("Avg. Humidity = " + RoundAvg.format(AvgHumidity/ActiveRecordCounts) + "%");
                 writer.println("Avg. Pressure = " + RoundAvg.format(AvgPressure/ActiveRecordCounts) + " mmHg");
                 writer.println("Avg. Temperature = " + RoundAvg.format(AvgTemperature/ActiveRecordCounts) + "C");
-		writer.println("Chamber 1 avg pCi/L = ");
-		writer.println("Chamber 2 avg pCi/L = ");
-		writer.println("Average pCi/L = ");
-	    }
-            
-            writer.close();
+		writer.println("Chamber 1 CF: " + Double.toString(CF1));
+		writer.println("Chamber 2 CF: " + Double.toString(CF2));
+		writer.println("\n");
+
+		// get size of AllHourlyCounts
+		// for size, perform =
+                for (int loopCount1 = 0; loopCount1 < AllHourlyCounts.size(); loopCount1++) {
+
+		    if (MainMenuUI.unitType == "US") {
+		        writer.println("Hour: (pCi/L)" + (Integer.toString(loopCount1)));
+
+		        // if the result is a whole number, df.format will not show the .0 - fix later if necessary
+		        writer.println("Ch1: " + df.format((double)AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1) + " Ch2: " + df.format((double)AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2));
+		    }
+		    else { // assuming SI
+		        writer.println("Hour: (Bq/M3)" + (Integer.toString(loopCount1)));
+
+		        // if the result is a whole number, df.format will not show the .0 - fix later if necessary
+		        writer.println("Ch1: " + si.format((double)AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1 * 37) + " Ch2: " + si.format((double)AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2 * 37));
+		    }
+
+	        }
+
+		// perform averaging of results
+		// first summing
+		for (int loopCount2 = 0; loopCount2 < AllHourlyCounts.size(); loopCount2++) {
+		    avgResult1 += (AllHourlyCounts.get(loopCount2).getCh1HourlyCount() / CF1);
+		    avgResult2 += (AllHourlyCounts.get(loopCount2).getCh2HourlyCount() / CF2);
+		}
+
+		// then dividing
+		avgResult1 = avgResult1 / (double)AllHourlyCounts.size();
+		avgResult2 = avgResult2 / (double)AllHourlyCounts.size();
+
+		writer.println("\n");
+
+		if (MainMenuUI.unitType == "US") {
+		    writer.println("Chamber 1 Avg pCi/L = " + df.format((double)avgResult1));
+		    writer.println("Chamber 2 Avg pCi/L = " + df.format((double)avgResult2));
+		    writer.println("Average pCi/L = " + df.format((double)(avgResult1 + avgResult2) / 2));
+		}
+		else {
+		    writer.println("Chamber 1 bQ/M3 = " + si.format((double)(avgResult1 * 37)));
+		    writer.println("Chamber 2 bQ/M3 = " + si.format((double)(avgResult2 * 37)));
+		    writer.println("Average bQ/M3 = " + si.format((double)(avgResult1 + avgResult2) / 2 * 37));
+		}
+
+		} // end user-mode-only actions
+
+		writer.close();
 
 	    if (MainMenuUI.diagnosticMode) {
                 XLfile.write();
@@ -548,6 +625,7 @@ public class ScanComm {
             MainMenuUI.displayProgressLabel("TXT/XLS files created.");
             System.out.println("TXT/XLS files created.");
         }
+
         catch (InterruptedException ex) {
             System.out.println(ex);
         }
