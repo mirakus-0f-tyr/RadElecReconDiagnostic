@@ -608,8 +608,8 @@ public class ScanComm {
 		    writer.println("Average pCi/L = " + df.format((double)(avgResult1 + avgResult2) / 2));
 		}
 		else {
-		    writer.println("Chamber 1 bQ/M3 = " + si.format((double)(avgResult1 * 37)));
-		    writer.println("Chamber 2 bQ/M3 = " + si.format((double)(avgResult2 * 37)));
+		    writer.println("Chamber 1 Avg bQ/M3 = " + si.format((double)(avgResult1 * 37)));
+		    writer.println("Chamber 2 Avg bQ/M3 = " + si.format((double)(avgResult2 * 37)));
 		    writer.println("Average bQ/M3 = " + si.format((double)(avgResult1 + avgResult2) / 2 * 37));
 		}
 
