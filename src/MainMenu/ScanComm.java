@@ -305,8 +305,8 @@ public class ScanComm {
 	    // these are used for numerical formats at the final stage of writing to text
 	    // the DecimalFormat object has the ability to set properties such as rounding up or down
 	    // investigate later if we need more precision or if something is wrong
-	    DecimalFormat df = new DecimalFormat("#.#"); // decimal formatting object
-	    DecimalFormat si = new DecimalFormat("#");
+	    DecimalFormat df = new DecimalFormat("0.0"); // decimal formatting object
+	    DecimalFormat si = new DecimalFormat("0");
 
 	    //End declarations
             
@@ -570,21 +570,28 @@ public class ScanComm {
 		writer.println("Chamber 2 CF: " + Double.toString(CF2));
 		writer.println("\n");
 
+		writer.println("Radon Concentration");
+
+                if (MainMenuUI.unitType == "US")
+		    writer.println("Unit: pCi/L");
+		else
+		    writer.println("Unit: bQ/M3");
+
 		// get size of AllHourlyCounts
 		// for size, perform =
                 for (int loopCount1 = 0; loopCount1 < AllHourlyCounts.size(); loopCount1++) {
 
 		    if (MainMenuUI.unitType == "US") {
-		        writer.println("Hour: (pCi/L)" + (Integer.toString(loopCount1)));
+		        writer.println("Hour: " + (Integer.toString(loopCount1)));
 
 		        // if the result is a whole number, df.format will not show the .0 - fix later if necessary
-		        writer.println("Ch1: " + df.format((double)AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1) + " Ch2: " + df.format((double)AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2));
+		        writer.println("Ch1: " + df.format((double)AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1) + "\tCh2: " + df.format((double)AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2));
 		    }
 		    else { // assuming SI
-		        writer.println("Hour: (Bq/M3)" + (Integer.toString(loopCount1)));
+		        writer.println("Hour: " + (Integer.toString(loopCount1)));
 
 		        // if the result is a whole number, df.format will not show the .0 - fix later if necessary
-		        writer.println("Ch1: " + si.format((double)AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1 * 37) + " Ch2: " + si.format((double)AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2 * 37));
+		        writer.println("Ch1: " + si.format((double)AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1 * 37) + "\tCh2: " + si.format((double)AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2 * 37));
 		    }
 
 	        }
