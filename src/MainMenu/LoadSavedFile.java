@@ -25,6 +25,10 @@ import org.apache.commons.lang3.StringUtils;
 public class LoadSavedFile {
     
     public static ArrayList<ArrayList<String>> LoadedReconTXTFile = new ArrayList<>(); //This ArrayList will be used to build the chart, and is populated when loading the file.
+    public static double LoadedReconCF1 = 6;
+    public static double LoadedReconCF2 = 6;
+    public static ArrayList<Double> LoadedReconTXTFile_Ch1RnC; //This array will store Ch1RnC
+    public static ArrayList<Double> LoadedReconTXTFile_Ch2RnC; //This array will store Ch2RnC
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -52,10 +56,28 @@ public class LoadSavedFile {
                         System.out.println("Checking Status: "+ Arrays.toString(LoadedReconTXTFile.get(i).toArray()));
                         i++;
                     }
+                    if(strLine.contains("Chamber 1 CF: ")) {
+                        strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
+                        LoadedReconCF1 = Double.parseDouble(strLine_parsed[3]);
+                        System.out.println("CF1 found and parsed: " + LoadedReconCF1);
+                    }
+                    if(strLine.contains("Chamber 2 CF: ")) {
+                        strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
+                        LoadedReconCF2 = Double.parseDouble(strLine_parsed[3]);
+                        System.out.println("CF2 found and parsed: " + LoadedReconCF2);
+                    }
+                    if(strLine.contains("Ch1: ")) {
+                        //strLine_parsed = StringUtils.split(strLine, "\\t"); //Parses both spaces and tabs for this line.
+                        //System.out.println("CH1 Array: " + strLine_parsed[0]);
+                        //LoadedReconTXTFile_Ch1RnC.add(Double.parseDouble(strLine_parsed[1]));
+                    }
+                    if(strLine.contains("Ch2: ")) {
+                        //strLine_parsed = StringUtils.split(strLine.trim(), "\\s+"); //Parses both spaces and tabs for this line.
+                        //LoadedReconTXTFile_Ch2RnC.add(Double.parseDouble(strLine_parsed[3]));
+                    }
                 }
             }
-            //System.out.println("TEST QUERY: "+Arrays.toString(LoadedReconTXTFile.toArray()));
-            //System.out.println("ArrayList has a total size of "+LoadedReconTXTFile.size());
+
             br.close();
             
             //Creates graph
