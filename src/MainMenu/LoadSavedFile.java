@@ -41,6 +41,9 @@ public class LoadSavedFile {
         
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ReconTXTFile)));
+            
+            LoadedReconTXTFile.clear(); //We should definitely clear this each time a file is loaded, or else it will continue to grow...
+            
             for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
                 if(strLine.length()>0) { //If the line is blank, then we definitely don't want to try to split the string.
                     strLine_parsed = StringUtils.split(strLine, ","); //splits strLine into the strLine_parsed[] string array.
