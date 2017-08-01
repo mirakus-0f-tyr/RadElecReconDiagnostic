@@ -540,6 +540,8 @@ public class ScanComm {
                 writer.println("Avg. Temperature = " + RoundAvg.format(AvgTemperature/ActiveRecordCounts) + "C");
                 writer.println("Instrument Wait Setting = " + ReconWaitTime);
                 writer.println("Instrument Duration Setting = " + ReconDurationSetting);
+		writer.println("Chamber 1 CF: " + Double.toString(CF1));
+		writer.println("Chamber 2 CF: " + Double.toString(CF2));
             }
 
 	    // or this if we're in regular user mode
