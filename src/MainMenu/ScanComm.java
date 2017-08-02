@@ -305,7 +305,10 @@ public class ScanComm {
 	    // these are used for numerical formats at the final stage of writing to text
 	    // the DecimalFormat object has the ability to set properties such as rounding up or down
 	    // investigate later if we need more precision or if something is wrong
-	    DecimalFormat df = new DecimalFormat("0.0"); // decimal formatting object
+	    DecimalFormat cfDec = new DecimalFormat("0.000"); // decimal format for calibration factors
+
+	    // decimal formats for radon concentration
+	    DecimalFormat df = new DecimalFormat("0.0");
 	    DecimalFormat si = new DecimalFormat("0");
 
 	    //End declarations
@@ -540,8 +543,8 @@ public class ScanComm {
                 writer.println("Avg. Temperature = " + RoundAvg.format(AvgTemperature/ActiveRecordCounts) + "C");
                 writer.println("Instrument Wait Setting = " + ReconWaitTime);
                 writer.println("Instrument Duration Setting = " + ReconDurationSetting);
-		writer.println("Chamber 1 CF: " + Double.toString(CF1));
-		writer.println("Chamber 2 CF: " + Double.toString(CF2));
+		writer.println("Chamber 1 CF: " + cfDec.format(CF1));
+		writer.println("Chamber 2 CF: " + cfDec.format(CF2));
             }
 
 	    // or this if we're in regular user mode
@@ -568,8 +571,8 @@ public class ScanComm {
                 writer.println("Avg. Humidity = " + RoundAvg.format(AvgHumidity/ActiveRecordCounts) + "%");
                 writer.println("Avg. Pressure = " + RoundAvg.format(AvgPressure/ActiveRecordCounts) + " mmHg");
                 writer.println("Avg. Temperature = " + RoundAvg.format(AvgTemperature/ActiveRecordCounts) + "C");
-		writer.println("Chamber 1 CF: " + Double.toString(CF1));
-		writer.println("Chamber 2 CF: " + Double.toString(CF2));
+		writer.println("Chamber 1 CF: " + cfDec.format(CF1));
+		writer.println("Chamber 2 CF: " + cfDec.format(CF2));
 		writer.println("\n");
 
 		writer.println("Radon Concentration");
