@@ -29,6 +29,9 @@ public class LoadSavedFile {
     public static double LoadedReconCF2 = 6;
     public static ArrayList<Double> LoadedReconTXTFile_Ch1RnC; //This array will store Ch1RnC
     public static ArrayList<Double> LoadedReconTXTFile_Ch2RnC; //This array will store Ch2RnC
+    public static String strTestSiteInfo = "";
+    public static String strStartDate = "Unknown Start Date";
+    public static String strEndDate = "Unknown End Date";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -36,6 +39,7 @@ public class LoadSavedFile {
         ArrayList<String> arrLine = new ArrayList<>();
         ArrayList<String> arrLine_temp = new ArrayList<>();
         String[] strLine_parsed;
+        boolean testSiteFlag = false;
         int i = 0;
         
         
@@ -78,6 +82,35 @@ public class LoadSavedFile {
                         //strLine_parsed = StringUtils.split(strLine.trim(), "\\s+"); //Parses both spaces and tabs for this line.
                         //LoadedReconTXTFile_Ch2RnC.add(Double.parseDouble(strLine_parsed[3]));
                     }
+                    if(strLine.contains("Start Date/Time:")) {
+                        strLine_parsed = StringUtils.split(strLine, " ");
+                        strStartDate = strLine_parsed[2] + " " + strLine_parsed[3];
+                    }
+                    if(strLine.contains("End Date/Time:")) {
+                        strLine_parsed = StringUtils.split(strLine, " ");
+                        strEndDate = strLine_parsed[2] + " " + strLine_parsed[3];
+                    }
+                    //BEGIN: Test Site Parsing Block
+                    if(testSiteFlag) {
+                        if(strLine.contains("Start Date/Time:")) {
+                            testSiteFlag = false;
+                            if (strTestSiteInfo.length() > 1) {
+                                strTestSiteInfo = strTestSiteInfo.trim(); //trim any anteceding or succeeding line-feeds...
+                                System.out.println("Test Site Info: " + strTestSiteInfo);
+                            } else {
+                                System.out.println("Unable to find any Test Site Info in " + MainMenu.MainMenuUI.lblLoadedFileName.getText() + "!");
+                            }
+                        } else {
+                            strTestSiteInfo = strTestSiteInfo + "\n" + strLine;
+                        }
+                    }
+                    if(strLine.contains("Test site:")) { //if we find this, then we know that our test site info will be in the next line.
+                        testSiteFlag = true;
+                    }
+                    //END: Test Site Parsing Block
+                   
+                    //Display Main Menu Console label
+                    MainMenu.MainMenuUI.lblSystemConsole.setText("File successfully loaded.");
                 }
             }
 

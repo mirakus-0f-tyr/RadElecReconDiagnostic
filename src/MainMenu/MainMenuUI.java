@@ -29,7 +29,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.5.6";
+    public static String version = "v0.5.14";
     
     //Old variables
     String[] SNandCF;
@@ -474,7 +474,8 @@ public class MainMenuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnOpenSavedFileActionPerformed
 
     private void btnGeneratePDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeneratePDFActionPerformed
-        // TODO add your handling code here:
+        GeneratePDF worker = new GeneratePDF();
+        worker.execute();
     }//GEN-LAST:event_btnGeneratePDFActionPerformed
 
     private void btnEraseReconDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEraseReconDataActionPerformed
@@ -795,6 +796,26 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       btnEraseReconData.setEnabled(false);
       System.out.println("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
+      btnDownloadSession.setEnabled(true);
+      btnOpenSavedFile.setEnabled(true);
+      btnGeneratePDF.setEnabled(true);
+      btnEraseReconData.setEnabled(true);
+
+      return null;
+    }
+}
+
+private class GeneratePDF extends SwingWorker<Void, Void>{
+    @Override
+    protected Void doInBackground() throws Exception {
+      // some buttons may be missed - check later
+
+      btnDownloadSession.setEnabled(false);
+      btnOpenSavedFile.setEnabled(false);
+      btnGeneratePDF.setEnabled(false);
+      btnEraseReconData.setEnabled(false);
+      System.out.println("Generate PDF button pressed.");
+      CreatePDF.main();
       btnDownloadSession.setEnabled(true);
       btnOpenSavedFile.setEnabled(true);
       btnGeneratePDF.setEnabled(true);
