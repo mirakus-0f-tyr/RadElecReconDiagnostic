@@ -14,6 +14,7 @@ import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
+import java.io.File;
 import java.time.temporal.ChronoUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -22,6 +23,7 @@ import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.panel.CrosshairOverlay;
@@ -55,6 +57,7 @@ public class CreateGraph extends JFrame {
         public MyDemoPanel() {
             super(new BorderLayout());
             JFreeChart chart = createChart(createDataset());
+            SaveGraph(chart);
             this.chartPanel = new ChartPanel(chart);
             this.chartPanel.addChartMouseListener(this);
             CrosshairOverlay crosshairOverlay = new CrosshairOverlay();
@@ -212,6 +215,15 @@ public class CreateGraph extends JFrame {
                 app.setVisible(true);
             }
         });
+    }
+    
+    public static void SaveGraph(JFreeChart chart) {
+        try {
+            ChartUtilities.saveChartAsJPEG(new File("graph.jpg"), chart, 500, 300);
+        }
+        catch (Exception ex) {
+            System.out.println("ERROR: Cannot externalize graph to JPG image.");
+        }
     }
 
 }
