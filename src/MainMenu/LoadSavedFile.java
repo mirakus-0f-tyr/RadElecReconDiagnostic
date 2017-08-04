@@ -5,6 +5,8 @@
  */
 package MainMenu;
 
+import Config.Config;
+
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -32,6 +34,7 @@ public class LoadSavedFile {
     public static String strTestSiteInfo = "";
     public static String strStartDate = "Unknown Start Date";
     public static String strEndDate = "Unknown End Date";
+    public static String strUnitSystem = "US";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -44,6 +47,10 @@ public class LoadSavedFile {
         
         
         try {
+            
+            Config getUnits = new Config();
+            strUnitSystem = getUnits.findUnitSystem();
+            
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ReconTXTFile)));
             
             LoadedReconTXTFile.clear(); //We should definitely clear this each time a file is loaded, or else it will continue to grow...
@@ -72,15 +79,6 @@ public class LoadSavedFile {
                         strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
                         LoadedReconCF2 = Double.parseDouble(strLine_parsed[3]);
                         System.out.println("CF2 found and parsed: " + LoadedReconCF2);
-                    }
-                    if(strLine.contains("Ch1: ")) {
-                        //strLine_parsed = StringUtils.split(strLine, "\\t"); //Parses both spaces and tabs for this line.
-                        //System.out.println("CH1 Array: " + strLine_parsed[0]);
-                        //LoadedReconTXTFile_Ch1RnC.add(Double.parseDouble(strLine_parsed[1]));
-                    }
-                    if(strLine.contains("Ch2: ")) {
-                        //strLine_parsed = StringUtils.split(strLine.trim(), "\\s+"); //Parses both spaces and tabs for this line.
-                        //LoadedReconTXTFile_Ch2RnC.add(Double.parseDouble(strLine_parsed[3]));
                     }
                     if(strLine.contains("Start Date/Time:")) {
                         strLine_parsed = StringUtils.split(strLine, " ");

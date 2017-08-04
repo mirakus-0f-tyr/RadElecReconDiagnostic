@@ -8,6 +8,7 @@ package MainMenu;
 import static MainMenu.LoadSavedFile.LoadedReconTXTFile;
 import static MainMenu.LoadSavedFile.LoadedReconCF1;
 import static MainMenu.LoadSavedFile.LoadedReconCF2;
+import static MainMenu.LoadSavedFile.strUnitSystem;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.BasicStroke;
@@ -106,17 +107,25 @@ public class CreateGraph extends JFrame {
             XYPlot plot = new XYPlot();
             plot.setDataset(0, dataset[0]); //Radon Concentration Series
             plot.setDataset(1, dataset[1]); //Humidity Series
+            plot.setDataset(2, dataset[2]); //Temperature Series
+            plot.setDataset(3, dataset[3]); //Pressure Series
             
             XYSplineRenderer spline_radon = new XYSplineRenderer();
             XYSplineRenderer spline_humidity = new XYSplineRenderer();
+            XYSplineRenderer spline_temp = new XYSplineRenderer();
+            XYSplineRenderer spline_press = new XYSplineRenderer();
             
             //Sets the plot for each dataset
             plot.setRenderer(0, spline_radon);
             plot.setRenderer(1, spline_humidity);
+            plot.setRenderer(2, spline_temp);
+            plot.setRenderer(3, spline_press);
             
             //Hides the hourly data points from the graph
             spline_radon.setShapesVisible(false);
             spline_humidity.setShapesVisible(false);
+            spline_temp.setShapesVisible(false);
+            spline_press.setShapesVisible(false);
             
             if(MainMenu.MainMenuUI.diagnosticMode) {
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN); //Ch. 1 Concenration Dataset = green
@@ -126,13 +135,33 @@ public class CreateGraph extends JFrame {
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.DARK_GRAY); //Avg. Radon Concenration Dataset = dark grey
             }
             plot.getRendererForDataset(plot.getDataset(1)).setSeriesPaint(0, Color.BLUE); //Humidity Dataset = blue
+            plot.getRendererForDataset(plot.getDataset(2)).setSeriesPaint(0, Color.RED); //Temperature Dataset = red
+            plot.getRendererForDataset(plot.getDataset(3)).setSeriesPaint(0, Color.ORANGE); //Pressure Dataset = green
             
-            plot.setRangeAxis(0, new NumberAxis("pCi/L"));
+            //Define Domain (x) axis and Range (y) axes.
+            if(strUnitSystem.equals("SI")) {
+                plot.setRangeAxis(0, new NumberAxis("Bq/m³"));
+                plot.setRangeAxis(2, new NumberAxis("Temperature (°C)"));
+                plot.setRangeAxis(3, new NumberAxis("Pressure (mbar)"));
+            } else {
+                plot.setRangeAxis(0, new NumberAxis("pCi/L"));
+                plot.setRangeAxis(2, new NumberAxis("Temperature (°F)"));
+                plot.setRangeAxis(3, new NumberAxis("Pressure (inHg)"));
+            }
             plot.setRangeAxis(1, new NumberAxis("%Humidity"));
             plot.setDomainAxis(new NumberAxis("Elapsed Time (Hours)"));
             
+            //Map each dataset to its unique y-axis / range.
             plot.mapDatasetToRangeAxis(0, 0);
             plot.mapDatasetToRangeAxis(1, 1);
+            plot.mapDatasetToRangeAxis(2, 2);
+            plot.mapDatasetToRangeAxis(3, 3);
+            
+            //Set Y-Axis (range) label colors, after the ranges have been mapped.
+            plot.getRangeAxis(0).setLabelPaint(Color.DARK_GRAY); //Radon
+            plot.getRangeAxis(1).setLabelPaint(Color.BLUE); //Humidity
+            plot.getRangeAxis(2).setLabelPaint(Color.RED); //Temperature
+            plot.getRangeAxis(3).setLabelPaint(Color.ORANGE); //Pressure
             
             JFreeChart chart = new JFreeChart("Radon Concentration", getFont(), plot, true);
             chart.setBackgroundPaint(Color.white);
@@ -144,7 +173,9 @@ public class CreateGraph extends JFrame {
             //Variable Declarations
             XYSeriesCollection datasetRadon = new XYSeriesCollection();
             XYSeriesCollection datasetHumidity = new XYSeriesCollection();
-            XYSeriesCollection[] datasetArray = {new XYSeriesCollection(), new XYSeriesCollection()};
+            XYSeriesCollection datasetTemp = new XYSeriesCollection();
+            XYSeriesCollection datasetPress = new XYSeriesCollection();
+            XYSeriesCollection[] datasetArray = {new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection()};
             
             DateTimeFormatter DateTimeDisplay = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
             LocalDateTime ReconDate = null;
@@ -152,6 +183,8 @@ public class CreateGraph extends JFrame {
             long Ch1Counts = 0;
             long Ch2Counts = 0;
             double hourlyAvgHumidity = 0;
+            double hourlyAvgTemp = 0;
+            double hourlyAvgPress = 0;
             int TempYear = 0;
             long diffMinutes = 0;
             long tempCounts_Ch1 = 0;
@@ -164,10 +197,21 @@ public class CreateGraph extends JFrame {
             //System.out.println("Query validity of array: "+ Arrays.toString(LoadedReconTXTFile.toArray()));
             
             //Create RnC series for each chamber...
-                XYSeries Ch1_Series = new XYSeries("Ch1_RnC");
-                XYSeries Ch2_Series = new XYSeries("Ch2_RnC");
-                XYSeries AvgRnC_Series = new XYSeries("Avg. Radon Concentration");
-                XYSeries AvgHumidity_Series = new XYSeries("%Humidity");
+            XYSeries Ch1_Series = new XYSeries("Ch1_RnC");
+            XYSeries Ch2_Series = new XYSeries("Ch2_RnC");
+            XYSeries AvgRnC_Series = new XYSeries("Avg. Radon Concentration");
+            XYSeries AvgHumidity_Series = new XYSeries("%Humidity");
+            XYSeries AvgTemp_Series = new XYSeries("Temperature");
+            XYSeries AvgPress_Series = new XYSeries("Pressure");
+            
+            //Confirm whether we're in SI/US Units
+            if(strUnitSystem.equals("SI")) {
+                System.out.println("SI Units detected in Config for graph.");
+            } else if(strUnitSystem.equals("US")) {
+                System.out.println("US Units detected in Config for graph.");
+            } else {
+                System.out.println("No units detected in Config for graph... defaulting to US.");
+            }
             
             //Iterate through the ArrayList, to build each series.
             for(int arrayCounter = 0; arrayCounter < LoadedReconTXTFile.size(); arrayCounter++) {
@@ -185,6 +229,8 @@ public class CreateGraph extends JFrame {
                     Ch1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10)); //pull Chamber #1 counts from LoadedReconTXTFile ArrayList
                     Ch2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(11)); //pull Chamber #2 counts from LoadedReconTXTFile ArrayList
                     hourlyAvgHumidity = hourlyAvgHumidity + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(15)); //pull average humidity...
+                    hourlyAvgTemp = hourlyAvgTemp + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(21)); //pull average temperature (Celsius units)...
+                    hourlyAvgPress = hourlyAvgPress + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(18)); //pull average barometric pressure (mbar units)...
                     
                     avgCounter++; //we need this in order to calculate hourly averages for humidity, temperature, pressure, etc.
                     
@@ -216,16 +262,30 @@ public class CreateGraph extends JFrame {
                             //Increase our hour counter (temporary until we figure out x-axis dates)
                             hourCounter++;
                             
-                            //Add values to series
-                            Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
-                            Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2));
-                            AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //This will calculate hourly average of both chambers
+                            //Add values to series independent of unitType (i.e. humidity and movement)
                             AvgHumidity_Series.add(hourCounter, hourlyAvgHumidity / avgCounter); //This will calculate hourly average humidity
                             
+                            //Add values to series that are dependent upon unitType
+                            if(strUnitSystem.equals("SI")) {
+                                Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1)*37);
+                                Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2)*37);
+                                AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //This will calculate hourly average of both chambers (in Bq/m3)
+                                AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter)); //This will calculate hourly average temperature (in Celsius)
+                                AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
+                            } else {
+                                Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
+                                Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2));
+                                AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //This will calculate hourly average of both chambers
+                                AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter) * (9/5) + 32); //This will calculate hourly average temperature (in Fahrenheit)
+                                AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
+                            }
+
                             //Reset the temporary chamber counts
                             tempCounts_Ch1 = 0;
                             tempCounts_Ch2 = 0;
                             hourlyAvgHumidity = 0;
+                            hourlyAvgTemp = 0;
+                            hourlyAvgPress = 0;
                             avgCounter = 0; //also reset avgCounter, as we just calculated average humidity, temperature, pressure, etc.
                             
                         }                   
@@ -243,9 +303,13 @@ public class CreateGraph extends JFrame {
                 datasetRadon.addSeries(AvgRnC_Series);
             }
             datasetHumidity.addSeries(AvgHumidity_Series); //always add humidity
+            datasetTemp.addSeries(AvgTemp_Series); //always add temperature
+            datasetPress.addSeries(AvgPress_Series); //always add pressure
         
         datasetArray[0] = datasetRadon;
         datasetArray[1] = datasetHumidity;
+        datasetArray[2] = datasetTemp;
+        datasetArray[3] = datasetPress;
         
         return datasetArray;
         }
@@ -261,10 +325,7 @@ public class CreateGraph extends JFrame {
             Rectangle2D dataArea = this.chartPanel.getScreenDataArea();
             JFreeChart chart = event.getChart();
             XYPlot plot = (XYPlot) chart.getPlot();
-            XYPlot plot2 = (XYPlot) chart.getPlot();
             ValueAxis xAxis = plot.getDomainAxis();
-            ValueAxis xAxis2 = plot.getDomainAxisForDataset(1);
-            
             //System.out.println("Crosshair plot domain_axis count = " + plot.getDomainAxisCount());
             //System.out.println("Crosshair plot range axis count = " + plot.getRangeAxisCount());
             //System.out.println("Total dataset count = " + plot.getDatasetCount());
@@ -273,10 +334,17 @@ public class CreateGraph extends JFrame {
             
             //This nonsense makes sure that we're only displaying to 1 decimal point for the radon concentration
             NumberFormat yCrossHairNumberFormat = NumberFormat.getInstance();
-            yCrossHairNumberFormat.setMinimumFractionDigits(1);
-            yCrossHairNumberFormat.setMaximumFractionDigits(1);
             yCrossHairNumberFormat.setMinimumIntegerDigits(1);
-            StandardCrosshairLabelGenerator yCrosshairLabel = new StandardCrosshairLabelGenerator("{0} pCi/L", yCrossHairNumberFormat);
+            StandardCrosshairLabelGenerator yCrosshairLabel;
+            if(strUnitSystem.equals("SI")) {
+                yCrossHairNumberFormat.setMinimumFractionDigits(0);
+                yCrossHairNumberFormat.setMaximumFractionDigits(0);
+                yCrosshairLabel = new StandardCrosshairLabelGenerator("{0} Bq/m³", yCrossHairNumberFormat);
+            } else {
+                yCrossHairNumberFormat.setMinimumFractionDigits(1);
+                yCrossHairNumberFormat.setMaximumFractionDigits(1);
+                yCrosshairLabel = new StandardCrosshairLabelGenerator("{0} pCi/L", yCrossHairNumberFormat);
+            }
             //Humidity Crosshair Number Format
             NumberFormat humidityCrossHairNumberFormat = NumberFormat.getInstance();
             humidityCrossHairNumberFormat.setMinimumFractionDigits(0);
@@ -284,13 +352,8 @@ public class CreateGraph extends JFrame {
             humidityCrossHairNumberFormat.setMinimumIntegerDigits(1);
             StandardCrosshairLabelGenerator humidityCrosshairLabel = new StandardCrosshairLabelGenerator("{0}%RH", humidityCrossHairNumberFormat);
             
-            double x = xAxis.java2DToValue(event.getTrigger().getX(), dataArea, 
-                    RectangleEdge.BOTTOM);
+            double x = xAxis.java2DToValue(event.getTrigger().getX(), dataArea, RectangleEdge.BOTTOM);
             this.xCrosshair.setValue(x);
-            
-            double x2 = xAxis2.java2DToValue(event.getTrigger().getX(), dataArea, 
-                    RectangleEdge.BOTTOM);
-            this.xCrosshair.setValue(x2);
             
             //This is only for the radon concentration (which could have more than one series)
             for (int i = 0; i < SERIES_COUNT; i++) {
@@ -300,9 +363,9 @@ public class CreateGraph extends JFrame {
             }
             
             //This is for humidity series
-            double y2 = DatasetUtilities.findYValue(plot2.getDataset(1), 0, x2);
-            this.yCrosshairs[SERIES_COUNT].setLabelGenerator(humidityCrosshairLabel);
-            this.yCrosshairs[SERIES_COUNT].setValue(y2); //Humidity index should always equate to SERIES_COUNT
+            //double y2 = DatasetUtilities.findYValue(plot.getDataset(1), 0, x); //this *SHOULD* work, but it looks like a bug in jFreeChart (see Github)
+            //this.yCrosshairs[SERIES_COUNT].setLabelGenerator(humidityCrosshairLabel);
+            //this.yCrosshairs[SERIES_COUNT].setValue(y2); //Humidity index should always equate to SERIES_COUNT
             //System.out.println("Avg. Humidity = " + this.yCrosshairs[SERIES_COUNT].getValue());
 
         }
