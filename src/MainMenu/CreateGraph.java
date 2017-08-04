@@ -16,6 +16,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
+import java.text.DecimalFormat;
 import java.time.temporal.ChronoUnit;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -28,11 +29,14 @@ import org.jfree.chart.ChartPanel;
 import org.jfree.chart.ChartUtilities;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.NumberAxis;
+import org.jfree.chart.axis.NumberTickUnit;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.StandardCrosshairLabelGenerator;
 import org.jfree.chart.panel.CrosshairOverlay;
 import org.jfree.chart.plot.Crosshair;
 import org.jfree.chart.plot.XYPlot;
+import org.jfree.chart.renderer.xy.StandardXYBarPainter;
+import org.jfree.chart.renderer.xy.XYBarRenderer;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.xy.XYDataset;
@@ -109,23 +113,30 @@ public class CreateGraph extends JFrame {
             plot.setDataset(1, dataset[1]); //Humidity Series
             plot.setDataset(2, dataset[2]); //Temperature Series
             plot.setDataset(3, dataset[3]); //Pressure Series
+            plot.setDataset(4, dataset[4]); //Movement Series
             
             XYSplineRenderer spline_radon = new XYSplineRenderer();
             XYSplineRenderer spline_humidity = new XYSplineRenderer();
             XYSplineRenderer spline_temp = new XYSplineRenderer();
             XYSplineRenderer spline_press = new XYSplineRenderer();
+            XYBarRenderer bar_movement = new XYBarRenderer();
             
             //Sets the plot for each dataset
             plot.setRenderer(0, spline_radon);
             plot.setRenderer(1, spline_humidity);
             plot.setRenderer(2, spline_temp);
             plot.setRenderer(3, spline_press);
+            plot.setRenderer(4, bar_movement);
             
             //Hides the hourly data points from the graph
             spline_radon.setShapesVisible(false);
             spline_humidity.setShapesVisible(false);
             spline_temp.setShapesVisible(false);
             spline_press.setShapesVisible(false);
+            bar_movement.setShadowVisible(false); //no shadows for the bar; they look tacky.
+            bar_movement.setDrawBarOutline(false);
+            bar_movement.setBarPainter(new StandardXYBarPainter());
+            
             
             if(MainMenu.MainMenuUI.diagnosticMode) {
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN); //Ch. 1 Concenration Dataset = green
@@ -137,6 +148,7 @@ public class CreateGraph extends JFrame {
             plot.getRendererForDataset(plot.getDataset(1)).setSeriesPaint(0, Color.BLUE); //Humidity Dataset = blue
             plot.getRendererForDataset(plot.getDataset(2)).setSeriesPaint(0, Color.RED); //Temperature Dataset = red
             plot.getRendererForDataset(plot.getDataset(3)).setSeriesPaint(0, Color.ORANGE); //Pressure Dataset = green
+            plot.getRendererForDataset(plot.getDataset(4)).setSeriesPaint(0, Color.LIGHT_GRAY); //Movement Dataset = light grey
             
             //Define Domain (x) axis and Range (y) axes.
             if(strUnitSystem.equals("SI")) {
@@ -149,19 +161,31 @@ public class CreateGraph extends JFrame {
                 plot.setRangeAxis(3, new NumberAxis("Pressure (inHg)"));
             }
             plot.setRangeAxis(1, new NumberAxis("%Humidity"));
+            plot.setRangeAxis(4, new NumberAxis("Movement"));
             plot.setDomainAxis(new NumberAxis("Elapsed Time (Hours)"));
+            
+            //don't display decimal places on the Movement y-axis
+            NumberAxis rangeMovement = (NumberAxis)plot.getRangeAxis(4);
+            NumberFormat formatterMovement = DecimalFormat.getInstance();
+            formatterMovement.setMinimumFractionDigits(0);
+            formatterMovement.setMaximumFractionDigits(0);
+            rangeMovement.setNumberFormatOverride(formatterMovement);
+            rangeMovement.setTickUnit(new NumberTickUnit(1));
+            
             
             //Map each dataset to its unique y-axis / range.
             plot.mapDatasetToRangeAxis(0, 0);
             plot.mapDatasetToRangeAxis(1, 1);
             plot.mapDatasetToRangeAxis(2, 2);
             plot.mapDatasetToRangeAxis(3, 3);
+            plot.mapDatasetToRangeAxis(4, 4);
             
             //Set Y-Axis (range) label colors, after the ranges have been mapped.
             plot.getRangeAxis(0).setLabelPaint(Color.DARK_GRAY); //Radon
             plot.getRangeAxis(1).setLabelPaint(Color.BLUE); //Humidity
             plot.getRangeAxis(2).setLabelPaint(Color.RED); //Temperature
             plot.getRangeAxis(3).setLabelPaint(Color.ORANGE); //Pressure
+            plot.getRangeAxis(4).setLabelPaint(Color.LIGHT_GRAY); //Movement
             
             JFreeChart chart = new JFreeChart("Radon Concentration", getFont(), plot, true);
             chart.setBackgroundPaint(Color.white);
@@ -175,7 +199,8 @@ public class CreateGraph extends JFrame {
             XYSeriesCollection datasetHumidity = new XYSeriesCollection();
             XYSeriesCollection datasetTemp = new XYSeriesCollection();
             XYSeriesCollection datasetPress = new XYSeriesCollection();
-            XYSeriesCollection[] datasetArray = {new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection()};
+            XYSeriesCollection datasetMovement = new XYSeriesCollection();
+            XYSeriesCollection[] datasetArray = {new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection(), new XYSeriesCollection()};
             
             DateTimeFormatter DateTimeDisplay = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
             LocalDateTime ReconDate = null;
@@ -185,6 +210,7 @@ public class CreateGraph extends JFrame {
             double hourlyAvgHumidity = 0;
             double hourlyAvgTemp = 0;
             double hourlyAvgPress = 0;
+            long hourlyMovement = 0;
             int TempYear = 0;
             long diffMinutes = 0;
             long tempCounts_Ch1 = 0;
@@ -203,6 +229,7 @@ public class CreateGraph extends JFrame {
             XYSeries AvgHumidity_Series = new XYSeries("%Humidity");
             XYSeries AvgTemp_Series = new XYSeries("Temperature");
             XYSeries AvgPress_Series = new XYSeries("Pressure");
+            XYSeries Movement_Series = new XYSeries("Movement");
             
             //Confirm whether we're in SI/US Units
             if(strUnitSystem.equals("SI")) {
@@ -231,6 +258,7 @@ public class CreateGraph extends JFrame {
                     hourlyAvgHumidity = hourlyAvgHumidity + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(15)); //pull average humidity...
                     hourlyAvgTemp = hourlyAvgTemp + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(21)); //pull average temperature (Celsius units)...
                     hourlyAvgPress = hourlyAvgPress + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(18)); //pull average barometric pressure (mbar units)...
+                    hourlyMovement = hourlyMovement + Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(9)); //pull movements from ArrayList...
                     
                     avgCounter++; //we need this in order to calculate hourly averages for humidity, temperature, pressure, etc.
                     
@@ -265,6 +293,15 @@ public class CreateGraph extends JFrame {
                             //Add values to series independent of unitType (i.e. humidity and movement)
                             AvgHumidity_Series.add(hourCounter, hourlyAvgHumidity / avgCounter); //This will calculate hourly average humidity
                             
+                            //Movement Logic Handling
+                            //The Recon is too sensitive / high resolution when it comes to movements.
+                            //We need to tone them down.
+                            //If the hourlyMovements are less than 100, then let's flat-out ignore them.
+                            //Also, let's divide our final value by 100, and then truncate it.
+                            if(hourlyMovement>=100) {
+                                Movement_Series.add(hourCounter, Math.round(hourlyMovement/100));
+                            }
+                            
                             //Add values to series that are dependent upon unitType
                             if(strUnitSystem.equals("SI")) {
                                 Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1)*37);
@@ -286,6 +323,7 @@ public class CreateGraph extends JFrame {
                             hourlyAvgHumidity = 0;
                             hourlyAvgTemp = 0;
                             hourlyAvgPress = 0;
+                            hourlyMovement = 0;
                             avgCounter = 0; //also reset avgCounter, as we just calculated average humidity, temperature, pressure, etc.
                             
                         }                   
@@ -305,11 +343,13 @@ public class CreateGraph extends JFrame {
             datasetHumidity.addSeries(AvgHumidity_Series); //always add humidity
             datasetTemp.addSeries(AvgTemp_Series); //always add temperature
             datasetPress.addSeries(AvgPress_Series); //always add pressure
+            datasetMovement.addSeries(Movement_Series); //always add movement
         
         datasetArray[0] = datasetRadon;
         datasetArray[1] = datasetHumidity;
         datasetArray[2] = datasetTemp;
         datasetArray[3] = datasetPress;
+        datasetArray[4] = datasetMovement;
         
         return datasetArray;
         }
