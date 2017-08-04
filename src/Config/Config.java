@@ -253,7 +253,7 @@ public class Config extends javax.swing.JFrame {
         return "End-User";
     }
     
-    private String findUnitSystem() {
+    public String findUnitSystem() {
         String config_info = "config/config.txt";
         String[] strSplitUnitSystem;
         try {
