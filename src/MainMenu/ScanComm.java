@@ -550,12 +550,17 @@ public class ScanComm {
 	    // or this if we're in regular user mode
 	    else if (BeginAveraging == true) {
 	        writer.println("\r\n");
-		writer.println("Test site:");
 
-		// had to make txtTestSiteInfo public to do this
-		// maybe there is a better way?
+		// write customer info to file
+		writer.println("Customer information:");
+		writer.println(MainMenuUI.txtCustomerInfo.getText());
+		writer.println("\r\n");
+
+		// write test site info to file
+		writer.println("Test site information:");
 		writer.println(MainMenuUI.txtTestSiteInfo.getText());
 		writer.println("\r\n");
+
 		writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
 		writer.println("End Date/Time: " + EndDate.format(DateTimeDisplay));
 
@@ -634,8 +639,8 @@ public class ScanComm {
                 XLfile.close();
             }
 
-            MainMenuUI.displayProgressLabel("TXT/XLS files created.");
-            System.out.println("TXT/XLS files created.");
+            MainMenuUI.displayProgressLabel("Files written successfully.");
+            System.out.println("Files written successfully.");
         }
 
         catch (InterruptedException ex) {
