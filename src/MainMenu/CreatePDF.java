@@ -15,6 +15,7 @@ import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
 import static MainMenu.LoadSavedFile.strTestSiteInfo;
+import static MainMenu.LoadSavedFile.strCustomerInfo;
 import static MainMenu.LoadSavedFile.strStartDate;
 import static MainMenu.LoadSavedFile.strEndDate;
 
@@ -131,14 +132,14 @@ public class CreatePDF {
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
             
             //Customer Info Block
-            contents.beginText(); //write the test site address
+            contents.beginText(); //write the customer info
             textLine = "Customer Information:";
             contents.setFont(fontBold, fontSize);
             contents.moveTextPositionByAmount(marginSide + 5, page.getMediaBox().getHeight() - marginTop - textHeight - 115); //left-justifies the customer info
             contents.showText(textLine);
             contents.newLine();
             contents.setFont(fontDefault, fontSize);
-            String[] CustomerInfo_parsed = strTestSiteInfo.split("\\n");
+            String[] CustomerInfo_parsed = strCustomerInfo.split("\\n");
             for(int i = 0; i < CustomerInfo_parsed.length; i++) {
                 textLine = CustomerInfo_parsed[i];
                 if ((fontDefault.getStringWidth(textLine) / 100 * fontSize) > textWidth) {

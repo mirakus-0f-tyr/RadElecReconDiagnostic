@@ -32,6 +32,7 @@ public class LoadSavedFile {
     public static ArrayList<Double> LoadedReconTXTFile_Ch1RnC; //This array will store Ch1RnC
     public static ArrayList<Double> LoadedReconTXTFile_Ch2RnC; //This array will store Ch2RnC
     public static String strTestSiteInfo = "";
+    public static String strCustomerInfo = "";
     public static String strStartDate = "Unknown Start Date";
     public static String strEndDate = "Unknown End Date";
     public static String strUnitSystem = "US";
@@ -43,6 +44,7 @@ public class LoadSavedFile {
         ArrayList<String> arrLine_temp = new ArrayList<>();
         String[] strLine_parsed;
         boolean testSiteFlag = false;
+        boolean customerInfoFlag = false;
         int i = 0;
         
         
@@ -102,10 +104,29 @@ public class LoadSavedFile {
                             strTestSiteInfo = strTestSiteInfo + "\n" + strLine;
                         }
                     }
-                    if(strLine.contains("Test site:")) { //if we find this, then we know that our test site info will be in the next line.
+                    if(strLine.contains("Test site information:")) { //if we find this, then we know that our test site info will be in the next line.
                         testSiteFlag = true;
                     }
                     //END: Test Site Parsing Block
+                    
+                    //BEGIN: Customer Info Parsing Block
+                    if(customerInfoFlag) {
+                        if(strLine.contains("Test site information:")) { //If we find this, we know we're past our customer info block.
+                            customerInfoFlag = false;
+                            if (strCustomerInfo.length() > 1) {
+                                strCustomerInfo = strCustomerInfo.trim(); //trim any anteceding or succeeding line-feeds...
+                                System.out.println("Customer Info: " + strCustomerInfo);
+                            } else {
+                                System.out.println("Unable to find any Customer Info in " + MainMenu.MainMenuUI.lblLoadedFileName.getText() + "!");
+                            }
+                        } else {
+                            strCustomerInfo = strCustomerInfo + "\n" + strLine;
+                        }
+                    }
+                    if(strLine.contains("Customer information:")) { //if we find this, then we know that our customer info will be in the next line.
+                        customerInfoFlag = true;
+                    }
+                    //END: Customer Info Parsing Block
                    
                     //Display Main Menu Console label
                     MainMenu.MainMenuUI.lblSystemConsole.setText("File successfully loaded.");

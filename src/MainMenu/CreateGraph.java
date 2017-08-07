@@ -14,6 +14,7 @@ import java.time.format.DateTimeFormatter;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -135,8 +136,12 @@ public class CreateGraph extends JFrame {
             spline_press.setShapesVisible(false);
             bar_movement.setShadowVisible(false); //no shadows for the bar; they look tacky.
             bar_movement.setDrawBarOutline(false);
-            bar_movement.setBarPainter(new StandardXYBarPainter());
+            bar_movement.setBarPainter(new StandardXYBarPainter());   
             
+            //Draw thicker AvRnC line if we're not in diagnostic mode...
+            if(!(MainMenu.MainMenuUI.diagnosticMode)) {
+                spline_radon.setStroke(new BasicStroke(3.0f));
+            }
             
             if(MainMenu.MainMenuUI.diagnosticMode) {
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN); //Ch. 1 Concenration Dataset = green
