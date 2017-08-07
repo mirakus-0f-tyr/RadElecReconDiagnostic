@@ -9,9 +9,11 @@ import Config.Config;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.logging.Level;
@@ -625,9 +627,32 @@ public void parseCompanyTXT() {
         strAddress3 = br.readLine();
         br.close();
     } catch (IOException e) {
-        System.out.println("ERROR: Unable to parse company.txt file.");
-        e.printStackTrace();
+        System.out.println("WARNING: Unable to parse company.txt file... attempting to create file.");
+        createCompanyTXT();
+        //e.printStackTrace();
     }
+}
+
+public void createCompanyTXT() {
+    String companyTXT = "config/company.txt";
+        try {
+            PrintWriter pw = new PrintWriter(companyTXT);
+            pw.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("ERROR: Unable to create company.txt file!");
+        }
+}
+
+public void createConfigTXT() {
+    String configTXT = "config/config.txt";
+        try {
+            PrintWriter pw = new PrintWriter(configTXT);
+            pw.print("DiagMode=0\n");
+            pw.print("UnitType=US\n");
+            pw.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("ERROR: Unable to create config.txt file!");
+        }
 }
 
 public void parseConfigTXT() {
@@ -680,8 +705,9 @@ public void parseConfigTXT() {
 
     // if error, print error and show stack trace
     catch (IOException e){
-	System.out.println("ERROR: Unable to parse config.txt file.");
-	e.printStackTrace();
+	System.out.println("WARNING: Unable to parse config.txt file... attempting to create file.");
+        createConfigTXT();
+	//e.printStackTrace();
     }
     
 }

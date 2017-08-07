@@ -425,6 +425,7 @@ public class Config extends javax.swing.JFrame {
                     + " and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high"
                     + " radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist"
                     + " you in evaluating your test results or deciding if further action is needed.");
+            System.out.println("WARNING: Unable to find report.txt configuration file... will attempt to create it.");
         }
     }
      
