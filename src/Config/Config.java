@@ -43,6 +43,7 @@ public class Config extends javax.swing.JFrame {
             String strUnitSystem;
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
+            LoadReportTXT();
             cboAppMode.setSelectedItem(strAppMode);
             cboUnitSystem.setSelectedItem(strUnitSystem);
             
@@ -73,6 +74,16 @@ public class Config extends javax.swing.JFrame {
         lblAppMode = new java.awt.Label();
         lblUnits = new java.awt.Label();
         cboUnitSystem = new javax.swing.JComboBox();
+        pnlSettings1 = new java.awt.Panel();
+        lblDeployedBy = new java.awt.Label();
+        txtDeployedBy = new java.awt.TextField();
+        lblRetrievedBy = new java.awt.Label();
+        txtRetrievedBy = new java.awt.TextField();
+        txtAnalyzedBy = new java.awt.TextField();
+        lblAnalyzedBy = new java.awt.Label();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        txtReportText = new javax.swing.JTextArea();
+        lblReportText = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Config");
@@ -142,7 +153,7 @@ public class Config extends javax.swing.JFrame {
                 .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(102, Short.MAX_VALUE))
+                .addContainerGap(108, Short.MAX_VALUE))
         );
 
         tabConfig.addTab("Company", pnlCompany);
@@ -183,10 +194,99 @@ public class Config extends javax.swing.JFrame {
                 .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(164, Short.MAX_VALUE))
+                .addContainerGap(170, Short.MAX_VALUE))
         );
 
         tabConfig.addTab("Settings", pnlSettings);
+
+        pnlSettings1.setBackground(new java.awt.Color(204, 204, 204));
+
+        lblDeployedBy.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblDeployedBy.setName(""); // NOI18N
+        lblDeployedBy.setText("Deployed By:");
+
+        txtDeployedBy.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtDeployedBy.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtDeployedBy.setName(""); // NOI18N
+
+        lblRetrievedBy.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblRetrievedBy.setName(""); // NOI18N
+        lblRetrievedBy.setText("Retrieved By:");
+
+        txtRetrievedBy.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtRetrievedBy.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtRetrievedBy.setName(""); // NOI18N
+
+        txtAnalyzedBy.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtAnalyzedBy.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtAnalyzedBy.setName(""); // NOI18N
+
+        lblAnalyzedBy.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblAnalyzedBy.setName(""); // NOI18N
+        lblAnalyzedBy.setText("Analyzed By:");
+
+        txtReportText.setBackground(new java.awt.Color(255, 255, 255));
+        txtReportText.setColumns(20);
+        txtReportText.setLineWrap(true);
+        txtReportText.setRows(5);
+        txtReportText.setWrapStyleWord(true);
+        txtReportText.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jScrollPane1.setViewportView(txtReportText);
+
+        lblReportText.setAlignment(java.awt.Label.CENTER);
+        lblReportText.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblReportText.setName(""); // NOI18N
+        lblReportText.setText("Report Text");
+
+        javax.swing.GroupLayout pnlSettings1Layout = new javax.swing.GroupLayout(pnlSettings1);
+        pnlSettings1.setLayout(pnlSettings1Layout);
+        pnlSettings1Layout.setHorizontalGroup(
+            pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettings1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1)
+                    .addGroup(pnlSettings1Layout.createSequentialGroup()
+                        .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(pnlSettings1Layout.createSequentialGroup()
+                                .addComponent(lblDeployedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtDeployedBy, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlSettings1Layout.createSequentialGroup()
+                                .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblRetrievedBy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblAnalyzedBy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtRetrievedBy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtAnalyzedBy, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addGap(0, 14, Short.MAX_VALUE))
+                    .addComponent(lblReportText, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
+        );
+        pnlSettings1Layout.setVerticalGroup(
+            pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettings1Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtDeployedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDeployedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtRetrievedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblRetrievedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtAnalyzedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAnalyzedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
+                .addComponent(lblReportText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(2, 2, 2)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+
+        tabConfig.addTab("Report", pnlSettings1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -216,6 +316,8 @@ public class Config extends javax.swing.JFrame {
             pw.close();
             //Let's surgically write our config parameters.
             writeConfig();
+            //Let's write our report parameters
+            writeReportTXT();
             MainMenuUI.btnConfig.setEnabled(true);
         } catch (IOException e) {
             System.out.println("ERROR: Unable to write to company.txt (to store updated company information).");
@@ -284,61 +386,122 @@ public class Config extends javax.swing.JFrame {
         return "US";
     }
     
-    
-private void writeConfig() {
-    try {
-        //This should suffice to write any parameter to the config file.
-        //Can be expanded as needed.
-        String config_info = "config/config.txt";
-        BufferedReader br = new BufferedReader(new FileReader(config_info));
+     public void LoadReportTXT() {
+        //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
+        //technicians, and everything after that is dedicated to the report text.
+        String report_info = "config/report.txt";
         String strLine;
-        StringBuffer inputBuffer = new StringBuffer();
-
-        while ((strLine = br.readLine()) != null) {
-            inputBuffer.append(strLine);
-            inputBuffer.append('\n');
+        String strTrimmedLine;
+        String strReportText = "";
+        File report = new File(report_info);
+        if (report.isFile()) {
+            try {
+                BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(report_info)));
+                //Deployed By:
+                strLine = br.readLine();
+                strTrimmedLine = strLine.trim();
+                txtDeployedBy.setText(strTrimmedLine.substring(11));
+                //Retrieved By:
+                strLine = br.readLine();
+                strTrimmedLine = strLine.trim();
+                txtRetrievedBy.setText(strTrimmedLine.substring(12));
+                //Analyzed By:
+                strLine = br.readLine();
+                strTrimmedLine = strLine.trim();
+                txtAnalyzedBy.setText(strTrimmedLine.substring(11));
+                while ((strLine = br.readLine()) != null) {
+                    strReportText = strReportText + strLine;
+                }
+                txtReportText.setText(strReportText);
+                br.close();
+            } catch (IOException e) {
+                System.out.println("ERROR: Unable to parse report.txt in order to retrieve the technician or report text information.");
+            }
+        } else {
+            //Default text blob to be generated if the file doesn't exist.
+            txtReportText.setText("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (EPA)"
+                    + " and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.  "
+                    + "The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you"
+                    + " and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high"
+                    + " radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist"
+                    + " you in evaluating your test results or deciding if further action is needed.");
         }
-        String strInput = inputBuffer.toString();
-        br.close();
-        
-        //Only rewrite to the config file if there was a change.
-        
-        //Handle Diagnostic Mode
-        if (cboAppMode.getSelectedItem().equals("Diagnostic")) {
-            strInput = strInput.replace("DiagMode=0", "DiagMode=1");
-        }
-        else {
-            strInput = strInput.replace("DiagMode=1", "DiagMode=0");
-        }
-        
-        //Handle Unit System
-        if (cboUnitSystem.getSelectedItem().equals("SI")) {
-            strInput = strInput.replace("UnitType=US", "UnitType=SI");
-        }
-        else {
-            strInput = strInput.replace("UnitType=SI", "UnitType=US");
-        }
-
-        FileOutputStream fileOut = new FileOutputStream(config_info);
-        fileOut.write(strInput.getBytes());
-        fileOut.close();
-        
-        //Display the new config settings in the console.
-        br = new BufferedReader(new FileReader(config_info));
-        //We'll need to clear the buffer, or else it will still contain the original config parameters.
-        inputBuffer.delete(0, inputBuffer.length());
-        while ((strLine = br.readLine()) != null) {
-            inputBuffer.append(strLine);
-            inputBuffer.append('\n');
-        }
-        strInput = inputBuffer.toString();
-        System.out.println(strInput);
-        br.close();
-
-    } catch (Exception e) {
-        System.out.println("ERROR: Unable to update config.txt file.");
     }
-}
+     
+    private void writeConfig() {
+        try {
+            //This should suffice to write any parameter to the config file.
+            //Can be expanded as needed.
+            String config_info = "config/config.txt";
+            BufferedReader br = new BufferedReader(new FileReader(config_info));
+            String strLine;
+            StringBuffer inputBuffer = new StringBuffer();
+
+            while ((strLine = br.readLine()) != null) {
+                inputBuffer.append(strLine);
+                inputBuffer.append('\n');
+            }
+            String strInput = inputBuffer.toString();
+            br.close();
+        
+            //Only rewrite to the config file if there was a change.
+        
+            //Handle Diagnostic Mode
+            if (cboAppMode.getSelectedItem().equals("Diagnostic")) {
+                strInput = strInput.replace("DiagMode=0", "DiagMode=1");
+            }
+            else {
+                strInput = strInput.replace("DiagMode=1", "DiagMode=0");
+            }
+        
+            //Handle Unit System
+            if (cboUnitSystem.getSelectedItem().equals("SI")) {
+                strInput = strInput.replace("UnitType=US", "UnitType=SI");
+            }
+            else {
+                strInput = strInput.replace("UnitType=SI", "UnitType=US");
+            }
+
+            FileOutputStream fileOut = new FileOutputStream(config_info);
+            fileOut.write(strInput.getBytes());
+            fileOut.close();
+        
+            //Display the new config settings in the console.
+            br = new BufferedReader(new FileReader(config_info));
+            //We'll need to clear the buffer, or else it will still contain the original config parameters.
+            inputBuffer.delete(0, inputBuffer.length());
+            while ((strLine = br.readLine()) != null) {
+                inputBuffer.append(strLine);
+                inputBuffer.append('\n');
+            }
+            strInput = inputBuffer.toString();
+            System.out.println(strInput);
+            br.close();
+
+        } catch (Exception e) {
+            System.out.println("ERROR: Unable to update config.txt file.");
+        }
+    }
+
+    private void writeReportTXT() {
+        try {
+            //For now, the easiest way to write to this file is just to nuke it and rewrite it.
+            //The report.txt file will also be created if it doesn't exist.
+        
+            String report_info = "config/report.txt";
+            PrintWriter pw = new PrintWriter(report_info);
+        
+            pw.print("DeployedBy=" + txtDeployedBy.getText() + "\n");
+            pw.print("RetrievedBy=" + txtRetrievedBy.getText() + "\n");
+            pw.print("AnalyzedBy=" + txtAnalyzedBy.getText() + "\n");
+            pw.print(txtReportText.getText());
+
+            pw.close();
+        
+        } catch (Exception e) {
+            System.out.println("ERROR: Unable to overwrite report.txt file.");
+        }
+    }
     
     /**
      * @param args the command line arguments
@@ -379,16 +542,26 @@ private void writeConfig() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboAppMode;
     private javax.swing.JComboBox cboUnitSystem;
+    private javax.swing.JScrollPane jScrollPane1;
+    private java.awt.Label lblAnalyzedBy;
     private java.awt.Label lblAppMode;
     private java.awt.Label lblCompanyAddress;
     private java.awt.Label lblCompanyName;
+    private java.awt.Label lblDeployedBy;
+    private java.awt.Label lblReportText;
+    private java.awt.Label lblRetrievedBy;
     private java.awt.Label lblUnits;
     private java.awt.Panel pnlCompany;
     private java.awt.Panel pnlSettings;
+    private java.awt.Panel pnlSettings1;
     private javax.swing.JTabbedPane tabConfig;
     private java.awt.TextField txtAddress1;
     private java.awt.TextField txtAddress2;
     private java.awt.TextField txtAddress3;
+    private java.awt.TextField txtAnalyzedBy;
     private java.awt.TextField txtCompanyName;
+    private java.awt.TextField txtDeployedBy;
+    private javax.swing.JTextArea txtReportText;
+    private java.awt.TextField txtRetrievedBy;
     // End of variables declaration//GEN-END:variables
 }
