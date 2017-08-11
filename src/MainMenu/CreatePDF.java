@@ -26,6 +26,7 @@ import static MainMenu.LoadSavedFile.strDeployedBy;
 import static MainMenu.LoadSavedFile.strRetrievedBy;
 import static MainMenu.LoadSavedFile.strAnalyzedBy;
 import static MainMenu.CreateGraph.OverallAvgRnC;
+import static MainMenu.LoadSavedFile.LoadedReconTXTFile;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -54,19 +55,22 @@ public class CreatePDF {
     public static String strLocation = "Basement";
     public static String strCustomReportText;
     float PDF_Y = 0;
+    SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    Date currentDate = new Date();
     
+    //Margin Stuff
+    static int marginTop = 10;
+    static int marginBottom = 30;
+    static int marginSide = 30;
+    static int fontSize = 14;
+        
     public void main() throws IOException {
         
         //strips .txt from the filename and replaces it with .pdf
         String PDF_Name = StringUtils.left(MainMenu.MainMenuUI.lblLoadedFileName.getText(),MainMenu.MainMenuUI.lblLoadedFileName.getText().length()-4) + ".pdf";
         
         PDDocument doc = new PDDocument();
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-        Date currentDate = new Date();
-        int marginTop = 10;
-        int marginBottom = 30;
-        int marginSide = 30;
-        int fontSize = 14;
+        
         String textLine;
         float textWidth;
         float textHeight;
@@ -98,126 +102,17 @@ public class CreatePDF {
             DrawCompanyHeader(contents, page, fontDefault, fontSize);
             
             //Title Block
-            contents.beginText(); //this is the only way I know how to reset the text position offset...
-            fontSize = 18; //puff up our font-size for the banner title
-            contents.setFont(fontBold, fontSize); //sets our bold font using the TTF loaded above.
-            contents.setLeading(14.5f);
-            textLine = "Radon Test Report"; //Our intended line, the "title" of the report
-            textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize; //textWidth is important for centering...
-            textHeight = fontDefault.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize; //Also important for centering, because PDFBox lacks a centering function...
-            PDF_Y -= 50;
-            contents.moveTextPositionByAmount((page.getMediaBox().getWidth() - textWidth) / 2, PDF_Y); //This will center the text.
-            contents.showText(textLine); //This will "draw" our textLine on the PDF.
-            contents.endText();
+            DrawTitleHeader(contents, page, "Radon Test Report", fontBold, fontDefault);
             
-            //Date Block (immediately below title)
-            contents.beginText();
-            fontSize = 12;
-            textLine = dateFormat.format(currentDate); //display date beneath the Radon Test Report title
-            textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize; //still important for centering
-            textHeight = fontDefault.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize; //still important for centering
-            PDF_Y -= 5;
-            contents.moveTextPositionByAmount((page.getMediaBox().getWidth() - textWidth) / 2, PDF_Y); //centers the date
-            contents.newLine(); //We should put an extra newLine here, to give us a bit more distance from the title block.
-            contents.setFont(fontDefault, fontSize);
-            contents.showText(textLine);
-            contents.endText(); //end date text block
-            
-            //Test Site Banner Block
-            contents.beginText();
-            fontSize = 12;
-            textLine = "A Rad Elec Recon Continuous Radon Monitor was deployed at the following test site:"; //display test site banner beneath the Radon Test Report title
-            textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize; //still important for centering
-            textHeight = fontDefault.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize; //still important for centering
-            PDF_Y -= 35;
-            contents.moveTextPositionByAmount((page.getMediaBox().getWidth() - textWidth) / 2, PDF_Y); //centers the date
-            contents.showText(textLine); //Test Site Banner Text
-            contents.endText();
-            PDF_Y -= 5;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            PDF_Y -= 3;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            
-            //Customer Info Block
-            contents.beginText(); //write the customer info
-            textLine = "Customer Information:";
-            contents.setFont(fontBold, fontSize);
-            PDF_Y -= 17;
-            contents.moveTextPositionByAmount(marginSide + 5, PDF_Y); //left-justifies the customer info
-            contents.showText(textLine);
-            contents.newLine();
-            contents.setFont(fontDefault, fontSize);
-            String[] CustomerInfo_parsed = strCustomerInfo.split("\\n");
-            for(int i = 0; i < CustomerInfo_parsed.length; i++) {
-                textLine = CustomerInfo_parsed[i];
-                if ((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
-                    textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize;
-                }
-                contents.showText(textLine);
-                contents.newLine();
-            }
-            contents.newLine();
-            contents.endText();
-            //End Customer Info Block. What a mess.
-            
-            //Test Site Info Block
-            contents.beginText(); //write the test site address
-            textLine = "Test Site:";
-            contents.setFont(fontBold, fontSize);
-            contents.moveTextPositionByAmount(((page.getMediaBox().getWidth() - marginSide)/2)+30, PDF_Y); //left-justifies the customer info
-            contents.showText(textLine);
-            contents.newLine();
-            contents.setFont(fontDefault, fontSize);
-            String[] TestSiteInfo_parsed = strTestSiteInfo.split("\\n");
-            TestSiteInfo_parsed = strTestSiteInfo.split("\\n");
-            for(int i = 0; i < TestSiteInfo_parsed.length; i++) {
-                textLine = TestSiteInfo_parsed[i];
-                if ((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
-                    textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize;
-                }
-                contents.showText(textLine);
-                contents.newLine();
-            }
-            PDF_Y += 1f*fontSize; //this is a hacky offset correction due to the newLine() (which I'll avoid in the future) ... I'll clean it up later.
-            contents.endText();
-            
-            //Drawing Rectangles around Customer Info and Test Site Info Blocks
-            //We need to make sure to grab the longest of the two text blocks and use that as our reference for drawing the rectangle.
-            int LongestTextBlock = 1;
-            if(CustomerInfo_parsed.length > TestSiteInfo_parsed.length) {
-                LongestTextBlock = CustomerInfo_parsed.length;
-            } else {
-                LongestTextBlock = TestSiteInfo_parsed.length;
-            }
-            //Customer Info Rectangle:
-            PDF_Y -= textHeight*(LongestTextBlock+2);
-            contents.addRect(marginSide, PDF_Y, ((page.getMediaBox().getWidth() - marginSide)/2)-25, textHeight * (LongestTextBlock+2));
-            contents.stroke();
-            //Test Site Info Rectangle:
-            contents.addRect(((page.getMediaBox().getWidth() - marginSide)/2)+25, PDF_Y, ((page.getMediaBox().getWidth() - marginSide)/2)-25, textHeight * (LongestTextBlock+2));
-            contents.stroke();
-            //End Rectangle Section
-            
-            //Radon Screening Text Block (beneath Customer & Test Site Text Blocks)
-            PDF_Y -= 3;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            PDF_Y -= 3;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            //Customer / Test Site Info Block
+            DrawCustomerTestSiteBlock(contents, page, fontBold, fontDefault);
             
             fontSize = 12;
             textLine = "A Rad Elec Recon Continuous Radon Monitor was used for radon screening measurements that were conducted at the above referenced test site by: " + strCompany_Name;
             
             //WrapMultiLineText is jumbled as all hell, but at least it's continued to a single method.
-            PDF_Y -= 11;
-            WrapMultiLineText (contents,page,marginSide*2,PDF_Y,textLine,fontDefault,fontSize,marginSide*2);
+            PDF_Y -= 20;
+            WrapMultiLineText (contents,page,marginSide,PDF_Y,textLine,fontDefault,fontSize,marginSide);
             
             //Results Header Line
             contents.beginText();
@@ -225,7 +120,7 @@ public class CreatePDF {
             contents.setFont(fontBold, fontSize);
             PDF_Y -= 0.5f*fontSize; //We already have a space buffer from the WrapMultiLineText() call above, so let's just give us a tad more...
             textLine = "The results are as follows:";
-            contents.newLineAtOffset(marginSide*2,PDF_Y);
+            contents.newLineAtOffset(marginSide,PDF_Y);
             contents.showText(textLine);
             contents.endText();
             
@@ -319,20 +214,20 @@ public class CreatePDF {
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
             
-            //Deployed By, Retrieved By, Analyzed By Lines
+            //Analyzed By, Deployed By, Retrieved By Lines
             contents.beginText();
             fontSize = 12;
             contents.setFont(fontBold, fontSize);
             float PDF_Y_temp = PDF_Y;
             PDF_Y_temp -= 1.5f*fontSize; //Let's get a little extra space between this and the previous line
-            textLine = "Deployed By: ";
+            textLine = "Analyzed By: ";
             textWidth = fontBold.getStringWidth(textLine) / 1000 * fontSize;
             contents.newLineAtOffset(marginSide, PDF_Y_temp);
             contents.showText(textLine);
             contents.endText();
             contents.beginText();
             PDF_Y_temp -= 1.1f*fontSize;
-            textLine = "Retrieved By: ";
+            textLine = "Deployed By: ";
             if((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
                 textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize); //If this textWidth is longer, let's use it to align the technician names
             }
@@ -341,7 +236,7 @@ public class CreatePDF {
             contents.endText();
             contents.beginText();
             PDF_Y_temp -= 1.1f*fontSize;
-            textLine = "Analyzed By: ";
+            textLine = "Retrieved By: ";
             if((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
                 textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize); //If this textWidth is the longest, let's use it to align the technician names
             }
@@ -352,6 +247,12 @@ public class CreatePDF {
             fontSize = 12;
             contents.setFont(fontDefault, fontSize);
             PDF_Y -= 1.5f*fontSize; //Let's get a little extra space between this and the previous line
+            textLine = strAnalyzedBy;
+            contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
+            contents.showText(textLine);
+            contents.endText();
+            contents.beginText();
+            PDF_Y -= 1.1f*fontSize;
             textLine = strDeployedBy;
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
@@ -362,13 +263,7 @@ public class CreatePDF {
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
-            contents.beginText();
-            PDF_Y -= 1.1f*fontSize;
-            textLine = strAnalyzedBy;
-            contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
-            contents.showText(textLine);
-            contents.endText();
-            //End Deployed By, Retrieved By, Analyzed By Block
+            //End Analyzed By, Deployed By, Retrieved By Block
             
             //Conditions, Tampering, Weather, etc.
             PDF_Y -= 1f*fontSize;
@@ -497,17 +392,71 @@ public class CreatePDF {
             //END FIRST PAGE (SUMMARY)
             
             //BEGIN SECOND PAGE (CHART)
-            PDPage chart_page = new PDPage(PDRectangle.A4);
-            doc.addPage(chart_page);
-            contents = new PDPageContentStream(doc, chart_page);
+            PDPage page_chart = new PDPage(PDRectangle.A4);
+            doc.addPage(page_chart);
+            contents = new PDPageContentStream(doc, page_chart);
+            PDF_Y = page_chart.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
             
             //Draw Company Header (we already called getCompanyInfo() above, so no need to call it again...
-            DrawCompanyHeader(contents, chart_page, fontDefault, marginTop);
+            DrawCompanyHeader(contents, page_chart, fontDefault, marginTop);
+            
+            //Draw Title Block again on this second page
+            DrawTitleHeader(contents, page_chart, "Radon Exposure Graphical Display", fontBold, fontDefault);
+            
+            //Draw Customer / Test Site Info Block on this second page, too...
+            DrawCustomerTestSiteBlock(contents, page_chart, fontBold, fontDefault);
             
             //This draws the graph image (graph.jpg), which was externalized to the file in the CreateGraph class.
             PDImageXObject graphJPG = PDImageXObject.createFromFile("graph.jpg", doc);
-            contents.drawImage(graphJPG, 40, 250);
+            PDF_Y -= 400;
+            contents.drawImage(graphJPG, marginSide*2, PDF_Y);
+            contents.close();
+            //END SECOND PAGE (CHART)
             
+            //BEGIN THIRD PAGE (DETAILED)
+            PDPage page_detailed = new PDPage(PDRectangle.A4);
+            doc.addPage(page_detailed);
+            contents = new PDPageContentStream(doc, page_detailed);
+            PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
+            
+            //Draw Company Header for the 3rd page (we already called getCompanyInfo() above, so no need to call it again...
+            DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
+            
+            //Draw Title Block again on this third page
+            DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+            
+            //Draw Customer / Test Site Info Block on this third page, too...
+            DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
+            
+            contents.beginText();
+            fontSize = 12;
+            PDF_Y -= 15;
+            String datetime_detailed = "Unknown";
+            contents.setFont(fontDefault, fontSize);
+            contents.newLineAtOffset(marginSide, PDF_Y);
+            for (int i = 0; i < LoadedReconTXTFile.size(); i++) {
+                datetime_detailed = LoadedReconTXTFile.get(i).get(4) + "/" + LoadedReconTXTFile.get(i).get(5) + "/20" + LoadedReconTXTFile.get(i).get(3) + " " + LoadedReconTXTFile.get(i).get(6) + ":" + LoadedReconTXTFile.get(i).get(7);
+                textLine = LoadedReconTXTFile.get(i).get(1) + "   " + datetime_detailed;
+                contents.moveTextPositionByAmount(0,-1.0f*fontSize);
+                PDF_Y -= 1.0f*fontSize;
+                contents.showText(textLine);
+                if(PDF_Y-1.0f*fontSize <= marginBottom) { //We need to be able to add a new page for long exposures.
+                    contents.endText();
+                    contents.close();
+                    page_detailed = new PDPage(PDRectangle.A4);
+                    doc.addPage(page_detailed);
+                    contents = new PDPageContentStream(doc, page_detailed);
+                    PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
+                    DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
+                    DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+                    contents.beginText();
+                    fontSize = 12;
+                    PDF_Y -= 15;
+                    contents.setFont(fontDefault, fontSize);
+                    contents.newLineAtOffset(marginSide, PDF_Y);
+                }
+            }
+            contents.endText();
             
             //End PDF Generation (i.e. rat's nest code)
             //******************
@@ -582,31 +531,156 @@ public class CreatePDF {
         }
     }
     
-    public static void DrawCompanyHeader(PDPageContentStream contents, PDPage page, PDFont fontDefault, int marginTop) {
+    public void DrawCompanyHeader(PDPageContentStream contents, PDPage page, PDFont fontDefault, int marginTop) {
         //Note: getCompanyInfo() needs to be called beforehand
         int fontSize = 14;
         float textHeight = fontDefault.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
-        float PDF_Y = page.getMediaBox().getHeight() - marginTop - textHeight;
+        //float PDF_Y = page.getMediaBox().getHeight() - marginTop - textHeight;
         try {
             contents.beginText(); //define beginning of text.
             contents.setFont(fontDefault, fontSize); //sets our font using the TTF loaded above.
             contents.setLeading(14.5f);
             String textLine = strCompany_Name;
-            PDF_Y = page.getMediaBox().getHeight() - marginTop - textHeight;
             contents.newLineAtOffset(20,PDF_Y);
             contents.showText(textLine);
-            contents.newLine();
             textLine = strCompany_Address1;
+            PDF_Y -= 1.0f*fontSize;
+            contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
-            contents.newLine();
             textLine = strCompany_Address2;
+            PDF_Y -= 1.0f*fontSize;
+            contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
-            contents.newLine();
             textLine = strCompany_Address3;
+            PDF_Y -= 1.0f*fontSize;
+            contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
             contents.endText();
         } catch (IOException ex) {
             System.out.println(ex);    
+        }
+    }
+    
+    public void DrawTitleHeader(PDPageContentStream contents, PDPage page, String strTitle, PDFont fontTitle, PDFont fontDate) {
+        
+        try {
+            //Title Block
+            contents.beginText(); //this is the only way I know how to reset the text position offset...
+            int fontSize = 18; //puff up our font-size for the banner title
+            contents.setFont(fontTitle, fontSize); //sets our bold font using the TTF loaded above.
+            contents.setLeading(14.5f);
+            String textLine = strTitle; //Our intended line, the "title" of the report
+            float textWidth = fontTitle.getStringWidth(textLine) / 1000 * fontSize;
+            float textHeight = fontTitle.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
+            PDF_Y -= 50;
+            contents.moveTextPositionByAmount((page.getMediaBox().getWidth() - textWidth) / 2, PDF_Y); //This will center the text.
+            contents.showText(textLine); //This will "draw" our textLine on the PDF.
+            contents.endText();
+            
+            //Date Block (immediately below title)
+            contents.beginText();
+            fontSize = 12;
+            textLine = dateFormat.format(currentDate); //display date beneath the Radon Test Report title
+            textWidth = fontDate.getStringWidth(textLine) / 1000 * fontSize; //still important for centering
+            textHeight = fontDate.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize; //still important for centering
+            PDF_Y -= 5;
+            contents.moveTextPositionByAmount((page.getMediaBox().getWidth() - textWidth) / 2, PDF_Y); //centers the date
+            contents.newLine(); //We should put an extra newLine here, to give us a bit more distance from the title block.
+            contents.setFont(fontDate, fontSize);
+            contents.showText(textLine);
+            contents.endText(); //end date text block    
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    public void DrawCustomerTestSiteBlock(PDPageContentStream contents, PDPage page, PDFont fontBold, PDFont fontDefault) {
+        try {
+            //Test Site Banner Block
+            PDF_Y -= 35;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at l8ineTo
+            PDF_Y -= 3;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            
+            //Customer Info Block
+            contents.beginText(); //write the customer info
+            String textLine = "Customer Information:";
+            fontSize = 12;
+            contents.setFont(fontBold, fontSize);
+            float textWidth = fontBold.getStringWidth(textLine) / 1000 * fontSize; //textWidth is important for centering...
+            float textHeight = fontBold.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize; //Also important for centering, because PDFBox lacks a centering function...
+            PDF_Y -= 17;
+            contents.moveTextPositionByAmount(marginSide + 5, PDF_Y); //left-justifies the customer info
+            contents.showText(textLine);
+            contents.newLine();
+            contents.setFont(fontDefault, fontSize);
+            String[] CustomerInfo_parsed = strCustomerInfo.split("\\n");
+            for(int i = 0; i < CustomerInfo_parsed.length; i++) {
+                textLine = CustomerInfo_parsed[i];
+                if ((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
+                    textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize;
+                }
+                contents.showText(textLine);
+                contents.newLine();
+            }
+            contents.newLine();
+            contents.endText();
+            //End Customer Info Block. What a mess.
+            
+            //Test Site Info Block
+            contents.beginText(); //write the test site address
+            textLine = "Test Site:";
+            contents.setFont(fontBold, fontSize);
+            contents.moveTextPositionByAmount(((page.getMediaBox().getWidth() - marginSide)/2)+30, PDF_Y); //left-justifies the customer info
+            contents.showText(textLine);
+            contents.newLine();
+            contents.setFont(fontDefault, fontSize);
+            String[] TestSiteInfo_parsed = strTestSiteInfo.split("\\n");
+            TestSiteInfo_parsed = strTestSiteInfo.split("\\n");
+            for(int i = 0; i < TestSiteInfo_parsed.length; i++) {
+                textLine = TestSiteInfo_parsed[i];
+                if ((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
+                    textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize;
+                }
+                contents.showText(textLine);
+                contents.newLine();
+            }
+            PDF_Y += 1f*fontSize; //this is a hacky offset correction due to the newLine() (which I'll avoid in the future) ... I'll clean it up later.
+            contents.endText();
+            
+            //Drawing Rectangles around Customer Info and Test Site Info Blocks
+            //We need to make sure to grab the longest of the two text blocks and use that as our reference for drawing the rectangle.
+            int LongestTextBlock = 1;
+            if(CustomerInfo_parsed.length > TestSiteInfo_parsed.length) {
+                LongestTextBlock = CustomerInfo_parsed.length;
+            } else {
+                LongestTextBlock = TestSiteInfo_parsed.length;
+            }
+            //Customer Info Rectangle:
+            PDF_Y -= textHeight*(LongestTextBlock+2);
+            contents.addRect(marginSide, PDF_Y, ((page.getMediaBox().getWidth() - marginSide)/2)-25, textHeight * (LongestTextBlock+2));
+            contents.stroke();
+            //Test Site Info Rectangle:
+            contents.addRect(((page.getMediaBox().getWidth() - marginSide)/2)+25, PDF_Y, ((page.getMediaBox().getWidth() - marginSide)/2)-25, textHeight * (LongestTextBlock+2));
+            contents.stroke();
+            //End Rectangle Section
+            
+            //Radon Screening Text Block (beneath Customer & Test Site Text Blocks)
+            PDF_Y -= 3;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            PDF_Y -= 3;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            
+        } catch (IOException ex) {
+            System.out.println(ex);
         }
     }
     
