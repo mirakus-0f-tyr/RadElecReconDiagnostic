@@ -504,6 +504,10 @@ public class Config extends javax.swing.JFrame {
         }
     }
     
+    public String getCustomReportText() {
+        return txtReportText.getText();
+    }
+    
     /**
      * @param args the command line arguments
      */

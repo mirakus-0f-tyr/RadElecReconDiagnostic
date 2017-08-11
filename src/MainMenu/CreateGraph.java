@@ -53,9 +53,11 @@ import org.jfree.ui.RectangleEdge;
  */
 
 public class CreateGraph extends JFrame {
-  
+    
+    public static double OverallAvgRnC = 0;
+    
     static class MyPanel extends JPanel implements ChartMouseListener {
-
+        
         private static int SERIES_COUNT = 1; //default to end-user mode, where only average radon conc. is displayed
     
         private ChartPanel chartPanel;
@@ -215,6 +217,8 @@ public class CreateGraph extends JFrame {
             double hourlyAvgHumidity = 0;
             double hourlyAvgTemp = 0;
             double hourlyAvgPress = 0;
+            double TotalAvgRnC = 0;
+            long TotalHourCounter = 0;
             long hourlyMovement = 0;
             int TempYear = 0;
             long diffMinutes = 0;
@@ -314,12 +318,16 @@ public class CreateGraph extends JFrame {
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //This will calculate hourly average of both chambers (in Bq/m3)
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter)); //This will calculate hourly average temperature (in Celsius)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
+                                TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
+                                TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
                             } else {
                                 Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
                                 Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2));
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //This will calculate hourly average of both chambers
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter) * (9/5) + 32); //This will calculate hourly average temperature (in Fahrenheit)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
+                                TotalAvgRnC = TotalAvgRnC + ((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2)/2); //Overall AvgRnC (in pCi/L)
+                                TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
                             }
 
                             //Reset the temporary chamber counts
@@ -335,6 +343,8 @@ public class CreateGraph extends JFrame {
                     }                   
                 }
             }
+            
+            OverallAvgRnC = TotalAvgRnC / TotalHourCounter; //Assign Overall Average Radon Concentration
             
             //We need to add each completed series to the dataset, or we won't have any data to display.
             //Only display AvRnC series for End-User Mode, whereas display both chambers for diagnostic mode.

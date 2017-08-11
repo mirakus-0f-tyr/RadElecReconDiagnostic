@@ -36,6 +36,10 @@ public class LoadSavedFile {
     public static String strStartDate = "Unknown Start Date";
     public static String strEndDate = "Unknown End Date";
     public static String strUnitSystem = "US";
+    public static String strInstrumentSerial = "Unknown Serial";
+    public static String strDeployedBy = "Unknown";
+    public static String strRetrievedBy = "Unknown";
+    public static String strAnalyzedBy = "Unknown";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -52,6 +56,7 @@ public class LoadSavedFile {
             
             Config getUnits = new Config();
             strUnitSystem = getUnits.findUnitSystem();
+            strInstrumentSerial = getReconSerial();
             
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ReconTXTFile)));
             
@@ -89,6 +94,15 @@ public class LoadSavedFile {
                     if(strLine.contains("End Date/Time:")) {
                         strLine_parsed = StringUtils.split(strLine, " ");
                         strEndDate = strLine_parsed[2] + " " + strLine_parsed[3];
+                    }
+                    if(strLine.contains("Deployed By:")) {
+                        strDeployedBy = strLine.substring(12);
+                    }
+                    if(strLine.contains("Retrieved By:")) {
+                        strRetrievedBy = strLine.substring(13);
+                    }
+                    if(strLine.contains("Analyzed By:")) {
+                        strAnalyzedBy = strLine.substring(12);
                     }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {
@@ -146,5 +160,20 @@ public class LoadSavedFile {
             System.out.println("ERROR: Fundamental IO Error encountered when parsing Recon TXT file.");
             Logger.getLogger(LoadSavedFile.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    public static String getReconSerial() {
+        //I think this is a poor way to retrieve the serial number.
+        //This is fragile and will break if the user renames the file.
+        //Should we add it into the text file?
+        if(MainMenu.MainMenuUI.lblLoadedFileName.getText().length() > 0) {
+            String[] str_Parsed = MainMenu.MainMenuUI.lblLoadedFileName.getText().split("_");
+            if(str_Parsed.length > 2) {
+                return str_Parsed[1];
+            } else {
+                return "Unknown Serial";
+            }
+        }
+        return "Unknown Serial";
     }
 }

@@ -866,7 +866,8 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       btnGeneratePDF.setEnabled(false);
       btnEraseReconData.setEnabled(false);
       System.out.println("Generate PDF button pressed.");
-      CreatePDF.main();
+      CreatePDF generate_pdf = new CreatePDF();
+      generate_pdf.main();
       btnDownloadSession.setEnabled(true);
       btnOpenSavedFile.setEnabled(true);
       btnGeneratePDF.setEnabled(true);
