@@ -27,12 +27,14 @@ import static MainMenu.LoadSavedFile.strRetrievedBy;
 import static MainMenu.LoadSavedFile.strAnalyzedBy;
 import static MainMenu.CreateGraph.OverallAvgRnC;
 import static MainMenu.LoadSavedFile.LoadedReconTXTFile;
+import static MainMenu.CreateGraph.HourlyReconData;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -428,20 +430,48 @@ public class CreatePDF {
             //Draw Customer / Test Site Info Block on this third page, too...
             DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
             
-            contents.beginText();
-            fontSize = 12;
-            PDF_Y -= 15;
-            String datetime_detailed = "Unknown";
-            contents.setFont(fontDefault, fontSize);
-            contents.newLineAtOffset(marginSide, PDF_Y);
-            for (int i = 0; i < LoadedReconTXTFile.size(); i++) {
-                datetime_detailed = LoadedReconTXTFile.get(i).get(4) + "/" + LoadedReconTXTFile.get(i).get(5) + "/20" + LoadedReconTXTFile.get(i).get(3) + " " + LoadedReconTXTFile.get(i).get(6) + ":" + LoadedReconTXTFile.get(i).get(7);
-                textLine = LoadedReconTXTFile.get(i).get(1) + "   " + datetime_detailed;
-                contents.moveTextPositionByAmount(0,-1.0f*fontSize);
-                PDF_Y -= 1.0f*fontSize;
+            //Draw Column Headers
+            DrawDetailedColumnHeaders(contents, fontBold);
+            
+            //Let's start drawing rows of detailed summary data
+            for (int arrayCounter = 0; arrayCounter < HourlyReconData.size(); arrayCounter++) {
+                //contents.moveTextPositionByAmount(0,-1.0f*fontSize);
+                PDF_Y -= 1.1f*fontSize;
+                contents.beginText();
+                contents.setFont(fontDefault, fontSize);
+                contents.newLineAtOffset(marginSide, PDF_Y);
+                //Record #
+                textLine = HourlyReconData.get(arrayCounter).get(0);
                 contents.showText(textLine);
+                //Date-Time
+                contents.moveTextPositionByAmount(45, 0);
+                textLine = HourlyReconData.get(arrayCounter).get(1);
+                contents.showText(textLine);
+                //Radon
+                contents.moveTextPositionByAmount(115, 0);
+                textLine = HourlyReconData.get(arrayCounter).get(2);
+                contents.showText(textLine);
+                //Temperature
+                contents.moveTextPositionByAmount(90, 0);
+                textLine = HourlyReconData.get(arrayCounter).get(3);
+                contents.showText(textLine);
+                //Pressure
+                contents.moveTextPositionByAmount(100, 0);
+                textLine = HourlyReconData.get(arrayCounter).get(4);
+                contents.showText(textLine);
+                //Humidity
+                contents.moveTextPositionByAmount(95, 0);
+                textLine = HourlyReconData.get(arrayCounter).get(5);
+                contents.showText(textLine);
+                //Tilts
+                contents.moveTextPositionByAmount(70, 0);
+                textLine = HourlyReconData.get(arrayCounter).get(6);
+                contents.showText(textLine);
+                
+                contents.endText();
+                
+                
                 if(PDF_Y-1.0f*fontSize <= marginBottom) { //We need to be able to add a new page for long exposures.
-                    contents.endText();
                     contents.close();
                     page_detailed = new PDPage(PDRectangle.A4);
                     doc.addPage(page_detailed);
@@ -449,14 +479,10 @@ public class CreatePDF {
                     PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
                     DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
                     DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
-                    contents.beginText();
-                    fontSize = 12;
                     PDF_Y -= 15;
-                    contents.setFont(fontDefault, fontSize);
-                    contents.newLineAtOffset(marginSide, PDF_Y);
+                    DrawDetailedColumnHeaders(contents, fontBold);
                 }
             }
-            contents.endText();
             
             //End PDF Generation (i.e. rat's nest code)
             //******************
@@ -678,6 +704,106 @@ public class CreatePDF {
             contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    private void DrawDetailedColumnHeaders(PDPageContentStream contents, PDFont font) {
+        try {
+            
+            //For our column headers, let's generate our units
+            String strTempUnits;
+            String strPressUnits;
+            String strRadonUnits;
+            
+            if(strUnitSystem.equals("SI")) {
+                strTempUnits = " (°C)";
+                strPressUnits = " (mbar)";
+                strRadonUnits = " (Bq/m³)";
+            } else {
+                strTempUnits = " (°F)";
+                strPressUnits = " (inHg)";
+                strRadonUnits = " (pCi/L)";
+            }
+            
+            String textLine;
+            float textWidth;
+            fontSize = 12;
+            PDF_Y -= 15;
+            contents.beginText();
+            contents.setFont(font, fontSize);
+            contents.newLineAtOffset(marginSide, PDF_Y);
+            if(MainMenu.MainMenuUI.diagnosticMode) {
+                textLine = "Record#";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Date/Time";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Ch1 RnC";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Ch2 RnC";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Avg Radon" + strRadonUnits;
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Temperature" + strTempUnits;
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Pressure" + strPressUnits;
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Humidity (%)";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+                textLine = "Tilts";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(15+textWidth, 0);
+            } else {
+                textLine = "Record#";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+                textLine = "Date/Time";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+                textLine = "Radon" + strRadonUnits;
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+                textLine = "Temperature" + strTempUnits;
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+                textLine = "Pressure" + strPressUnits;
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+                textLine = "Humidity (%)";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+                textLine = "Tilts";
+                contents.showText(textLine);
+                textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                contents.moveTextPositionByAmount(20+textWidth, 0);
+            }
+            
+            contents.endText();
             
         } catch (IOException ex) {
             System.out.println(ex);

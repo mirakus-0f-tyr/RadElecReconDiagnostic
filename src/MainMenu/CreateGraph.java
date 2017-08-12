@@ -14,7 +14,6 @@ import java.time.format.DateTimeFormatter;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.io.File;
 import java.text.DecimalFormat;
@@ -23,6 +22,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
@@ -55,6 +56,10 @@ import org.jfree.ui.RectangleEdge;
 public class CreateGraph extends JFrame {
     
     public static double OverallAvgRnC = 0;
+    
+    public static ArrayList<ArrayList<String>> HourlyReconData = new ArrayList<>();
+    
+    public static SimpleDateFormat dateFormat_Intl = new SimpleDateFormat("dd-MMM-yyyy HH:mm");
     
     static class MyPanel extends JPanel implements ChartMouseListener {
         
@@ -168,7 +173,7 @@ public class CreateGraph extends JFrame {
                 plot.setRangeAxis(3, new NumberAxis("Pressure (inHg)"));
             }
             plot.setRangeAxis(1, new NumberAxis("%Humidity"));
-            plot.setRangeAxis(4, new NumberAxis("Movement"));
+            plot.setRangeAxis(4, new NumberAxis("Tilt"));
             plot.setDomainAxis(new NumberAxis("Elapsed Time (Hours)"));
             
             //don't display decimal places on the Movement y-axis
@@ -194,6 +199,21 @@ public class CreateGraph extends JFrame {
             plot.getRangeAxis(3).setLabelPaint(Color.ORANGE); //Pressure
             plot.getRangeAxis(4).setLabelPaint(Color.LIGHT_GRAY); //Movement
             
+            //Set Y-Axis (range) axis colors, after the ranges have been mapped.
+            plot.getRangeAxis(0).setAxisLinePaint(Color.DARK_GRAY); //Radon
+            plot.getRangeAxis(1).setAxisLinePaint(Color.BLUE); //Humidity
+            plot.getRangeAxis(2).setAxisLinePaint(Color.RED); //Temperature
+            plot.getRangeAxis(3).setAxisLinePaint(Color.ORANGE); //Pressure
+            plot.getRangeAxis(4).setAxisLinePaint(Color.LIGHT_GRAY); //Movement
+            
+            //Set Y-Axis (range) tick label colors, after the ranges have been mapped.
+            plot.getRangeAxis(0).setTickLabelPaint(Color.DARK_GRAY); //Radon
+            plot.getRangeAxis(1).setTickLabelPaint(Color.BLUE); //Humidity
+            plot.getRangeAxis(2).setTickLabelPaint(Color.RED); //Temperature
+            plot.getRangeAxis(3).setTickLabelPaint(Color.ORANGE); //Pressure
+            plot.getRangeAxis(4).setTickLabelPaint(Color.LIGHT_GRAY); //Movement
+            
+            
             JFreeChart chart = new JFreeChart("Radon Concentration", getFont(), plot, true);
             chart.setBackgroundPaint(Color.white);
             return chart;
@@ -212,6 +232,13 @@ public class CreateGraph extends JFrame {
             DateTimeFormatter DateTimeDisplay = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm");
             LocalDateTime ReconDate = null;
             LocalDateTime HourCounter = null;
+            
+            //Number Format Stuff
+            NumberFormat formatUS_RnC = new DecimalFormat("#0.0");
+            NumberFormat formatSI_RnC = new DecimalFormat("#0");
+            NumberFormat formatZero = new DecimalFormat("#0"); //redundant, but easier to read
+            NumberFormat formatTenth = new DecimalFormat("#0.0");
+            
             long Ch1Counts = 0;
             long Ch2Counts = 0;
             double hourlyAvgHumidity = 0;
@@ -238,7 +265,7 @@ public class CreateGraph extends JFrame {
             XYSeries AvgHumidity_Series = new XYSeries("%Humidity");
             XYSeries AvgTemp_Series = new XYSeries("Temperature");
             XYSeries AvgPress_Series = new XYSeries("Pressure");
-            XYSeries Movement_Series = new XYSeries("Movement");
+            XYSeries Movement_Series = new XYSeries("Tilt");
             
             //Confirm whether we're in SI/US Units
             if(strUnitSystem.equals("SI")) {
@@ -249,6 +276,12 @@ public class CreateGraph extends JFrame {
                 System.out.println("No units detected in Config for graph... defaulting to US.");
             }
             
+            HourlyReconData.clear(); //Let's clear our summary array, which will be used for the detailed summary in the PDF.
+            
+            //Needed for building HourlyReconData arraylist...
+            ArrayList<String> arrLine = new ArrayList<>();
+            ArrayList<String> arrLine_temp = new ArrayList<>();
+        
             //Iterate through the ArrayList, to build each series.
             for(int arrayCounter = 0; arrayCounter < LoadedReconTXTFile.size(); arrayCounter++) {
                 if(LoadedReconTXTFile.get(arrayCounter).get(2).equals("S")||(LoadedReconTXTFile.get(arrayCounter).get(2).equals("I"))||(LoadedReconTXTFile.get(arrayCounter).get(2).equals("E"))) { //Only build data from S, I, and E flags.
@@ -318,18 +351,48 @@ public class CreateGraph extends JFrame {
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //This will calculate hourly average of both chambers (in Bq/m3)
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter)); //This will calculate hourly average temperature (in Celsius)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
+                                
                                 TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
+                                
+                                //Add to HourlyReconData array, to be used in our PDF (only SI-specific elements to be added)
+                                arrLine.add(0, Long.toString(TotalHourCounter)); //Total Hour Counter Index = 0
+                                arrLine.add(1, (ReconDate.toString())); //Datetime Index = 1;
+                                arrLine.add(2, formatSI_RnC.format(((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37)); //Hourly Avg Radon Index = 2
+                                arrLine.add(3, formatZero.format(hourlyAvgTemp/avgCounter)); //Hourly Avg Temperature (in Celsius) Index = 3
+                                arrLine.add(4, formatTenth.format(hourlyAvgPress / avgCounter)); //Hourly Avg Pressure (in mbar) Index = 4
+                                arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
+                                arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
+                                arrLine.add(7, Double.toString((tempCounts_Ch1/LoadedReconCF1)*37)); //Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(8, Double.toString((tempCounts_Ch2/LoadedReconCF2)*37)); //Hourly Chamber 2 radon concentration Index = 8
+                                
                             } else {
                                 Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
                                 Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2));
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //This will calculate hourly average of both chambers
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter) * (9/5) + 32); //This will calculate hourly average temperature (in Fahrenheit)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
+                                
                                 TotalAvgRnC = TotalAvgRnC + ((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2)/2); //Overall AvgRnC (in pCi/L)
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
+                                
+                                //Add to HourlyReconData array, to be used in our PDF (only US-specific elements to be added)
+                                arrLine.add(0, Long.toString(TotalHourCounter)); //Total Hour Counter Index = 0
+                                arrLine.add(1, (ReconDate.toString())); //Datetime Index = 1;
+                                arrLine.add(2, formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //Hourly Avg Radon Index = 2
+                                arrLine.add(3, formatZero.format((hourlyAvgTemp / avgCounter) * (9/5) + 32)); //Hourly Avg Temperature (in Fahrenheit) Index = 3
+                                arrLine.add(4, formatTenth.format((hourlyAvgPress / avgCounter)*0.02952998751)); //Hourly Avg Pressure (in inHg) Index = 4
+                                arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
+                                arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
+                                arrLine.add(7, Double.toString(tempCounts_Ch1/LoadedReconCF1)); //Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(8, Double.toString(tempCounts_Ch2/LoadedReconCF2)); //Hourly Chamber 2 radon concentration Index = 8
                             }
-
+                            
+                            //Finalize HourlyReconData line, and add it to the ArrayList
+                            arrLine_temp = (ArrayList<String>) arrLine.clone(); //This seems really stupid, but if you don't clone the ArrayList to a temporary holder, it'll be lost after arrLine.clear() below.
+                            HourlyReconData.add(arrLine_temp); //This will add the temporary arrLine into the primary HourlyReconData ArrayList.
+                            arrLine.clear();
+                            
                             //Reset the temporary chamber counts
                             tempCounts_Ch1 = 0;
                             tempCounts_Ch2 = 0;
