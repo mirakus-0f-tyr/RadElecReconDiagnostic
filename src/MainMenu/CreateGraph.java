@@ -73,6 +73,7 @@ public class CreateGraph extends JFrame {
 
         public MyPanel() {
             super(new BorderLayout());
+            SERIES_COUNT = 1; //always assign static value here, or else it'll get screwy when we switch between Diagnostic and End-User mode
             if(MainMenu.MainMenuUI.diagnosticMode) {
                 SERIES_COUNT = SERIES_COUNT + 2; //if we're in diagnostic mode, then let's make sure to increase our SERIES_COUNT to account for both chambers.
             }

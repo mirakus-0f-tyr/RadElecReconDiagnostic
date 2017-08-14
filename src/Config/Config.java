@@ -318,6 +318,9 @@ public class Config extends javax.swing.JFrame {
             writeConfig();
             //Let's write our report parameters
             writeReportTXT();
+            //Let's reload our config settings
+            MainMenuUI.parseConfigTXT();
+            //Setting button enabled...
             MainMenuUI.btnConfig.setEnabled(true);
         } catch (IOException e) {
             System.out.println("ERROR: Unable to write to company.txt (to store updated company information).");

@@ -643,7 +643,7 @@ public void createCompanyTXT() {
         }
 }
 
-public void createConfigTXT() {
+public static void createConfigTXT() {
     String configTXT = "config/config.txt";
         try {
             PrintWriter pw = new PrintWriter(configTXT);
@@ -655,12 +655,15 @@ public void createConfigTXT() {
         }
 }
 
-public void parseConfigTXT() {
+public static void parseConfigTXT() {
     // set name of config text file
     String configTextFile = "config/config.txt";
     
     // try to parse the config file
     try {
+        
+        System.out.println("Loading current settings from config.txt...");
+        
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
         for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
