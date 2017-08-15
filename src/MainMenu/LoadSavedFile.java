@@ -39,6 +39,7 @@ public class LoadSavedFile {
     public static String strDeployedBy = "Unknown";
     public static String strRetrievedBy = "Unknown";
     public static String strAnalyzedBy = "Unknown";
+    public static String strCalDate = "Unknown";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -102,6 +103,10 @@ public class LoadSavedFile {
                     }
                     if(strLine.contains("Analyzed By:")) {
                         strAnalyzedBy = strLine.substring(12);
+                    }
+                    if(strLine.contains("Calibration Date =")) {
+                        strLine_parsed = StringUtils.split(strLine, "=");
+                        strCalDate = strLine_parsed[1].trim();
                     }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {

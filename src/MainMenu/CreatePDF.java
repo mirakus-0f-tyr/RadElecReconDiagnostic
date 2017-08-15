@@ -25,8 +25,8 @@ import static MainMenu.LoadSavedFile.strInstrumentSerial;
 import static MainMenu.LoadSavedFile.strDeployedBy;
 import static MainMenu.LoadSavedFile.strRetrievedBy;
 import static MainMenu.LoadSavedFile.strAnalyzedBy;
+import static MainMenu.LoadSavedFile.strCalDate;
 import static MainMenu.CreateGraph.OverallAvgRnC;
-import static MainMenu.LoadSavedFile.LoadedReconTXTFile;
 import static MainMenu.CreateGraph.HourlyReconData;
 
 import java.io.BufferedReader;
@@ -59,11 +59,11 @@ public class CreatePDF {
     public static String strInstrumentType = "Recon CRM";
     public static String strLocation = "Basement";
     public static String strCustomReportText;
-    public static String strDateLastCalibrated = "Unknown";
     
     float PDF_Y = 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
-    static String validDate = "dd-MMM-yyyy";
+    static String validDate = "MM/dd/yyyy";
+    SimpleDateFormat dateFormatCalibration = new SimpleDateFormat("MM/dd/yyyy");
     Date currentDate = new Date();
     
     //Margin Stuff
@@ -198,14 +198,14 @@ public class CreatePDF {
             
             //Calibration Line (same PDF_Y as Analyzed By)
             fontSize = 12;
-            textLine = "Last Calibration: " + strDateLastCalibrated + "    Next Calibration Due: ";
-            String strDateCalibrationDue;
-            if(isValidDate(strDateLastCalibrated)) {
+            textLine = "Cal. Date: " + strCalDate + "   Cal. Due: ";
+            String strDateCalibrationDue = "Unknown";
+            if(isValidDate(strCalDate)) {
                 try {
                     Calendar dateInstance = Calendar.getInstance();
-                    dateInstance.setTime((Date)dateFormat.parse(strDateLastCalibrated));
+                    dateInstance.setTime((Date)dateFormatCalibration.parse(strCalDate));
                     dateInstance.add(Calendar.YEAR,1);
-                    strDateCalibrationDue = dateInstance.toString();
+                    strDateCalibrationDue = dateFormatCalibration.format(dateInstance.getTime());
                 } catch (ParseException ex) {
                     System.out.println("Unable to parse calibration date... this shouldn't have happened!");
                     strDateCalibrationDue = "Unknown";
@@ -224,6 +224,7 @@ public class CreatePDF {
             contents.endText();
             
             //Analyzed By, Deployed By, Retrieved By Lines
+            fontSize = 12;
             contents.beginText();
             textLine = "Analyzed By: ";
             contents.setFont(fontBold, fontSize);

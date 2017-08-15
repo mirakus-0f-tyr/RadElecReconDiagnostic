@@ -15,6 +15,7 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -66,6 +67,7 @@ public class ScanComm {
     public static int fullYear = 2000;
     public static String ReconWaitTime = "Unknown";
     public static String ReconDurationSetting = "Unknown";
+    public static String ReconCalDate = "Unknown";
     
     public static void main(String[] args) {
         try {
@@ -326,6 +328,7 @@ public class ScanComm {
             String[] CF_Array = CheckCalibrationFactors(scannedPort); //Let's pull the calibration factors
             CF1 = Double.parseDouble(CF_Array[0]) / 1000; //We need to add error-handling for this...
             CF2 = Double.parseDouble(CF_Array[1]) / 1000; //We need to add error-handling for this, too...
+            ReconCalDate = GetCalibrationDate(scannedPort);
             Thread.sleep(10);
             WriteComm.main(scannedPort, CheckNewRecord); //We need to go to the :RB first.
             Thread.sleep(10);
@@ -545,6 +548,7 @@ public class ScanComm {
                 writer.println("Instrument Duration Setting = " + ReconDurationSetting);
 		writer.println("Chamber 1 CF: " + cfDec.format(CF1));
 		writer.println("Chamber 2 CF: " + cfDec.format(CF2));
+                writer.println("Calibration Date = " + ReconCalDate);
             }
 
 	    // or this if we're in regular user mode
@@ -578,6 +582,7 @@ public class ScanComm {
                 writer.println("Avg. Temperature = " + RoundAvg.format(AvgTemperature/ActiveRecordCounts) + "C");
 		writer.println("Chamber 1 CF: " + cfDec.format(CF1));
 		writer.println("Chamber 2 CF: " + cfDec.format(CF2));
+                writer.println("Calibration Date = " + ReconCalDate);
 		writer.println("\n");
 
 		writer.println("Radon Concentration");
@@ -791,5 +796,30 @@ public class ScanComm {
             System.out.println(ex);
         }
         return new String[] {"0","0"};
+    }
+    
+    public static String GetCalibrationDate(SerialPort scannedPort) throws InterruptedException {
+        try {
+            Thread.sleep(125);
+            System.out.println("Issuing :RL command to determine calibration date.");
+            WriteComm.main(scannedPort, ReadCalibrationFactors);
+            Thread.sleep(125);
+            String CalDate;
+            Integer TempYear;
+            String DeviceResponse = ReadComm.main(scannedPort, 19);
+            String DeviceResponse_targeted = StringUtils.left(DeviceResponse,3);
+            if(DeviceResponse_targeted.equals("=RL")) {
+                String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
+                CalDate = DeviceResponse_parsed[4] + "/" + DeviceResponse_parsed[5] + "/20" + DeviceResponse_parsed[3]; //default US format works for now
+                System.out.println("Calibration Date = " + CalDate);
+                return CalDate;
+            } else {
+                System.out.println("Unexpected response when trying to read calibration date!");
+            }
+        } catch (InterruptedException ex) {
+            System.out.println(ex);
+        }
+        System.out.println("Unable to determine calibration date!");
+        return "Unknown";
     }
 }
