@@ -32,10 +32,13 @@ import static MainMenu.CreateGraph.HourlyReconData;
 import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.text.DateFormat;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
@@ -56,8 +59,11 @@ public class CreatePDF {
     public static String strInstrumentType = "Recon CRM";
     public static String strLocation = "Basement";
     public static String strCustomReportText;
+    public static String strDateLastCalibrated = "Unknown";
+    
     float PDF_Y = 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    static String validDate = "dd-MMM-yyyy";
     Date currentDate = new Date();
     
     //Margin Stuff
@@ -131,14 +137,12 @@ public class CreatePDF {
             contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            
             //Data Column Headers
             contents.beginText();
             fontSize = 12;
             contents.setFont(fontBold, fontSize);
             PDF_Y -= 1f*fontSize;
-            String[] strColumnHeaders = {"Serial", "Instrument", "Location", "Test Start Date", "Test End Date", "Results "};
-            //textLine = "Serial          Instrument          Location          Test Start Date          Test End Date          Results ";
+            String[] strColumnHeaders = {"Serial#", "Instrument", "Location", "Start Date/Time", "End Date/Time", "Results "};
             if(strUnitSystem.equals("SI")) {
                 strColumnHeaders[5] += "(Bq/m³)";
             } else {
@@ -189,40 +193,40 @@ public class CreatePDF {
             }
             contents.endText();
             
-            //Draw yet another line (below data summary)
-            PDF_Y -= 0.5f*fontSize;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            //Average Radon Concentration Banner
+            DrawAverageRadonBanner(contents, page, fontBold, true);
             
-            //Average Results Banner
-            contents.beginText();
-            fontSize = 18;
-            contents.setFont(fontBold, fontSize);
-            PDF_Y -= 1f*fontSize;
-            textLine = "Average Radon Concentration in:          " + strLocation + "          " + strOverallAvgRnC;
-            if(strUnitSystem.equals("SI")) {
-                textLine += " Bq/m³";
+            //Calibration Line (same PDF_Y as Analyzed By)
+            fontSize = 12;
+            textLine = "Last Calibration: " + strDateLastCalibrated + "    Next Calibration Due: ";
+            String strDateCalibrationDue;
+            if(isValidDate(strDateLastCalibrated)) {
+                try {
+                    Calendar dateInstance = Calendar.getInstance();
+                    dateInstance.setTime((Date)dateFormat.parse(strDateLastCalibrated));
+                    dateInstance.add(Calendar.YEAR,1);
+                    strDateCalibrationDue = dateInstance.toString();
+                } catch (ParseException ex) {
+                    System.out.println("Unable to parse calibration date... this shouldn't have happened!");
+                    strDateCalibrationDue = "Unknown";
+                }
             } else {
-                textLine += " pCi/L";
+                strDateCalibrationDue = "Unknown";
             }
-            contents.newLineAtOffset(marginSide,PDF_Y);
+            textLine += strDateCalibrationDue;
+            textWidth = fontDefault.getStringWidth(textLine) / 1000 * fontSize;
+            contents.beginText();
+            contents.setFont(fontDefault, fontSize);
+            float PDF_Y_temp = PDF_Y;
+            PDF_Y_temp -= 1.5f*fontSize; //Let's get a little extra space between this and the previous line
+            contents.newLineAtOffset(page.getMediaBox().getWidth()-marginSide-textWidth, PDF_Y_temp);
             contents.showText(textLine);
             contents.endText();
             
-            //Another Line (below Average Results Banner)
-            PDF_Y -= 0.5f*fontSize;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            
             //Analyzed By, Deployed By, Retrieved By Lines
             contents.beginText();
-            fontSize = 12;
-            contents.setFont(fontBold, fontSize);
-            float PDF_Y_temp = PDF_Y;
-            PDF_Y_temp -= 1.5f*fontSize; //Let's get a little extra space between this and the previous line
             textLine = "Analyzed By: ";
+            contents.setFont(fontBold, fontSize);
             textWidth = fontBold.getStringWidth(textLine) / 1000 * fontSize;
             contents.newLineAtOffset(marginSide, PDF_Y_temp);
             contents.showText(textLine);
@@ -403,10 +407,13 @@ public class CreatePDF {
             DrawCompanyHeader(contents, page_chart, fontDefault, marginTop);
             
             //Draw Title Block again on this second page
-            DrawTitleHeader(contents, page_chart, "Radon Exposure Graphical Display", fontBold, fontDefault);
+            DrawTitleHeader(contents, page_chart, "Graphical Radon Report", fontBold, fontDefault);
             
             //Draw Customer / Test Site Info Block on this second page, too...
             DrawCustomerTestSiteBlock(contents, page_chart, fontBold, fontDefault);
+            
+            //Draw Average Radon Concentration Banner
+            DrawAverageRadonBanner(contents, page_chart, fontBold, false);
             
             //This draws the graph image (graph.jpg), which was externalized to the file in the CreateGraph class.
             PDImageXObject graphJPG = PDImageXObject.createFromFile("graph.jpg", doc);
@@ -425,10 +432,13 @@ public class CreatePDF {
             DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
             
             //Draw Title Block again on this third page
-            DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+            DrawTitleHeader(contents, page_detailed, "Hourly Radon Report", fontBold, fontDefault);
             
             //Draw Customer / Test Site Info Block on this third page, too...
             DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
+            
+            //Draw Average Radon Concentration Banner
+            DrawAverageRadonBanner(contents, page_detailed, fontBold, false);
             
             //Draw Column Headers
             DrawDetailedColumnHeaders(contents, fontBold);
@@ -479,6 +489,8 @@ public class CreatePDF {
                     PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
                     DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
                     DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+                    DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
+                    DrawAverageRadonBanner(contents, page_chart, fontBold, false);
                     PDF_Y -= 15;
                     DrawDetailedColumnHeaders(contents, fontBold);
                 }
@@ -710,6 +722,58 @@ public class CreatePDF {
         }
     }
     
+    private void DrawAverageRadonBanner(PDPageContentStream contents, PDPage page, PDFont font, boolean drawTopDoubleLines) {
+        try {
+            
+            String strOverallAvgRnC;
+            if(strUnitSystem.equals("SI")) {
+                strOverallAvgRnC = new DecimalFormat("0").format(OverallAvgRnC); //no decimal places for Bq/m3
+            } else {
+                strOverallAvgRnC = new DecimalFormat("0.0").format(OverallAvgRnC); //tenth decimal place for pCi/L
+            }
+            
+            //Draw yet another pair of double-lines (above Average Results Banner) -- if drawTopDoubleLines is true!
+            if(drawTopDoubleLines) {
+                PDF_Y -= 0.5f*fontSize;
+                contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+                contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+                contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+                PDF_Y -= 3;
+                contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+                contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+                contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            }
+            
+            //Average Results Banner
+            contents.beginText();
+            fontSize = 18;
+            contents.setFont(font, fontSize);
+            PDF_Y -= 1f*fontSize;
+            String textLine = "Average Radon Concentration in:          " + strLocation + "          " + strOverallAvgRnC;
+            if(strUnitSystem.equals("SI")) {
+                textLine += " Bq/m³";
+            } else {
+                textLine += " pCi/L";
+            }
+            contents.newLineAtOffset(marginSide,PDF_Y);
+            contents.showText(textLine);
+            contents.endText();
+            
+            //Another Double-Line (below Average Results Banner)
+            PDF_Y -= 0.5f*fontSize;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            PDF_Y -= 3;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
     private void DrawDetailedColumnHeaders(PDPageContentStream contents, PDFont font) {
         try {
             
@@ -807,6 +871,18 @@ public class CreatePDF {
             
         } catch (IOException ex) {
             System.out.println(ex);
+        }
+    }
+    
+    public static boolean isValidDate(String date) 
+    {
+        try {
+            DateFormat df = new SimpleDateFormat(validDate);
+            df.setLenient(false);
+            df.parse(date);
+            return true;
+        } catch (ParseException ex) {
+            return false;
         }
     }
     

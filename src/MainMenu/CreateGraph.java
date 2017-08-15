@@ -177,14 +177,14 @@ public class CreateGraph extends JFrame {
             plot.setRangeAxis(4, new NumberAxis("Tilt"));
             plot.setDomainAxis(new NumberAxis("Elapsed Time (Hours)"));
             
-            //don't display decimal places on the Movement y-axis
+            //don't display decimal places on the Tilts/Movement y-axis
             NumberAxis rangeMovement = (NumberAxis)plot.getRangeAxis(4);
             NumberFormat formatterMovement = DecimalFormat.getInstance();
             formatterMovement.setMinimumFractionDigits(0);
             formatterMovement.setMaximumFractionDigits(0);
             rangeMovement.setNumberFormatOverride(formatterMovement);
             rangeMovement.setTickUnit(new NumberTickUnit(1));
-            
+            rangeMovement.setRange(0,10); //for right now, this should be sufficient.
             
             //Map each dataset to its unique y-axis / range.
             plot.mapDatasetToRangeAxis(0, 0);
