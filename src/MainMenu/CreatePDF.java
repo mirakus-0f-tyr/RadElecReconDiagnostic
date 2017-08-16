@@ -36,7 +36,6 @@ import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -115,83 +114,8 @@ public class CreatePDF {
             //Customer / Test Site Info Block
             DrawCustomerTestSiteBlock(contents, page, fontBold, fontDefault);
             
-            fontSize = 12;
-            textLine = "A Rad Elec Recon Continuous Radon Monitor was used for radon screening measurements that were conducted at the above referenced test site by: " + strCompany_Name;
-            
-            //WrapMultiLineText is jumbled as all hell, but at least it's continued to a single method.
-            PDF_Y -= 20;
-            WrapMultiLineText (contents,page,marginSide,PDF_Y,textLine,fontDefault,fontSize,marginSide);
-            
-            //Results Header Line
-            contents.beginText();
-            fontSize = 14;
-            contents.setFont(fontBold, fontSize);
-            PDF_Y -= 0.5f*fontSize; //We already have a space buffer from the WrapMultiLineText() call above, so let's just give us a tad more...
-            textLine = "The results are as follows:";
-            contents.newLineAtOffset(marginSide,PDF_Y);
-            contents.showText(textLine);
-            contents.endText();
-            
-            //Draw Another Line (above data column headers)
-            PDF_Y -= 1f*fontSize;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            //Data Column Headers
-            contents.beginText();
-            fontSize = 12;
-            contents.setFont(fontBold, fontSize);
-            PDF_Y -= 1f*fontSize;
-            String[] strColumnHeaders = {"Serial#", "Instrument", "Location", "Start Date/Time", "End Date/Time", "Results "};
-            if(strUnitSystem.equals("SI")) {
-                strColumnHeaders[5] += "(Bq/m³)";
-            } else {
-                strColumnHeaders[5] += "(pCi/L)";
-            }
-            contents.newLineAtOffset((((page.getMediaBox().getWidth()-marginSide*2)) / -6)+marginSide, PDF_Y); //a bit hacky, but the logic should be sound...
-            for (int i = 0; i < strColumnHeaders.length; i++) {
-                contents.moveTextPositionByAmount(((page.getMediaBox().getWidth()-marginSide*2)) / 6, 0);
-                switch(i) {
-                    case 1: contents.moveTextPositionByAmount(-40,0); //hacky, to fine-tune column spacing
-                    case 4: contents.moveTextPositionByAmount(15,0);
-                    case 5: contents.moveTextPositionByAmount(10,0);
-                }
-                contents.showText(strColumnHeaders[i]);
-            }
-            contents.endText();
-            
-            //Draw Another Line (below data column headers)
-            PDF_Y -= 0.5f*fontSize;
-            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            
-            //Draw Data Summary
-            String strOverallAvgRnC;
-            if(strUnitSystem.equals("SI")) {
-                strOverallAvgRnC = new DecimalFormat("0").format(OverallAvgRnC); //no decimal places for Bq/m3
-            } else {
-                strOverallAvgRnC = new DecimalFormat("0.0").format(OverallAvgRnC); //tenth decimal place for pCi/L
-            }
-            fontSize = 12;
-            contents.setFont(fontDefault, fontSize);
-            PDF_Y -= 1.0f * fontSize;
-            contents.beginText();
-            contents.newLineAtOffset((((page.getMediaBox().getWidth()-marginSide*2)) / -6)+marginSide, PDF_Y);
-            String[] combinedDataArray = {strInstrumentSerial, strInstrumentType, strLocation, strStartDate, strEndDate, strOverallAvgRnC};
-            for (int i = 0; i < combinedDataArray.length; i++) {
-                contents.moveTextPositionByAmount(((page.getMediaBox().getWidth()-marginSide*2)) / 6, 0);
-                switch(i) {
-                    case 1: contents.moveTextPositionByAmount(-40,0); //hacky, to fine-tune column spacing
-                    case 4: contents.moveTextPositionByAmount(15,0);
-                    case 5: contents.moveTextPositionByAmount(10,0);
-                }
-                if(i==combinedDataArray.length-1) { //Another hack for the results -- why is the switch statement above so twitchy?
-                    contents.moveTextPositionByAmount(30-(strOverallAvgRnC.length()/2), 0);
-                }
-                contents.showText(combinedDataArray[i]);
-            }
-            contents.endText();
+            //Test Summary Block
+            drawTestSummaryBlock(contents, page, fontDefault, fontBold);
             
             //Average Radon Concentration Banner
             DrawAverageRadonBanner(contents, page, fontBold, true);
@@ -413,8 +337,11 @@ public class CreatePDF {
             //Draw Customer / Test Site Info Block on this second page, too...
             DrawCustomerTestSiteBlock(contents, page_chart, fontBold, fontDefault);
             
+            //Test Summary Block
+            drawTestSummaryBlock(contents, page, fontDefault, fontBold);
+            
             //Draw Average Radon Concentration Banner
-            DrawAverageRadonBanner(contents, page_chart, fontBold, false);
+            DrawAverageRadonBanner(contents, page_chart, fontBold, true);
             
             //This draws the graph image (graph.jpg), which was externalized to the file in the CreateGraph class.
             PDImageXObject graphJPG = PDImageXObject.createFromFile("graph.jpg", doc);
@@ -438,8 +365,11 @@ public class CreatePDF {
             //Draw Customer / Test Site Info Block on this third page, too...
             DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
             
+            //Test Summary Block
+            drawTestSummaryBlock(contents, page, fontDefault, fontBold);
+            
             //Draw Average Radon Concentration Banner
-            DrawAverageRadonBanner(contents, page_detailed, fontBold, false);
+            DrawAverageRadonBanner(contents, page_detailed, fontBold, true);
             
             //Draw Column Headers
             DrawDetailedColumnHeaders(contents, fontBold);
@@ -482,7 +412,8 @@ public class CreatePDF {
                 contents.endText();
                 
                 
-                if(PDF_Y-1.0f*fontSize <= marginBottom) { //We need to be able to add a new page for long exposures.
+                if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
+                    //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
                     contents.close();
                     page_detailed = new PDPage(PDRectangle.A4);
                     doc.addPage(page_detailed);
@@ -491,10 +422,12 @@ public class CreatePDF {
                     DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
                     DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
                     DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
-                    DrawAverageRadonBanner(contents, page_chart, fontBold, false);
+                    drawTestSummaryBlock(contents, page, fontDefault, fontBold);
+                    DrawAverageRadonBanner(contents, page_chart, fontBold, true);
                     PDF_Y -= 15;
                     DrawDetailedColumnHeaders(contents, fontBold);
                 }
+                
             }
             
             //End PDF Generation (i.e. rat's nest code)
@@ -503,6 +436,13 @@ public class CreatePDF {
             contents.close();
             
             doc.save(PDF_Name);
+            
+            //Draw the footer info (page #, version, etc.)
+            //It's a bit shoddy, but because we're appending, we need to have already saved it
+            //and then re-open the file.
+            File ReconPDF = new File(PDF_Name);
+            drawFooterInfo(ReconPDF, PDF_Name);
+            
             System.out.println(PDF_Name + " has been created.");
             MainMenu.MainMenuUI.lblSystemConsole.setText("PDF has been created.");
         }
@@ -875,8 +815,117 @@ public class CreatePDF {
         }
     }
     
-    public static boolean isValidDate(String date) 
-    {
+    public void drawTestSummaryBlock(PDPageContentStream contents, PDPage page, PDFont fontDefault, PDFont fontBold) {
+        try {
+            fontSize = 12;
+            String textLine = "A Rad Elec Recon® CRM (NRPP Device Code #8304) was used for radon screening measurements that were conducted at the above referenced test site by: " + strCompany_Name;
+            
+            //WrapMultiLineText is jumbled as all hell, but at least it's continued to a single method.
+            PDF_Y -= 20;
+            WrapMultiLineText (contents,page,marginSide,PDF_Y,textLine,fontDefault,fontSize,marginSide);
+            
+            //Results Header Line
+            contents.beginText();
+            fontSize = 14;
+            contents.setFont(fontBold, fontSize);
+            PDF_Y -= 0.5f*fontSize; //We already have a space buffer from the WrapMultiLineText() call above, so let's just give us a tad more...
+            textLine = "The results are as follows:";
+            contents.newLineAtOffset(marginSide,PDF_Y);
+            contents.showText(textLine);
+            contents.endText();
+            
+            //Draw Another Line (above data column headers)
+            PDF_Y -= 1f*fontSize;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            //Data Column Headers
+            contents.beginText();
+            fontSize = 12;
+            contents.setFont(fontBold, fontSize);
+            PDF_Y -= 1f*fontSize;
+            String[] strColumnHeaders = {"Serial#", "Instrument", "Location", "Start Date/Time", "End Date/Time", "Results "};
+            if(strUnitSystem.equals("SI")) {
+                strColumnHeaders[5] += "(Bq/m³)";
+            } else {
+                strColumnHeaders[5] += "(pCi/L)";
+            }
+            contents.newLineAtOffset((((page.getMediaBox().getWidth()-marginSide*2)) / -6)+marginSide, PDF_Y); //a bit hacky, but the logic should be sound...
+            for (int i = 0; i < strColumnHeaders.length; i++) {
+                contents.moveTextPositionByAmount(((page.getMediaBox().getWidth()-marginSide*2)) / 6, 0);
+                switch(i) {
+                    case 1: contents.moveTextPositionByAmount(-40,0); //hacky, to fine-tune column spacing
+                    case 4: contents.moveTextPositionByAmount(15,0);
+                    case 5: contents.moveTextPositionByAmount(10,0);
+                }
+                contents.showText(strColumnHeaders[i]);
+            }
+            contents.endText();
+            
+            //Draw Another Line (below data column headers)
+            PDF_Y -= 0.5f*fontSize;
+            contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            
+            //Draw Data Summary
+            String strOverallAvgRnC;
+            if(strUnitSystem.equals("SI")) {
+                strOverallAvgRnC = new DecimalFormat("0").format(OverallAvgRnC); //no decimal places for Bq/m3
+            } else {
+                strOverallAvgRnC = new DecimalFormat("0.0").format(OverallAvgRnC); //tenth decimal place for pCi/L
+            }
+            fontSize = 12;
+            contents.setFont(fontDefault, fontSize);
+            PDF_Y -= 1.0f * fontSize;
+            contents.beginText();
+            contents.newLineAtOffset((((page.getMediaBox().getWidth()-marginSide*2)) / -6)+marginSide, PDF_Y);
+            String[] combinedDataArray = {strInstrumentSerial, strInstrumentType, strLocation, strStartDate, strEndDate, strOverallAvgRnC};
+            for (int i = 0; i < combinedDataArray.length; i++) {
+                contents.moveTextPositionByAmount(((page.getMediaBox().getWidth()-marginSide*2)) / 6, 0);
+                switch(i) {
+                    case 1: contents.moveTextPositionByAmount(-40,0); //hacky, to fine-tune column spacing
+                    case 4: contents.moveTextPositionByAmount(15,0);
+                    case 5: contents.moveTextPositionByAmount(10,0);
+                }
+                if(i==combinedDataArray.length-1) { //Another hack for the results -- why is the switch statement above so twitchy?
+                    contents.moveTextPositionByAmount(30-(strOverallAvgRnC.length()/2), 0);
+                }
+                contents.showText(combinedDataArray[i]);
+            }
+            contents.endText();            
+        } catch (IOException ex) {
+            System.out.println(ex);
+        }
+    }
+    
+    //Write page numbers and version numbers in lower right margin
+    private void drawFooterInfo(File ReconPDF, String FileName) {
+        try {
+            PDDocument doc = PDDocument.load(ReconPDF);
+            PDFont fontDefault = PDType0Font.load(doc, new File("fonts/calibri.ttf")); //Truetype fonts are easier to utilize when it comes to margins, etc.
+            if(doc.getNumberOfPages() >= 1) {
+                fontSize = 8;
+                for (int numPages = 0; numPages < doc.getNumberOfPages(); numPages++) {
+                    PDPage page = doc.getPage(numPages);
+                    PDPageContentStream contents = new PDPageContentStream(doc, page, true, false);
+                    String textLine = "Page " + (numPages+1) + " / " + doc.getNumberOfPages() + " (" + MainMenu.MainMenuUI.version + ")";
+                    float textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize);
+                    contents.beginText();
+                    contents.setFont(fontDefault, fontSize);
+                    contents.newLineAtOffset(page.getMediaBox().getWidth() - marginSide - textWidth, (float) (marginBottom*0.5));
+                    contents.showText(textLine);
+                    contents.endText();
+                    contents.close();
+                }
+                doc.save(FileName); //Only save if we've actually made changes
+            }
+        } catch (IOException ex) {
+            System.out.println("Could not write page footer lines!");
+        }
+    }
+    
+    public static boolean isValidDate(String date) {
         try {
             DateFormat df = new SimpleDateFormat(validDate);
             df.setLenient(false);
