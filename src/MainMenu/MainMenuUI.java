@@ -16,8 +16,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -57,6 +55,13 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int testDuration = 48;
     public static boolean displayStatus = false;
     
+    //Deployment Variables
+    public static String strProtocol = "Closed Building Conditions Met";
+    public static String strTampering = "No Tampering Detected";
+    public static String strWeather = "No Abnormal Weather Conditions";
+    public static String strMitigation = "No Mitigation System Installed";
+    public static String strComment = "Thanks for the business!";
+    
     /**
      * Creates new form MainMenuUI
      */
@@ -64,6 +69,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         //Auto-generated GUI builder
         parseCompanyTXT();
 	parseConfigTXT();
+        parseDeploymentTXT();
         initComponents();
         
         //Invis certain labels on load
@@ -710,7 +716,59 @@ public static void parseConfigTXT() {
     catch (IOException e){
 	System.out.println("WARNING: Unable to parse config.txt file... attempting to create file.");
         createConfigTXT();
-	//e.printStackTrace();
+    }
+    
+}
+
+public static void createDeploymentTXT() {
+    String configTXT = "config/deployment.txt";
+        try {
+            PrintWriter pw = new PrintWriter(configTXT);
+            pw.print("Protocol: Closed Building Conditions Met\n");
+            pw.print("Tampering: No Tampering Detected\n");
+            pw.print("Weather: No Abnormal Weather Conditions\n");
+            pw.print("Mitigation: No Mitigation System Installed\n");
+            pw.print("Comment: Thanks for the business!\n");
+            pw.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("ERROR: Unable to create deployment.txt file!");
+        }
+}
+
+public static void parseDeploymentTXT() {
+    // set name of deployment text file
+    String configTextFile = "config/deployment.txt";
+    
+    // try to parse the deployment file
+    try {  
+        System.out.println("Loading current settings from deployment.txt...");
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
+   
+        for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+            if(strLine.length() > 8 && strLine.substring(0,9).contains("Protocol:")) {
+                strProtocol = strLine.substring(9).trim(); //Should robustly parse protocol.
+            } else if(strLine.length() > 9 && strLine.substring(0,10).contains("Tampering:")) {
+                strTampering = strLine.substring(10).trim(); //Should robustly parse tampering.
+            } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Weather:")) {
+                strWeather = strLine.substring(8).trim(); //Should robustly parse weather.
+            } else if(strLine.length() > 10 && strLine.substring(0,11).contains("Mitigation:")) {
+                strMitigation = strLine.substring(11).trim(); //Should robustly parse mitigation.
+            } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Comment:")) {
+                strComment = strLine.substring(8).trim(); //Should robustly parse comment.
+            }
+        }
+	// cleanup buffered reader
+	br.close();
+    } catch (IOException e){
+	System.out.println("WARNING: Unable to parse deployment.txt file... attempting to create file.");
+        //Assign default values to the variables...
+        strProtocol = "Closed Building Conditions Met";
+        strTampering = "No Tampering Detected";
+        strWeather = "No Abnormal Weather Conditions";
+        strMitigation = "No Mitigation System Installed";
+        strComment = "Thanks for the business!";
+        createDeploymentTXT();
     }
     
 }

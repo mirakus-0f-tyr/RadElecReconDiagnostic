@@ -15,7 +15,6 @@ import java.text.ParseException;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.LinkedList;
 
 import org.apache.commons.lang3.StringUtils;
@@ -549,6 +548,11 @@ public class ScanComm {
 		writer.println("Chamber 1 CF: " + cfDec.format(CF1));
 		writer.println("Chamber 2 CF: " + cfDec.format(CF2));
                 writer.println("Calibration Date = " + ReconCalDate);
+                writer.println("Protocol: " + MainMenu.MainMenuUI.strProtocol);
+                writer.println("Tampering: " + MainMenu.MainMenuUI.strTampering);
+                writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
+                writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
+                writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
             }
 
 	    // or this if we're in regular user mode
@@ -583,6 +587,11 @@ public class ScanComm {
 		writer.println("Chamber 1 CF: " + cfDec.format(CF1));
 		writer.println("Chamber 2 CF: " + cfDec.format(CF2));
                 writer.println("Calibration Date = " + ReconCalDate);
+                writer.println("Protocol: " + MainMenu.MainMenuUI.strProtocol);
+                writer.println("Tampering: " + MainMenu.MainMenuUI.strTampering);
+                writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
+                writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
+                writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
 		writer.println("\n");
 
 		writer.println("Radon Concentration");

@@ -6,6 +6,11 @@
 package Config;
 
 import MainMenu.MainMenuUI;
+import static MainMenu.MainMenuUI.strComment;
+import static MainMenu.MainMenuUI.strMitigation;
+import static MainMenu.MainMenuUI.strProtocol;
+import static MainMenu.MainMenuUI.strTampering;
+import static MainMenu.MainMenuUI.strWeather;
 import java.io.*;
 
 /**
@@ -44,6 +49,7 @@ public class Config extends javax.swing.JFrame {
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
             LoadReportTXT();
+            loadDeploymentVariables();
             cboAppMode.setSelectedItem(strAppMode);
             cboUnitSystem.setSelectedItem(strUnitSystem);
             
@@ -84,6 +90,17 @@ public class Config extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         txtReportText = new javax.swing.JTextArea();
         lblReportText = new java.awt.Label();
+        pnlSettings2 = new java.awt.Panel();
+        lblProtocol = new java.awt.Label();
+        txtProtocol = new java.awt.TextField();
+        lblTampering = new java.awt.Label();
+        txtTampering = new java.awt.TextField();
+        txtWeather = new java.awt.TextField();
+        lblWeather = new java.awt.Label();
+        txtMitigation = new java.awt.TextField();
+        lblMitigation = new java.awt.Label();
+        txtComment = new java.awt.TextField();
+        lblComment = new java.awt.Label();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Config");
@@ -288,6 +305,98 @@ public class Config extends javax.swing.JFrame {
 
         tabConfig.addTab("Report", pnlSettings1);
 
+        pnlSettings2.setBackground(new java.awt.Color(204, 204, 204));
+
+        lblProtocol.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblProtocol.setName(""); // NOI18N
+        lblProtocol.setText("Protocol:");
+
+        txtProtocol.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtProtocol.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtProtocol.setName(""); // NOI18N
+
+        lblTampering.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblTampering.setName(""); // NOI18N
+        lblTampering.setText("Tampering:");
+
+        txtTampering.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtTampering.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtTampering.setName(""); // NOI18N
+
+        txtWeather.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtWeather.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtWeather.setName(""); // NOI18N
+
+        lblWeather.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblWeather.setName(""); // NOI18N
+        lblWeather.setText("Weather:");
+
+        txtMitigation.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtMitigation.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtMitigation.setName(""); // NOI18N
+
+        lblMitigation.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblMitigation.setName(""); // NOI18N
+        lblMitigation.setText("Mitigation:");
+
+        txtComment.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txtComment.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        txtComment.setName(""); // NOI18N
+
+        lblComment.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblComment.setName(""); // NOI18N
+        lblComment.setText("Comment:");
+
+        javax.swing.GroupLayout pnlSettings2Layout = new javax.swing.GroupLayout(pnlSettings2);
+        pnlSettings2.setLayout(pnlSettings2Layout);
+        pnlSettings2Layout.setHorizontalGroup(
+            pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettings2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblMitigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTampering, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblWeather, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblProtocol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(txtProtocol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtTampering, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
+                    .addComponent(txtWeather, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtMitigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(51, Short.MAX_VALUE))
+        );
+        pnlSettings2Layout.setVerticalGroup(
+            pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(pnlSettings2Layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtProtocol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblProtocol, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtTampering, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblTampering, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtWeather, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblWeather, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(txtMitigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblMitigation, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(txtComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(130, Short.MAX_VALUE))
+        );
+
+        tabConfig.addTab("Deployment", pnlSettings2);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -318,8 +427,12 @@ public class Config extends javax.swing.JFrame {
             writeConfig();
             //Let's write our report parameters
             writeReportTXT();
+            //Let's write our deployment parameters
+            writeDeploymentTXT();
             //Let's reload our config settings
             MainMenuUI.parseConfigTXT();
+            //Let's reload our deployment settings
+            MainMenuUI.parseDeploymentTXT();
             //Setting button enabled...
             MainMenuUI.btnConfig.setEnabled(true);
         } catch (IOException e) {
@@ -389,7 +502,7 @@ public class Config extends javax.swing.JFrame {
         return "US";
     }
     
-     public void LoadReportTXT() {
+    public void LoadReportTXT() {
         //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
         //technicians, and everything after that is dedicated to the report text.
         String report_info = "config/report.txt";
@@ -507,6 +620,35 @@ public class Config extends javax.swing.JFrame {
         }
     }
     
+    private void writeDeploymentTXT() {
+        try {
+            //For now, the easiest way to write to this file is just to nuke it and rewrite it.
+            //If the file doesn't exist for whatever reason, it will be created.
+            String report_info = "config/deployment.txt";
+            PrintWriter pw = new PrintWriter(report_info);
+        
+            pw.print("Protocol: " + txtProtocol.getText() + "\n");
+            pw.print("Tampering: " + txtTampering.getText() + "\n");
+            pw.print("Weather: " + txtWeather.getText() + "\n");
+            pw.print("Mitigation: " + txtMitigation.getText() + "\n");
+            pw.print("Comment: " + txtComment.getText() + "\n");
+
+            pw.close();
+        
+        } catch (Exception e) {
+            System.out.println("ERROR: Unable to overwrite deployment.txt file.");
+        }
+    }
+    
+    private void loadDeploymentVariables() {
+        //These should already have been initialized from MainMenu.MainMenuUI.parseReportTXT()
+        txtProtocol.setText(strProtocol);
+        txtTampering.setText(strTampering);
+        txtWeather.setText(strWeather);
+        txtMitigation.setText(strMitigation);
+        txtComment.setText(strComment);
+    }
+    
     public String getCustomReportText() {
         return txtReportText.getText();
     }
@@ -553,23 +695,34 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
     private java.awt.Label lblAppMode;
+    private java.awt.Label lblComment;
     private java.awt.Label lblCompanyAddress;
     private java.awt.Label lblCompanyName;
     private java.awt.Label lblDeployedBy;
+    private java.awt.Label lblMitigation;
+    private java.awt.Label lblProtocol;
     private java.awt.Label lblReportText;
     private java.awt.Label lblRetrievedBy;
+    private java.awt.Label lblTampering;
     private java.awt.Label lblUnits;
+    private java.awt.Label lblWeather;
     private java.awt.Panel pnlCompany;
     private java.awt.Panel pnlSettings;
     private java.awt.Panel pnlSettings1;
+    private java.awt.Panel pnlSettings2;
     private javax.swing.JTabbedPane tabConfig;
     private java.awt.TextField txtAddress1;
     private java.awt.TextField txtAddress2;
     private java.awt.TextField txtAddress3;
     private java.awt.TextField txtAnalyzedBy;
+    private java.awt.TextField txtComment;
     private java.awt.TextField txtCompanyName;
     private java.awt.TextField txtDeployedBy;
+    private java.awt.TextField txtMitigation;
+    private java.awt.TextField txtProtocol;
     private javax.swing.JTextArea txtReportText;
     private java.awt.TextField txtRetrievedBy;
+    private java.awt.TextField txtTampering;
+    private java.awt.TextField txtWeather;
     // End of variables declaration//GEN-END:variables
 }
