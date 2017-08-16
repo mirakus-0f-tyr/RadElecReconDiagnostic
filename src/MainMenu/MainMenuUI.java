@@ -62,6 +62,11 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String strMitigation = "No Mitigation System Installed";
     public static String strComment = "Thanks for the business!";
     
+    //Technician Variables
+    public static String strDeployedBy = "Unknown";
+    public static String strRetrievedBy = "Unknown";
+    public static String strAnalyzedBy = "Unknown";
+    
     /**
      * Creates new form MainMenuUI
      */
@@ -70,6 +75,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         parseCompanyTXT();
 	parseConfigTXT();
         parseDeploymentTXT();
+        parseReportTXT();
         initComponents();
         
         //Invis certain labels on load
@@ -773,6 +779,48 @@ public static void parseDeploymentTXT() {
     
 }
 
+public static void createReportTXT() {
+    String companyTXT = "config/report.txt";
+        try {
+            PrintWriter pw = new PrintWriter(companyTXT);
+            pw.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("ERROR: Unable to create report.txt file!");
+        }
+}
+
+public static void parseReportTXT() {
+    // set name of report text file
+    String configTextFile = "config/report.txt";
+    
+    // try to parse the report.txt, but only for technicians at the moment...
+    try {  
+        System.out.println("Loading current settings from report.txt...");
+        
+        BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
+   
+        for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+            if(strLine.length() > 10 && strLine.substring(0,11).contains("DeployedBy=")) {
+                strDeployedBy = strLine.substring(11).trim(); //Should robustly parse deployment tech
+            } else if(strLine.length() > 11 && strLine.substring(0,12).contains("RetrievedBy=")) {
+                strRetrievedBy = strLine.substring(12).trim(); //Should robustly parse retrieval tech
+            } else if(strLine.length() > 10 && strLine.substring(0,11).contains("AnalyzedBy=")) {
+                strAnalyzedBy = strLine.substring(11).trim(); //Should robustly parse analyst
+            }
+        }
+	// cleanup buffered reader
+	br.close();
+    } catch (IOException e){
+	System.out.println("WARNING: Unable to parse report.txt file... attempting to create file.");
+        //Assign default values to the variables...
+        strDeployedBy = "Unknown";
+        strRetrievedBy = "Unknown";
+        strAnalyzedBy = "Unknown";
+        createReportTXT();
+    }
+    
+}
+
 private class MySwingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
@@ -795,6 +843,8 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
         if(CRM_Parameters[0].equals("true")) {
             parseConfigTXT(); //Just in case these options have changed, let's recheck the config.txt and company.txt files.
             parseCompanyTXT();
+            parseDeploymentTXT();
+            parseReportTXT();
             if (diagnosticMode) {
                 btnDownloadSession.setVisible(false);
                 btnOpenSavedFile.setVisible(true);

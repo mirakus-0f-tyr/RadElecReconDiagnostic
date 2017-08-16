@@ -40,6 +40,11 @@ public class LoadSavedFile {
     public static String strRetrievedBy = "Unknown";
     public static String strAnalyzedBy = "Unknown";
     public static String strCalDate = "Unknown";
+    public static String strReportProtocol = "Unknown";
+    public static String strReportTampering = "Unknown";
+    public static String strReportWeather = "Unknown";
+    public static String strReportMitigation = "Unknown";
+    public static String strReportComment = "Unknown";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -107,6 +112,17 @@ public class LoadSavedFile {
                     if(strLine.contains("Calibration Date =")) {
                         strLine_parsed = StringUtils.split(strLine, "=");
                         strCalDate = strLine_parsed[1].trim();
+                    }
+                    if(strLine.length() > 8 && strLine.substring(0,9).contains("Protocol:")) {
+                        strReportProtocol = strLine.substring(9).trim(); //Should robustly parse protocol.
+                    } else if(strLine.length() > 9 && strLine.substring(0,10).contains("Tampering:")) {
+                        strReportTampering = strLine.substring(10).trim(); //Should robustly parse tampering.
+                    } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Weather:")) {
+                        strReportWeather = strLine.substring(8).trim(); //Should robustly parse weather.
+                    } else if(strLine.length() > 10 && strLine.substring(0,11).contains("Mitigation:")) {
+                        strReportMitigation = strLine.substring(11).trim(); //Should robustly parse mitigation.
+                    } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Comment:")) {
+                        strReportComment = strLine.substring(8).trim(); //Should robustly parse comment.
                     }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {

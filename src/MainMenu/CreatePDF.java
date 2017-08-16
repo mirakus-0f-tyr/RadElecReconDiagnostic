@@ -26,6 +26,11 @@ import static MainMenu.LoadSavedFile.strDeployedBy;
 import static MainMenu.LoadSavedFile.strRetrievedBy;
 import static MainMenu.LoadSavedFile.strAnalyzedBy;
 import static MainMenu.LoadSavedFile.strCalDate;
+import static MainMenu.LoadSavedFile.strReportProtocol;
+import static MainMenu.LoadSavedFile.strReportTampering;
+import static MainMenu.LoadSavedFile.strReportWeather;
+import static MainMenu.LoadSavedFile.strReportMitigation;
+import static MainMenu.LoadSavedFile.strReportComment;
 import static MainMenu.CreateGraph.OverallAvgRnC;
 import static MainMenu.CreateGraph.HourlyReconData;
 
@@ -203,7 +208,7 @@ public class CreatePDF {
             contents.setFont(fontBold, fontSize);
             PDF_Y_temp = PDF_Y;
             PDF_Y_temp -= 1.5f*fontSize; //Let's get a little extra space between this and the previous line
-            textLine = "Conditions:  ";
+            textLine = "Protocol:  ";
             textWidth = fontBold.getStringWidth(textLine) / 1000 * fontSize;
             contents.newLineAtOffset(marginSide, PDF_Y_temp);
             contents.showText(textLine);
@@ -236,32 +241,48 @@ public class CreatePDF {
             contents.showText(textLine);
             contents.endText();
             contents.beginText();
+            PDF_Y_temp -= 1.1f*fontSize;
+            textLine = "Comment:  ";
+            if((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
+                textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize); //If this textWidth is the longest, let's use it to align the technician names
+            }
+            contents.newLineAtOffset(marginSide, PDF_Y_temp);
+            contents.showText(textLine);
+            contents.endText();
+            
+            contents.beginText();
             fontSize = 12;
             contents.setFont(fontDefault, fontSize);
             PDF_Y -= 1.5f*fontSize; //Let's get a little extra space between this and the previous line
-            textLine = "Unknown";
+            textLine = strReportProtocol; //Protocols Details
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
             contents.beginText();
             PDF_Y -= 1.1f*fontSize;
-            textLine = "Unknown";
+            textLine = strReportTampering; //Tampering Details
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
             contents.beginText();
             PDF_Y -= 1.1f*fontSize;
-            textLine = "Unknown";
+            textLine = strReportWeather; //Weather Details
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
             contents.beginText();
             PDF_Y -= 1.1f*fontSize;
-            textLine = "Unknown";
+            textLine = strReportMitigation; //Mitigation Details
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
-            //End Conditions, Weather, Tampering, Mitigation Block
+            contents.beginText();
+            PDF_Y -= 1.1f*fontSize;
+            textLine = strReportComment; //Comment Details
+            contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
+            contents.showText(textLine);
+            contents.endText();
+            //End Conditions, Weather, Tampering, Mitigation, Comment Block
             
             //Double Line
             PDF_Y -= 1f*fontSize;

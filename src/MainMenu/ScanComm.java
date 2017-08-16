@@ -553,6 +553,11 @@ public class ScanComm {
                 writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
+                writer.println("\n");
+                writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
+                writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
+                writer.println("Retrieved By: " + MainMenu.MainMenuUI.strRetrievedBy);
+                writer.println("\n");
             }
 
 	    // or this if we're in regular user mode
@@ -593,6 +598,10 @@ public class ScanComm {
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
 		writer.println("\n");
+                writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
+                writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
+                writer.println("Retrieved By: " + MainMenu.MainMenuUI.strRetrievedBy);
+                writer.println("\n");
 
 		writer.println("Radon Concentration");
 
