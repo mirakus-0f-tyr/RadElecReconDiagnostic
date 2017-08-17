@@ -374,7 +374,7 @@ public class CreateGraph extends JFrame {
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter) * (9/5) + 32); //This will calculate hourly average temperature (in Fahrenheit)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
                                 
-                                TotalAvgRnC = TotalAvgRnC + ((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2)/2); //Overall AvgRnC (in pCi/L)
+                                TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
                                 
                                 //Add to HourlyReconData array, to be used in our PDF (only US-specific elements to be added)
