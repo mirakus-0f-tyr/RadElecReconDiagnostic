@@ -46,12 +46,15 @@ public class Config extends javax.swing.JFrame {
             //is located in the config.txt file.
             String strAppMode;
             String strUnitSystem;
+            String strDisplaySig;
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
+            strDisplaySig = findDisplaySig();
             LoadReportTXT();
             loadDeploymentVariables();
             cboAppMode.setSelectedItem(strAppMode);
             cboUnitSystem.setSelectedItem(strUnitSystem);
+            cboDisplaySig.setSelectedItem(strDisplaySig);
             
         } catch (IOException e) {
             System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
@@ -80,6 +83,8 @@ public class Config extends javax.swing.JFrame {
         lblAppMode = new java.awt.Label();
         lblUnits = new java.awt.Label();
         cboUnitSystem = new javax.swing.JComboBox();
+        cboDisplaySig = new javax.swing.JComboBox();
+        lblDisplaySignature = new java.awt.Label();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -187,6 +192,11 @@ public class Config extends javax.swing.JFrame {
 
         cboUnitSystem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "US", "SI" }));
 
+        cboDisplaySig.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Display Line", "No Signature" }));
+
+        lblDisplaySignature.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblDisplaySignature.setText("Signature Options");
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -194,24 +204,31 @@ public class Config extends javax.swing.JFrame {
             .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(262, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
         );
         pnlSettingsLayout.setVerticalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(1, 1, 1)
-                .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(0, 0, 0)
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(1, 1, 1)
                 .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(170, Short.MAX_VALUE))
+                .addContainerGap(171, Short.MAX_VALUE))
         );
 
         tabConfig.addTab("Settings", pnlSettings);
@@ -471,6 +488,33 @@ public class Config extends javax.swing.JFrame {
         return "End-User";
     }
     
+    private String findDisplaySig() {
+        String config_info = "config/config.txt";
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
+            //Although this means that the order of the configuration parameters is unimportant, a single blank
+            //line will terminate the for loop (and halt the parsing process).
+            //For unexpected values in DisplaySig value (or if it's missing), we default to an DisplaySig=1.
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("DisplaySig=")) {
+                    //Cool, we've found what we're looking for...
+                    if(strLine.endsWith("1")) {
+                        br.close();
+                        return "Display Line";
+                    } else {
+                        br.close();
+                        return "No Signature";
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to parse config.txt in order to find DisplaySig. There was a problem loading the settings.");
+        }
+        return "Display Line";        
+    }
+    
     public String findUnitSystem() {
         String config_info = "config/config.txt";
         String[] strSplitUnitSystem;
@@ -577,6 +621,14 @@ public class Config extends javax.swing.JFrame {
             }
             else {
                 strInput = strInput.replace("UnitType=SI", "UnitType=US");
+            }
+            
+            //Handle Signature Display
+            if (cboDisplaySig.getSelectedItem().equals("Display Line")) {
+                strInput = strInput.replace("DisplaySig=0", "DisplaySig=1"); 
+            }
+            else {
+                strInput = strInput.replace("DisplaySig=1", "DisplaySig=0");
             }
 
             FileOutputStream fileOut = new FileOutputStream(config_info);
@@ -691,6 +743,7 @@ public class Config extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboAppMode;
+    private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox cboUnitSystem;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
@@ -699,6 +752,7 @@ public class Config extends javax.swing.JFrame {
     private java.awt.Label lblCompanyAddress;
     private java.awt.Label lblCompanyName;
     private java.awt.Label lblDeployedBy;
+    private java.awt.Label lblDisplaySignature;
     private java.awt.Label lblMitigation;
     private java.awt.Label lblProtocol;
     private java.awt.Label lblReportText;

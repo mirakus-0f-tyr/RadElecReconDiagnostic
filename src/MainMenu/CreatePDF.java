@@ -31,6 +31,8 @@ import static MainMenu.LoadSavedFile.strReportTampering;
 import static MainMenu.LoadSavedFile.strReportWeather;
 import static MainMenu.LoadSavedFile.strReportMitigation;
 import static MainMenu.LoadSavedFile.strReportComment;
+import static MainMenu.MainMenuUI.displaySig;
+
 import static MainMenu.CreateGraph.OverallAvgRnC;
 import static MainMenu.CreateGraph.HourlyReconData;
 
@@ -314,7 +316,7 @@ public class CreatePDF {
             WrapMultiLineText (contents,page,marginSide,PDF_Y,textLine,fontDefault,fontSize,marginSide);
             
             //Bottom Signature Line
-            contents.beginText();
+            /*contents.beginText();
             textLine = "Signature: ";
             textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize);
             fontSize = 12;
@@ -339,7 +341,12 @@ public class CreatePDF {
             //Draw Date Line
             contents.moveTo(page.getMediaBox().getWidth()/2 + 30 + textWidth, marginBottom); //getting ready to draw a line (starting coordinates)
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo*/
+            
+            if(displaySig==1) {
+                drawSignatureLine(contents, page, fontDefault); //Draw Signature Line; for now, only if DisplaySig = 1 in options.
+            }
+            
             contents.close();
             //END FIRST PAGE (SUMMARY)
             
@@ -512,7 +519,7 @@ public class CreatePDF {
             contents.endText();
             } catch (IOException ex) {
                 System.out.println(ex);
-            }
+        }
     }
     
     public static void GetCompanyInfo() {
@@ -917,6 +924,40 @@ public class CreatePDF {
             contents.endText();            
         } catch (IOException ex) {
             System.out.println(ex);
+        }
+    }
+    
+    private void drawSignatureLine(PDPageContentStream contents, PDPage page, PDFont font) {
+        try {
+            //Bottom Signature Line
+            contents.beginText();
+            String textLine = "Signature: ";
+            float textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+            fontSize = 12;
+            contents.setFont(font, fontSize);
+            contents.newLineAtOffset(marginSide, marginBottom);
+            contents.showText(textLine);
+            contents.endText();
+            //Draw Signature Line
+            contents.moveTo(marginSide+textWidth, marginBottom); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth()/2 - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
+            
+            //Bottom Date Line
+            contents.beginText();
+            textLine = "Date: ";
+            textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+            fontSize = 12;
+            contents.setFont(font, fontSize);
+            contents.newLineAtOffset(page.getMediaBox().getWidth()/2 + 30, marginBottom);
+            contents.showText(textLine);
+            contents.endText();
+            //Draw Date Line
+            contents.moveTo(page.getMediaBox().getWidth()/2 + 30 + textWidth, marginBottom); //getting ready to draw a line (starting coordinates)
+            contents.lineTo(page.getMediaBox().getWidth() - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
+            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo  
+        } catch (IOException ex) {
+            System.out.println("ERROR: Unable to draw signature line!");
         }
     }
     

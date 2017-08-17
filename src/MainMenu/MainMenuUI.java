@@ -54,6 +54,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int waitTime = 0;
     public static int testDuration = 48;
     public static boolean displayStatus = false;
+    public static int displaySig = 1;
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -661,6 +662,7 @@ public static void createConfigTXT() {
             PrintWriter pw = new PrintWriter(configTXT);
             pw.print("DiagMode=0\n");
             pw.print("UnitType=US\n");
+            pw.print("DisplaySig=1\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create config.txt file!");
@@ -711,7 +713,10 @@ public static void parseConfigTXT() {
                 }
             } else if(strLine.contains("DispRes=")) {
                 displayStatus = strLine.endsWith("1");
+            } else if(strLine.contains("DisplaySig=")) {
+                displaySig = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplaySig
             }
+            
         }
 
 	// cleanup buffered reader

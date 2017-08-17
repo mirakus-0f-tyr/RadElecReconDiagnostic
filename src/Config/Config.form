@@ -181,12 +181,16 @@
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="cboAppMode" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
                           <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboAppMode" min="-2" pref="123" max="-2" attributes="0"/>
                           <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="cboUnitSystem" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="262" max="32767" attributes="0"/>
+                      <EmptySpace pref="139" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
+                      </Group>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -194,14 +198,20 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
-                      <Component id="cboAppMode" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboAppMode" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboDisplaySig" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblUnits" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="cboUnitSystem" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="170" max="32767" attributes="0"/>
+                      <EmptySpace pref="171" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -241,6 +251,24 @@
                     <StringItem index="1" value="SI"/>
                   </StringArray>
                 </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cboDisplaySig">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Display Line"/>
+                    <StringItem index="1" value="No Signature"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="java.awt.Label" name="lblDisplaySignature">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Calibri" size="12" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Signature Options"/>
               </Properties>
             </Component>
           </SubComponents>
