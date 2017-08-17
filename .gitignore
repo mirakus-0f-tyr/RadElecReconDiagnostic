@@ -1,8 +1,11 @@
 data
 config
 lib
+fonts
 /dist/
 /build/
 *.swp
 nbproject
 build.xml
+*.jpg
+*.pdf
