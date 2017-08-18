@@ -554,37 +554,62 @@ public class Config extends javax.swing.JFrame {
         String strTrimmedLine;
         String strReportText = "";
         File report = new File(report_info);
+        boolean rewriteConfigTXT = false;
         if (report.isFile()) {
             try {
                 BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(report_info)));
                 //Deployed By:
                 strLine = br.readLine();
-                strTrimmedLine = strLine.trim();
-                txtDeployedBy.setText(strTrimmedLine.substring(11));
+                if(strLine != null && strLine.length() > 10 && !rewriteConfigTXT) {
+                    strTrimmedLine = strLine.trim();
+                    txtDeployedBy.setText(strTrimmedLine.substring(11));
+                } else {
+                    rewriteConfigTXT = true;
+                }
                 //Retrieved By:
                 strLine = br.readLine();
-                strTrimmedLine = strLine.trim();
-                txtRetrievedBy.setText(strTrimmedLine.substring(12));
+                if(strLine != null && strLine.length() > 11 && !rewriteConfigTXT) {
+                    strTrimmedLine = strLine.trim();
+                    txtRetrievedBy.setText(strTrimmedLine.substring(12));
+                } else {
+                    rewriteConfigTXT = true;
+                }
                 //Analyzed By:
                 strLine = br.readLine();
-                strTrimmedLine = strLine.trim();
-                txtAnalyzedBy.setText(strTrimmedLine.substring(11));
-                while ((strLine = br.readLine()) != null) {
-                    strReportText = strReportText + strLine;
+                if(strLine != null && strLine.length() > 10 && !rewriteConfigTXT) {
+                    strTrimmedLine = strLine.trim();
+                    txtAnalyzedBy.setText(strTrimmedLine.substring(11));
+                } else {
+                    rewriteConfigTXT = true;
                 }
-                txtReportText.setText(strReportText);
+                if(!rewriteConfigTXT) {
+                    while ((strLine = br.readLine()) != null) {
+                        strReportText = strReportText + strLine;
+                    }
+                    txtReportText.setText(strReportText);
+                }
                 br.close();
+                if(rewriteConfigTXT) {
+                    System.out.println("Unhandled format in report.txt. Attempting to recreate...");
+                    txtReportText.setText("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (US EPA)"
+                        + " and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.  "
+                        + "The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you"
+                        + " and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high"
+                        + " radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist"
+                        + " you in evaluating your test results or deciding if further action is needed.");
+                    MainMenu.MainMenuUI.createReportTXT();
+                }
             } catch (IOException e) {
                 System.out.println("ERROR: Unable to parse report.txt in order to retrieve the technician or report text information.");
             }
         } else {
             //Default text blob to be generated if the file doesn't exist.
-            txtReportText.setText("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (EPA)"
-                    + " and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.  "
-                    + "The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you"
-                    + " and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high"
-                    + " radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist"
-                    + " you in evaluating your test results or deciding if further action is needed.");
+            txtReportText.setText("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (US EPA)"
+                + " and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.  "
+                + "The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you"
+                + " and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high"
+                + " radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist"
+                + " you in evaluating your test results or deciding if further action is needed.");
             System.out.println("WARNING: Unable to find report.txt configuration file... will attempt to create it.");
         }
     }

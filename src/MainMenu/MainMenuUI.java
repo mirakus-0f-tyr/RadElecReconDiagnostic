@@ -788,6 +788,15 @@ public static void createReportTXT() {
     String companyTXT = "config/report.txt";
         try {
             PrintWriter pw = new PrintWriter(companyTXT);
+            pw.print("DeployedBy=\n");
+            pw.print("RetrievedBy=\n");
+            pw.print("AnalyzedBy=\n");
+            pw.print("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (US EPA)");
+            pw.print(" and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.");
+            pw.print(" The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you");
+            pw.print(" and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high");
+            pw.print(" radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist");
+            pw.print(" you in evaluating your test results or deciding if further action is needed.\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create report.txt file!");
