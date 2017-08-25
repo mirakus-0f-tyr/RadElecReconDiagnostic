@@ -16,6 +16,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -67,7 +68,10 @@ public class ScanComm {
     public static String ReconWaitTime = "Unknown";
     public static String ReconDurationSetting = "Unknown";
     public static String ReconCalDate = "Unknown";
-    
+
+    // string to be used in OS determination
+    public static String userOS = System.getProperty("os.name").toLowerCase();
+
     public static void main(String[] args) {
         try {
             ScanComm obj = new ScanComm();
@@ -88,7 +92,21 @@ public class ScanComm {
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
         System.out.println("Beginning to scan Comm ports...");
-        String[] portNames = SerialPortList.getPortNames();
+
+	String[] portNames;
+
+	// search for com port name depending on OS
+	if (userOS.contains("win"))
+	    portNames = SerialPortList.getPortNames();
+	else if (userOS.contains("linux"))
+            portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty(ACM[0-9]{1,2})"));
+	else if (userOS.contains("mac"))
+	    portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty.*"));
+	else {
+	    portNames = SerialPortList.getPortNames();	// initialize anyway if no matches
+	    System.out.println("OS not Windows, Linux, or Mac...");
+	}
+
         for(int i = 0; i < portNames.length; i++){
             System.out.println(portNames[i]);
             SerialPort scannedPort = new SerialPort(portNames[i]);
@@ -109,7 +127,7 @@ public class ScanComm {
                     foundRecon = true;
                     if(OptArgs == 1){
                         System.out.println("Rad Elec Recon CRM found!");
-                        MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!"); // Comment from John: TODO - name Linux device nodes such as ttyACM0
+                        MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!");
                         String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                         //A bit of error-handling, just in case the serial number doesn't exist.
                         if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
