@@ -463,17 +463,33 @@ public class CreatePDF {
             
             contents.close();
             
-            doc.save(PDF_Name);
+	    // check if reports directory exists and write file - create dir if necessary
+	    File reportsDir = new File("reports");
+
+	    if (reportsDir.exists() && reportsDir.isDirectory())
+		doc.save(reportsDir + "/" + PDF_Name);
+	    else {
+		System.out.println("Reports directory does not exist.  Creating...");
+		reportsDir.mkdir();
+		doc.save(reportsDir + "/" + PDF_Name);
+	    }
             
             //Draw the footer info (page #, version, etc.)
             //It's a bit shoddy, but because we're appending, we need to have already saved it
             //and then re-open the file.
-            File ReconPDF = new File(PDF_Name);
-            drawFooterInfo(ReconPDF, PDF_Name);
-            
-            System.out.println(PDF_Name + " has been created.");
-            MainMenu.MainMenuUI.lblSystemConsole.setText("PDF has been created.");
-        }
+            File ReconPDF = new File(reportsDir + "/" + PDF_Name);
+            drawFooterInfo(ReconPDF, reportsDir + "/" + PDF_Name);
+
+	    if (ReconPDF.exists()) {
+		System.out.println(PDF_Name + " has been created.");
+		MainMenu.MainMenuUI.lblSystemConsole.setText("PDF has been created.");
+	    }
+	    else {
+		System.out.println("Problem creating PDF.");
+		MainMenu.MainMenuUI.lblSystemConsole.setText("Problem creating PDF.");
+	    }
+
+	}
         catch (IOException ex) {
             System.out.println(ex);
         }
