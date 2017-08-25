@@ -514,7 +514,7 @@ public class CreateGraph extends JFrame {
     
     public static void SaveGraph(JFreeChart chart) {
         try {
-            ChartUtilities.saveChartAsJPEG(new File("graph.jpg"), chart, 500, 300);
+	    ChartUtilities.saveChartAsPNG(new File("graph.png"), chart, 500, 300);
         }
         catch (Exception ex) {
             System.out.println("ERROR: Cannot externalize graph to JPG image.");

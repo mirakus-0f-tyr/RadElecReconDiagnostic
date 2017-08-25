@@ -371,11 +371,11 @@ public class CreatePDF {
             //Draw Average Radon Concentration Banner
             DrawAverageRadonBanner(contents, page_chart, fontBold, true);
             
-            //This draws the graph image (graph.jpg), which was externalized to the file in the CreateGraph class.
-            PDImageXObject graphJPG = PDImageXObject.createFromFile("graph.jpg", doc);
-            PDF_Y -= 400;
-            contents.drawImage(graphJPG, marginSide*2, PDF_Y);
-            contents.close();
+	    //This draws the graph image (graph.png), which was externalized to the file in the CreateGraph class.
+	    PDImageXObject graphPNG = PDImageXObject.createFromFile("graph.png", doc);
+	    PDF_Y -= 400;
+	    contents.drawImage(graphPNG, marginSide*2, PDF_Y);
+	    contents.close();
             //END SECOND PAGE (CHART)
             
             //BEGIN THIRD PAGE (DETAILED)
