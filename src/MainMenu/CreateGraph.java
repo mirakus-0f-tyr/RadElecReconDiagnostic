@@ -371,7 +371,7 @@ public class CreateGraph extends JFrame {
                                 Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
                                 Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2));
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //This will calculate hourly average of both chambers
-                                AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter) * (9/5) + 32); //This will calculate hourly average temperature (in Fahrenheit)
+                                AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter) * 9 / 5 + 32); //This will calculate hourly average temperature (in Fahrenheit)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
                                 
                                 TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
@@ -381,7 +381,7 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(0, Long.toString(TotalHourCounter)); //Total Hour Counter Index = 0
                                 arrLine.add(1, (ReconDate.toString())); //Datetime Index = 1;
                                 arrLine.add(2, formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //Hourly Avg Radon Index = 2
-                                arrLine.add(3, formatZero.format((hourlyAvgTemp / avgCounter) * (9/5) + 32)); //Hourly Avg Temperature (in Fahrenheit) Index = 3
+                                arrLine.add(3, formatZero.format((hourlyAvgTemp / avgCounter) * 9 / 5 + 32)); //Hourly Avg Temperature (in Fahrenheit) Index = 3
                                 arrLine.add(4, formatTenth.format((hourlyAvgPress / avgCounter)*0.02952998751)); //Hourly Avg Pressure (in inHg) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
                                 arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
