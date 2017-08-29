@@ -545,7 +545,16 @@ public class ScanComm {
             
 	    // do this if we're in diagnostic mode
 	    if(BeginAveraging==true && MainMenuUI.diagnosticMode) {
-                writer.println("\r\n");
+	       // write customer info to file
+		writer.println("Customer information:");
+		writer.println(MainMenuUI.txtCustomerInfo.getText());
+		writer.println("\r\n");
+
+		// write test site info to file
+		writer.println("Test site information:");
+		writer.println(MainMenuUI.txtTestSiteInfo.getText());
+		writer.println("\r\n");
+
                 writer.println("SUMMARY:");
                 writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
                 writer.println("End Date/Time: " + EndDate.format(DateTimeDisplay));
@@ -620,7 +629,8 @@ public class ScanComm {
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
                 writer.println("Retrieved By: " + MainMenu.MainMenuUI.strRetrievedBy);
                 writer.println("\n");
-
+	    }
+		// do following regardless of mode
 		writer.println("Radon Concentration");
 
                 if (MainMenuUI.unitType == "US")
@@ -670,8 +680,6 @@ public class ScanComm {
 		    writer.println("Chamber 2 Avg bQ/M3 = " + si.format((double)(avgResult2 * 37)));
 		    writer.println("Average bQ/M3 = " + si.format((double)(avgResult1 + avgResult2) / 2 * 37));
 		}
-
-		} // end user-mode-only actions
 
 		writer.close();
 
