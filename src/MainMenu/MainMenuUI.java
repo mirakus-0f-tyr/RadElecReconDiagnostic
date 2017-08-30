@@ -650,6 +650,8 @@ public void createCompanyTXT() {
     String companyTXT = "config/company.txt";
         try {
             PrintWriter pw = new PrintWriter(companyTXT);
+	    pw.println("\n");
+	    pw.println("\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create company.txt file!");
