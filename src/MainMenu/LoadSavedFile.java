@@ -129,7 +129,7 @@ public class LoadSavedFile {
                     }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {
-                        if(strLine.contains("Start Date/Time:")) {
+                        if(strLine.contains("Start Date/Time:") || strLine.contains("SUMMARY:")) {
                             testSiteFlag = false;
                             if (strTestSiteInfo.length() > 1) {
                                 strTestSiteInfo = strTestSiteInfo.trim(); //trim any anteceding or succeeding line-feeds...

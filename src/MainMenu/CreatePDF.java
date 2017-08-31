@@ -676,7 +676,7 @@ public class CreatePDF {
             contents.newLine();
             contents.setFont(fontDefault, fontSize);
             String[] TestSiteInfo_parsed = strTestSiteInfo.split("\\n");
-            TestSiteInfo_parsed = strTestSiteInfo.split("\\n");
+            //TestSiteInfo_parsed = strTestSiteInfo.split("\\n");  Why is this done twice?
             for(int i = 0; i < TestSiteInfo_parsed.length; i++) {
                 textLine = TestSiteInfo_parsed[i];
                 if ((fontDefault.getStringWidth(textLine) / 1000 * fontSize) > textWidth) {
