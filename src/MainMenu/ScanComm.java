@@ -545,7 +545,8 @@ public class ScanComm {
             
 	    // do this if we're in diagnostic mode
 	    if(BeginAveraging==true && MainMenuUI.diagnosticMode) {
-	       // write customer info to file
+	        // write customer info to file
+		writer.println("\r\n");
 		writer.println("Customer information:");
 		writer.println(MainMenuUI.txtCustomerInfo.getText());
 		writer.println("\r\n");
@@ -589,9 +590,8 @@ public class ScanComm {
 
 	    // or this if we're in regular user mode
 	    else if (BeginAveraging == true) {
-	        writer.println("\r\n");
-
 		// write customer info to file
+	        writer.println("\r\n");
 		writer.println("Customer information:");
 		writer.println(MainMenuUI.txtCustomerInfo.getText());
 		writer.println("\r\n");
