@@ -364,8 +364,8 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(4, formatTenth.format(hourlyAvgPress / avgCounter)); //Hourly Avg Pressure (in mbar) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
                                 arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
-                                arrLine.add(7, Double.toString((tempCounts_Ch1/LoadedReconCF1)*37)); //Hourly Chamber 1 radon concentration Index = 7
-                                arrLine.add(8, Double.toString((tempCounts_Ch2/LoadedReconCF2)*37)); //Hourly Chamber 2 radon concentration Index = 8
+                                arrLine.add(7, formatSI_RnC.format(((tempCounts_Ch1/LoadedReconCF1)*37))); //Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(8, formatSI_RnC.format(((tempCounts_Ch2/LoadedReconCF2)*37))); //Hourly Chamber 2 radon concentration Index = 8
                                 
                             } else {
                                 Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
@@ -385,8 +385,8 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(4, formatTenth.format((hourlyAvgPress / avgCounter)*0.02952998751)); //Hourly Avg Pressure (in inHg) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
                                 arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
-                                arrLine.add(7, Double.toString(tempCounts_Ch1/LoadedReconCF1)); //Hourly Chamber 1 radon concentration Index = 7
-                                arrLine.add(8, Double.toString(tempCounts_Ch2/LoadedReconCF2)); //Hourly Chamber 2 radon concentration Index = 8
+                                arrLine.add(7, formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1))); //Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(8, formatUS_RnC.format((tempCounts_Ch2/LoadedReconCF2))); //Hourly Chamber 2 radon concentration Index = 8
                             }
                             
                             //Finalize HourlyReconData line, and add it to the ArrayList

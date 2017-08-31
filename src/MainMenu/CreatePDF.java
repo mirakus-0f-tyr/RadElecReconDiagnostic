@@ -71,7 +71,7 @@ public class CreatePDF {
     static String validDate = "MM/dd/yyyy";
     SimpleDateFormat dateFormatCalibration = new SimpleDateFormat("MM/dd/yyyy");
     Date currentDate = new Date();
-    
+
     //Margin Stuff
     static int marginTop = 10;
     static int marginBottom = 30;
@@ -417,9 +417,22 @@ public class CreatePDF {
                 textLine = HourlyReconData.get(arrayCounter).get(1);
                 contents.showText(textLine);
                 //Radon
-                contents.moveTextPositionByAmount(115, 0);
-                textLine = HourlyReconData.get(arrayCounter).get(2);
-                contents.showText(textLine);
+		if (!MainMenuUI.diagnosticMode) {
+                    contents.moveTextPositionByAmount(115, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(2);
+                    contents.showText(textLine);
+		}
+		else { // draw RnC for both chambers as well as the average
+		    contents.moveTextPositionByAmount(100, 0);
+		    textLine = HourlyReconData.get(arrayCounter).get(7);
+		    contents.showText(textLine);
+		    contents.moveTextPositionByAmount(50, 0);
+		    textLine = HourlyReconData.get(arrayCounter).get(8);
+		    contents.showText(textLine);
+		    contents.moveTextPositionByAmount(80, 0);
+		    textLine = HourlyReconData.get(arrayCounter).get(2);
+		    contents.showText(textLine);
+		}
                 //Temperature
                 contents.moveTextPositionByAmount(90, 0);
                 textLine = HourlyReconData.get(arrayCounter).get(3);

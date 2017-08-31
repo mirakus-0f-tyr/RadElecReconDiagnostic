@@ -6,27 +6,27 @@ import java.text.DecimalFormat;
 
 public class ConvMath {
 	// expected formatting of various results
-	public static DecimalFormat RadonUS = new DecimalFormat("0.0");
-	public static DecimalFormat RadonSI = new DecimalFormat("0");
-	public static DecimalFormat PressUS = new DecimalFormat("0");
-	public static DecimalFormat PressSI = new DecimalFormat("0");
+	public static DecimalFormat formatUS_RnC = new DecimalFormat("0.0");
+	public static DecimalFormat formatSI_RnC = new DecimalFormat("0");
+	public static DecimalFormat formatUS_pres = new DecimalFormat("0");
+	public static DecimalFormat formatSI_pres = new DecimalFormat("0");
 
 	// radon units
 	public static String UStoSIRadon(double pCiL) {
-		return RadonSI.format(pCiL * 37);
+		return formatSI_RnC.format(pCiL * 37);
 	}
 
 	public static String SItoUSRadon(int BQM3) {
-		return RadonUS.format((double)BQM3 / 37);
+		return formatUS_RnC.format((double)BQM3 / 37);
 	}
 
 	public static String AverageRadon(double val1, double val2, String unit) {
 		if (unit == "US") 
-			return RadonUS.format((val1 + val2) / 2);
+			return formatUS_RnC.format((val1 + val2) / 2);
 		else if (unit == "SI") {
 			val1 = Double.parseDouble(UStoSIRadon(val1));
 			val2 = Double.parseDouble(UStoSIRadon(val2));
-			return RadonSI.format((val1 + val2) / 2);
+			return formatSI_RnC.format((val1 + val2) / 2);
 		}
 		else
 			return "Incorrect unit type specified.";
@@ -43,10 +43,10 @@ public class ConvMath {
 
 	// pressure units
 	public static String UStoSIPressure(double inHG) {
-		return PressSI.format(inHG * 33.8639);
+		return formatSI_pres.format(inHG * 33.8639);
 	}
 
 	public static String SItoUSPressure(double mBar) {
-		return PressUS.format(mBar * 0.02953);
+		return formatUS_pres.format(mBar * 0.02953);
 	}
 }
