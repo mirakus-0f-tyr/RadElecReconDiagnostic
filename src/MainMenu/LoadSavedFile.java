@@ -56,6 +56,9 @@ public class LoadSavedFile {
         boolean customerInfoFlag = false;
         int i = 0;
         
+	// clear customer and test site strings every time a new file is opened
+	strTestSiteInfo = "";
+	strCustomerInfo = "";
         
         try {
             
