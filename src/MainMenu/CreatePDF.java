@@ -403,74 +403,120 @@ public class CreatePDF {
             DrawDetailedColumnHeaders(contents, fontBold);
             
             //Let's start drawing rows of detailed summary data
-            for (int arrayCounter = 0; arrayCounter < HourlyReconData.size(); arrayCounter++) {
-                //contents.moveTextPositionByAmount(0,-1.0f*fontSize);
-                PDF_Y -= 1.1f*fontSize;
-                contents.beginText();
-                contents.setFont(fontDefault, fontSize);
-                contents.newLineAtOffset(marginSide, PDF_Y);
-                //Record #
-                textLine = HourlyReconData.get(arrayCounter).get(0);
-                contents.showText(textLine);
-                //Date-Time
-                contents.moveTextPositionByAmount(45, 0);
-                textLine = HourlyReconData.get(arrayCounter).get(1);
-                contents.showText(textLine);
-                //Radon
-		if (!MainMenuUI.diagnosticMode) {
+	    if (!MainMenuUI.diagnosticMode) { // regular user mode
+	        for (int arrayCounter = 0; arrayCounter < HourlyReconData.size(); arrayCounter++) { 
+                    //contents.moveTextPositionByAmount(0,-1.0f*fontSize);
+                    PDF_Y -= 1.1f*fontSize;
+                    contents.beginText();
+                    contents.setFont(fontDefault, fontSize);
+                    contents.newLineAtOffset(marginSide, PDF_Y);
+                    //Record #
+                    textLine = HourlyReconData.get(arrayCounter).get(0);
+                    contents.showText(textLine);
+                    //Date-Time
+                    contents.moveTextPositionByAmount(45, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(1);
+                    contents.showText(textLine);
+                    //Radon
                     contents.moveTextPositionByAmount(115, 0);
                     textLine = HourlyReconData.get(arrayCounter).get(2);
                     contents.showText(textLine);
+                    //Temperature
+                    contents.moveTextPositionByAmount(90, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(3);
+                    contents.showText(textLine);
+                    //Pressure
+                    contents.moveTextPositionByAmount(100, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(4);
+                    contents.showText(textLine);
+                    //Humidity
+                    contents.moveTextPositionByAmount(95, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(5);
+                    contents.showText(textLine);
+                    //Tilts
+                    contents.moveTextPositionByAmount(70, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(6);
+                    contents.showText(textLine);
+
+                    contents.endText();
+
+		    if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
+                        //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
+                        contents.close();
+                        page_detailed = new PDPage(PDRectangle.A4);
+                        doc.addPage(page_detailed);
+                        contents = new PDPageContentStream(doc, page_detailed);
+                        PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
+                        DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
+                        DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+                        DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
+                        drawTestSummaryBlock(contents, page, fontDefault, fontBold);
+                        DrawAverageRadonBanner(contents, page_chart, fontBold, true);
+                        PDF_Y -= 15;
+                        DrawDetailedColumnHeaders(contents, fontBold);
+                    }
 		}
-		else { // draw RnC for both chambers as well as the average
+	    }
+	    else { // diagnostic mode
+                for (int arrayCounter = 0; arrayCounter < HourlyReconData.size(); arrayCounter++) { 
+		    PDF_Y -= 1.1f*fontSize;
+                    contents.beginText();
+                    contents.setFont(fontDefault, fontSize);
+                    contents.newLineAtOffset(marginSide, PDF_Y);
+                    //Record #
+                    textLine = HourlyReconData.get(arrayCounter).get(0);
+                    contents.showText(textLine);
+                    //Date-Time
+                    contents.moveTextPositionByAmount(25, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(1);
+                    contents.showText(textLine);
+                    //Radon
 		    contents.moveTextPositionByAmount(100, 0);
 		    textLine = HourlyReconData.get(arrayCounter).get(7);
 		    contents.showText(textLine);
-		    contents.moveTextPositionByAmount(50, 0);
+		    contents.moveTextPositionByAmount(35, 0);
 		    textLine = HourlyReconData.get(arrayCounter).get(8);
 		    contents.showText(textLine);
-		    contents.moveTextPositionByAmount(80, 0);
+		    contents.moveTextPositionByAmount(50, 0);
 		    textLine = HourlyReconData.get(arrayCounter).get(2);
 		    contents.showText(textLine);
+                    //Temperature
+                    contents.moveTextPositionByAmount(68, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(3);
+                    contents.showText(textLine);
+                    //Pressure
+                    contents.moveTextPositionByAmount(75, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(4);
+                    contents.showText(textLine);
+                    //Humidity
+                    contents.moveTextPositionByAmount(95, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(5);
+                    contents.showText(textLine);
+                    //Tilts
+                    contents.moveTextPositionByAmount(62, 0);
+                    textLine = HourlyReconData.get(arrayCounter).get(6);
+                    contents.showText(textLine);
+                
+                    contents.endText();
+
+		    if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
+                        //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
+                        contents.close();
+                        page_detailed = new PDPage(PDRectangle.A4);
+                        doc.addPage(page_detailed);
+                        contents = new PDPageContentStream(doc, page_detailed);
+                        PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
+                        DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
+                        DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+                        DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
+                        drawTestSummaryBlock(contents, page, fontDefault, fontBold);
+                        DrawAverageRadonBanner(contents, page_chart, fontBold, true);
+                        PDF_Y -= 15;
+                        DrawDetailedColumnHeaders(contents, fontBold);
+                    }
 		}
-                //Temperature
-                contents.moveTextPositionByAmount(90, 0);
-                textLine = HourlyReconData.get(arrayCounter).get(3);
-                contents.showText(textLine);
-                //Pressure
-                contents.moveTextPositionByAmount(100, 0);
-                textLine = HourlyReconData.get(arrayCounter).get(4);
-                contents.showText(textLine);
-                //Humidity
-                contents.moveTextPositionByAmount(95, 0);
-                textLine = HourlyReconData.get(arrayCounter).get(5);
-                contents.showText(textLine);
-                //Tilts
-                contents.moveTextPositionByAmount(70, 0);
-                textLine = HourlyReconData.get(arrayCounter).get(6);
-                contents.showText(textLine);
+	    }
                 
-                contents.endText();
-                
-                
-                if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
-                    //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
-                    contents.close();
-                    page_detailed = new PDPage(PDRectangle.A4);
-                    doc.addPage(page_detailed);
-                    contents = new PDPageContentStream(doc, page_detailed);
-                    PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
-                    DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
-                    DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
-                    DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
-                    drawTestSummaryBlock(contents, page, fontDefault, fontBold);
-                    DrawAverageRadonBanner(contents, page_chart, fontBold, true);
-                    PDF_Y -= 15;
-                    DrawDetailedColumnHeaders(contents, fontBold);
-                }
-                
-            }
-            
             //End PDF Generation (i.e. rat's nest code)
             //******************
             
@@ -806,19 +852,19 @@ public class CreatePDF {
                 contents.showText(textLine);
                 textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 contents.moveTextPositionByAmount(15+textWidth, 0);
-                textLine = "Ch1 RnC";
+                textLine = "Ch1";
                 contents.showText(textLine);
                 textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 contents.moveTextPositionByAmount(15+textWidth, 0);
-                textLine = "Ch2 RnC";
+                textLine = "Ch2";
                 contents.showText(textLine);
                 textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 contents.moveTextPositionByAmount(15+textWidth, 0);
-                textLine = "Avg Radon" + strRadonUnits;
+                textLine = "Avg" + strRadonUnits;
                 contents.showText(textLine);
                 textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 contents.moveTextPositionByAmount(15+textWidth, 0);
-                textLine = "Temperature" + strTempUnits;
+                textLine = "Temp." + strTempUnits;
                 contents.showText(textLine);
                 textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 contents.moveTextPositionByAmount(15+textWidth, 0);

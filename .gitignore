@@ -10,3 +10,4 @@ build.xml
 *.jpg
 *.png
 *.pdf
+run.sh
