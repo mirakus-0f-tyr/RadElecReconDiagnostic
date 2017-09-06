@@ -167,7 +167,11 @@ public class LoadSavedFile {
                         customerInfoFlag = true;
                     }
                     //END: Customer Info Parsing Block
-                   
+
+		    // reload customer and test site info in MainMenuUI in case user wants to re-edit
+		    MainMenu.MainMenuUI.txtCustomerInfo.setText(strCustomerInfo);
+		    MainMenu.MainMenuUI.txtTestSiteInfo.setText(strTestSiteInfo);
+
                     //Display Main Menu Console label
                     MainMenu.MainMenuUI.lblSystemConsole.setText("File successfully loaded.");
                 }
