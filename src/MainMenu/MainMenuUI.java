@@ -64,6 +64,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String strWeather = "No Abnormal Weather Conditions";
     public static String strMitigation = "No Mitigation System Installed";
     public static String strComment = "Thanks for the business!";
+    public static String strRoomDeployed = "Basement";
     
     //Technician Variables
     public static String strDeployedBy = "Unknown";
@@ -747,6 +748,7 @@ public static void createDeploymentTXT() {
             pw.print("Weather: No Abnormal Weather Conditions\n");
             pw.print("Mitigation: No Mitigation System Installed\n");
             pw.print("Comment: Thanks for the business!\n");
+	    pw.print("Room: Basement\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create deployment.txt file!");
@@ -774,7 +776,9 @@ public static void parseDeploymentTXT() {
                 strMitigation = strLine.substring(11).trim(); //Should robustly parse mitigation.
             } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Comment:")) {
                 strComment = strLine.substring(8).trim(); //Should robustly parse comment.
-            }
+            } else if(strLine.length() > 4 && strLine.substring(0,5).contains("Room:")) {
+		strRoomDeployed = strLine.substring(5).trim(); // as above
+	    }
         }
 	// cleanup buffered reader
 	br.close();
@@ -786,6 +790,7 @@ public static void parseDeploymentTXT() {
         strWeather = "No Abnormal Weather Conditions";
         strMitigation = "No Mitigation System Installed";
         strComment = "Thanks for the business!";
+	strRoomDeployed = "Basement";
         createDeploymentTXT();
     }
     
