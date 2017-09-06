@@ -581,6 +581,7 @@ public class ScanComm {
                 writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
+		writer.println("Room: " + MainMenu.MainMenuUI.strRoomDeployed);
                 writer.println("\n");
                 writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
@@ -624,6 +625,7 @@ public class ScanComm {
                 writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
+		writer.println("Room: " + MainMenu.MainMenuUI.strRoomDeployed);
 		writer.println("\n");
                 writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);

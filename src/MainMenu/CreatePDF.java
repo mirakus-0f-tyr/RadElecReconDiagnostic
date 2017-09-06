@@ -31,6 +31,7 @@ import static MainMenu.LoadSavedFile.strReportTampering;
 import static MainMenu.LoadSavedFile.strReportWeather;
 import static MainMenu.LoadSavedFile.strReportMitigation;
 import static MainMenu.LoadSavedFile.strReportComment;
+import static MainMenu.LoadSavedFile.strRoomDeployed;
 import static MainMenu.MainMenuUI.displaySig;
 
 import static MainMenu.CreateGraph.OverallAvgRnC;
@@ -63,7 +64,6 @@ public class CreatePDF {
     public static String strCompany_Address2;
     public static String strCompany_Address3;
     public static String strInstrumentType = "Recon CRM";
-    public static String strLocation = "Basement";
     public static String strCustomReportText;
     
     float PDF_Y = 0;
@@ -284,7 +284,7 @@ public class CreatePDF {
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
-            //End Conditions, Weather, Tampering, Mitigation, Comment Block
+	    //End Conditions, Weather, Tampering, Mitigation, Comment Block
             
             //Double Line
             PDF_Y -= 1f*fontSize;
@@ -793,7 +793,7 @@ public class CreatePDF {
             fontSize = 18;
             contents.setFont(font, fontSize);
             PDF_Y -= 1f*fontSize;
-            String textLine = "Average Radon Concentration in:          " + strLocation + "          " + strOverallAvgRnC;
+            String textLine = "Average Radon Concentration in:          " + strRoomDeployed + "          " + strOverallAvgRnC;
             if(strUnitSystem.equals("SI")) {
                 textLine += " Bq/m³";
             } else {
@@ -983,7 +983,7 @@ public class CreatePDF {
             PDF_Y -= 1.0f * fontSize;
             contents.beginText();
             contents.newLineAtOffset((((page.getMediaBox().getWidth()-marginSide*2)) / -6)+marginSide, PDF_Y);
-            String[] combinedDataArray = {strInstrumentSerial, strInstrumentType, strLocation, strStartDate, strEndDate, strOverallAvgRnC};
+            String[] combinedDataArray = {strInstrumentSerial, strInstrumentType, strRoomDeployed, strStartDate, strEndDate, strOverallAvgRnC};
             for (int i = 0; i < combinedDataArray.length; i++) {
                 contents.moveTextPositionByAmount(((page.getMediaBox().getWidth()-marginSide*2)) / 6, 0);
                 switch(i) {

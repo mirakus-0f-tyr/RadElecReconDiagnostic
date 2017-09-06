@@ -45,6 +45,7 @@ public class LoadSavedFile {
     public static String strReportWeather = "Unknown";
     public static String strReportMitigation = "Unknown";
     public static String strReportComment = "Unknown";
+    public static String strRoomDeployed = "Unknown";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -126,7 +127,9 @@ public class LoadSavedFile {
                         strReportMitigation = strLine.substring(11).trim(); //Should robustly parse mitigation.
                     } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Comment:")) {
                         strReportComment = strLine.substring(8).trim(); //Should robustly parse comment.
-                    }
+                    } else if(strLine.length() > 4 && strLine.substring(0,5).contains("Room:")) {
+		        strRoomDeployed = strLine.substring(5).trim();
+		    }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {
                         if(strLine.contains("Start Date/Time:") || strLine.contains("SUMMARY:")) {
