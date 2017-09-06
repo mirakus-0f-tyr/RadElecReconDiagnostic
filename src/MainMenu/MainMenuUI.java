@@ -8,6 +8,7 @@ package MainMenu;
 import Config.Config;
 import java.io.BufferedReader;
 import java.io.File;
+import java.awt.Desktop;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -55,6 +56,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int testDuration = 48;
     public static boolean displayStatus = false;
     public static int displaySig = 1;
+    public static int openPDFWind = 1;
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -665,6 +667,7 @@ public static void createConfigTXT() {
             pw.print("DiagMode=0\n");
             pw.print("UnitType=US\n");
             pw.print("DisplaySig=1\n");
+	    pw.print("OpenPDFWindow=1\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create config.txt file!");
@@ -718,7 +721,9 @@ public static void parseConfigTXT() {
             } else if(strLine.contains("DisplaySig=")) {
                 displaySig = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplaySig
             }
-            
+	      else if(strLine.contains("OpenPDFWindow=")) {
+	        openPDFWind = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse opening reports folder preference
+            }
         }
 
 	// cleanup buffered reader
@@ -995,6 +1000,20 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       System.out.println("Generate PDF button pressed.");
       CreatePDF generate_pdf = new CreatePDF();
       generate_pdf.main();
+      // once CreatePDF.main returns, open an "explorer" window
+      Desktop desktop = null;
+      File reportsdir = new File("reports");
+      if (openPDFWind == 1) {
+          try {
+	      if (Desktop.isDesktopSupported()) {
+	          desktop = Desktop.getDesktop();;
+	          desktop.open(reportsdir);
+	      }
+	      else
+	          System.out.println("Opening PDF folder window - unsupported desktop.");
+          }
+          catch (IOException ex) { }
+      }
       btnDownloadSession.setEnabled(true);
       btnOpenSavedFile.setEnabled(true);
       btnGeneratePDF.setEnabled(true);
