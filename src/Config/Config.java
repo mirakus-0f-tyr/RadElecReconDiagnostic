@@ -205,7 +205,7 @@ public class Config extends javax.swing.JFrame {
         lblDisplaySignature.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblDisplaySignature.setText("Signature Options");
 
-        lblPDFFolder.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        lblPDFFolder.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblPDFFolder.setText("Open PDF Folder");
         lblPDFFolder.setToolTipText("");
 
@@ -385,7 +385,7 @@ public class Config extends javax.swing.JFrame {
         lblComment.setName(""); // NOI18N
         lblComment.setText("Comment:");
 
-        lblRoomDeployed.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        lblRoomDeployed.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblRoomDeployed.setText("Room:");
 
         txtRoomDeployed.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
