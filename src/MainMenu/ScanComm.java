@@ -101,7 +101,7 @@ public class ScanComm {
 	else if (userOS.contains("linux"))
             portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty(ACM[0-9]{1,2})"));
 	else if (userOS.contains("mac"))
-	    portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty.*"));
+	    portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty*"));
 	else {
 	    portNames = SerialPortList.getPortNames();	// initialize anyway if no matches
 	    System.out.println("OS not Windows, Linux, or Mac...");

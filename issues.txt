@@ -1,0 +1,10 @@
+- CreatePDF - "WARNING: Warning: You did not close a PDF Document" appears regularly but the final document seems okay
+
+- connection errors during comm port scanning - usually solved with another connect attempt, but why is this happening?
+
+- App worked on Mac, but performed VERY slowly (it COULD be all the tty devices it's checking - ask for the output)
+
+- graph not shown during Mac test (commas as separators in decimal numbers - need to force locale?)  See exception:
+	Exception in thread "AWT-EventQueue-0" java.lang.NumberFormatException: For input string: "5,945"
+
+- Mac port listed correctly when double-clicking on jar to run, but running from command line did not show the correct value
