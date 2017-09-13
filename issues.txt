@@ -8,3 +8,21 @@
 	Exception in thread "AWT-EventQueue-0" java.lang.NumberFormatException: For input string: "5,945"
 
 - Mac port listed correctly when double-clicking on jar to run, but running from command line did not show the correct value
+
+- Connected to above connection errors: With the new, separate methods of CreateTXT and CreateXLS, the unit is downloaded
+  twice.  Whereas before it was "all or nothing," now there is the possibility of successfully downloading the text file
+  but having a connect-fail on the second download.  More scrutiny should be placed on what is happening here to notify
+  the user and correct any problems.
+
+- Windows: It was observed in one case that repeatedly clicking Connect button did not result in the unit being recognized, although the unit
+  was recognized by Windows in Device Manager.  It is unclear what caused this...a reboot fixed the problem, but something happened.
+
+OTHER THINGS WE NEED TO DO
+
+- have an installer
+
+- have a convenient way for users to update
+
+- sort through library jars and remove any that aren't necessary
+
+- be aware of distribution terms for every library jar before we release
