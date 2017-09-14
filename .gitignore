@@ -5,11 +5,10 @@ fonts
 reports
 /dist/
 /build/
-*.swp
-*.swo
+*.sw*
 nbproject
 build.xml
 *.jpg
 *.png
 *.pdf
-run.sh
+*.sh

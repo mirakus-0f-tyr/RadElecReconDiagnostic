@@ -30,7 +30,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.5.57";
+    public static String version = "v0.5.66";
     
     //Old variables
     String[] SNandCF;
