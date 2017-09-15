@@ -73,10 +73,12 @@ public class LoadSavedFile {
             
             for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
                 if(strLine.length()>0) { //If the line is blank, then we definitely don't want to try to split the string.
+                    strLine = strLine.replace("[", ""); //Remove left brackets from strLine (introduced with new text file format)
+                    strLine = strLine.replace("]", ""); //Remove right brackets from strLine (introduced with new text file format)
                     strLine_parsed = StringUtils.split(strLine, ","); //splits strLine into the strLine_parsed[] string array.
                     if(strLine_parsed[0].equals("=DB")) { //make sure that we only add valid data files into our two-dimensional string array (LoadedReconTXTFile)...
                         for(int arrayCounter = 0; arrayCounter <= strLine_parsed.length -1; arrayCounter++) {
-                            arrLine.add(arrayCounter, strLine_parsed[arrayCounter]); //This will add each element in strLine_parsed to the temporary arrLine ArrayList.
+                            arrLine.add(arrayCounter, strLine_parsed[arrayCounter].trim()); //This will add each element in strLine_parsed to the temporary arrLine ArrayList.
                         }
                         arrLine_temp = (ArrayList<String>) arrLine.clone(); //This seems really stupid, but if you don't clone the ArrayList to a temporary holder, it'll be lost after arrLine.clear() below.
                         LoadedReconTXTFile.add(arrLine_temp); //This will add the temporary arrLine into the primary LoadedReconTXTFile ArrayList.
