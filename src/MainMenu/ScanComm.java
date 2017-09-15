@@ -217,6 +217,8 @@ public class ScanComm {
     
     static void DownloadNewRecord(SerialPort scannedPort) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         try {
+	    ReconCommand.DownloadReconSessionToRAM();
+
 	    // create the files
 	    if (MainMenuUI.diagnosticMode) {
 	        CreateTXT.main();
@@ -226,6 +228,7 @@ public class ScanComm {
 	        CreateTXT.main();
 	    }
 
+	    // we should check if files were actually written successfully!
             MainMenuUI.displayProgressLabel("Files written successfully.");
             System.out.println("Files written successfully.");
         }

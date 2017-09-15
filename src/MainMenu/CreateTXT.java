@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.time.Duration;
+import java.util.Arrays;
 
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
@@ -61,6 +62,9 @@ public class CreateTXT {
         double avgResult1 = 0;
         double avgResult2 = 0;
 
+	// used when traversing session list
+	int sessionCounter = 0;
+
         // these are used for numerical formats at the final stage of writing to text
         // the DecimalFormat object has the ability to set properties such as rounding up or down
         // investigate later if we need more precision or if something is wrong
@@ -82,6 +86,7 @@ public class CreateTXT {
         ReconCalDate = ScanComm.GetCalibrationDate(ScanComm.scannedPort);
 
         // load next record from Recon, prior to attempting naming detection below
+	System.out.println("Issuing reads to determine TXT file name...");
         ReconCommand.LoadNewRecord();
         ReconWaitTime = ReconCommand.DeviceResponse_parsed[12];
         ReconDurationSetting = ReconCommand.DeviceResponse_parsed[13];
@@ -107,42 +112,38 @@ public class CreateTXT {
         try {
             writer = new PrintWriter(TXT_name, "UTF-8");
 
-            Thread.sleep(10);
-            WriteComm.main(ScanComm.scannedPort, ReconCommand.CheckNewRecord); //Check the Recon to see if a new record exists.
-            Thread.sleep(10);
-            ReconCommand.DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
-            ReconCommand.DeviceResponse_parsed = StringUtils.split(ReconCommand.DeviceResponse, ",");
-            writer.println(ReconCommand.DeviceResponse);
+	    // print first line of data (start of test)
+            writer.println(Arrays.toString(ReconCommand.reconSession.get(sessionCounter)));
 
-            while (!(ReconCommand.DeviceResponse_parsed[2].equals("Z"))) {
-                if (ReconCommand.DeviceResponse_parsed[2].equals("S")) {
+            while (sessionCounter < ReconCommand.reconSession.size()) {
+                if (ReconCommand.reconSession.get(sessionCounter)[2].equals("S")) {
                     BeginAveraging = true;
-                    TempYear = 2000 + Integer.parseInt(ReconCommand.DeviceResponse_parsed[3]);
-                    StartDate = LocalDateTime.of(TempYear, Integer.parseInt(ReconCommand.DeviceResponse_parsed[4]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[5]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[6]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[7]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[8]));
+                    TempYear = 2000 + Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[3]);
+                    StartDate = LocalDateTime.of(TempYear, Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[4]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[5]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[6]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[7]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[8]));
                 }
 
-                if (ReconCommand.DeviceResponse_parsed[2].equals("I")) {
+                if (ReconCommand.reconSession.get(sessionCounter)[2].equals("I")) {
                     tenMinuteCounter++;
                 }
 
-                if (ReconCommand.DeviceResponse_parsed[2].equals("E")) {
-                    TempYear = 2000 + Integer.parseInt(ReconCommand.DeviceResponse_parsed[3]);
-                    EndDate = LocalDateTime.of(TempYear, Integer.parseInt(ReconCommand.DeviceResponse_parsed[4]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[5]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[6]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[7]), Integer.parseInt(ReconCommand.DeviceResponse_parsed[8]));
+                if (ReconCommand.reconSession.get(sessionCounter)[2].equals("E")) {
+                    TempYear = 2000 + Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[3]);
+                    EndDate = LocalDateTime.of(TempYear, Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[4]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[5]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[6]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[7]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[8]));
                 }
-                if (BeginAveraging == true) {
+                if (BeginAveraging == true && !ReconCommand.reconSession.get(sessionCounter)[2].equals("Z")) {
                     ActiveRecordCounts++;
-                    TotalMovements = TotalMovements + Long.parseLong(ReconCommand.DeviceResponse_parsed[9]);
-                    TotalChamber1Counts = TotalChamber1Counts + Long.parseLong(ReconCommand.DeviceResponse_parsed[10]);
-                    TotalChamber2Counts = TotalChamber2Counts + Long.parseLong(ReconCommand.DeviceResponse_parsed[11]);
-                    AvgHumidity = (AvgHumidity + Double.parseDouble(ReconCommand.DeviceResponse_parsed[15]));
-                    AvgPressure = (AvgPressure + Double.parseDouble(ReconCommand.DeviceResponse_parsed[18]));
-                    AvgTemperature = (AvgTemperature + Double.parseDouble(ReconCommand.DeviceResponse_parsed[21]));
+                    TotalMovements = TotalMovements + Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[9]);
+                    TotalChamber1Counts = TotalChamber1Counts + Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[10]);
+                    TotalChamber2Counts = TotalChamber2Counts + Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[11]);
+                    AvgHumidity = (AvgHumidity + Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[15]));
+                    AvgPressure = (AvgPressure + Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[18]));
+                    AvgTemperature = (AvgTemperature + Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[21]));
                     //System.out.println("AvgHum=" + AvgHumidity + ", AvgPress=" + AvgPressure + ", AvgTemp=" + AvgTemperature);
 
                     // section of code to tally counts and push hourly values into linked list for later analysis
                     // if (!LTMode) - do not forget this won't work for LT mode!
-                    ch1Counter += Integer.parseInt(ReconCommand.DeviceResponse_parsed[10]);
-                    ch2Counter += Integer.parseInt(ReconCommand.DeviceResponse_parsed[11]);
+                    ch1Counter += Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[10]);
+                    ch2Counter += Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[11]);
 
                     if (tenMinuteCounter == 6) {
                         AllHourlyCounts.addLast(new CountContainer(ch1Counter, ch2Counter)); // add new grouping of hourly totals to the list
@@ -154,13 +155,11 @@ public class CreateTXT {
                     }
                 }
 
-                Thread.sleep(10);
-                WriteComm.main(ScanComm.scannedPort, ReconCommand.ReadNextRecord);
-                Thread.sleep(10);
-                ReconCommand.DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
-                ReconCommand.DeviceResponse_parsed = StringUtils.split(ReconCommand.DeviceResponse, ",");
-                writer.println(ReconCommand.DeviceResponse);
-                MainMenuUI.displayProgressLabel("Reading Record #" + ReconCommand.DeviceResponse_parsed[1] + "...");
+		if (sessionCounter > 0) // we've already written that one outside the loop
+                    writer.println(Arrays.toString(ReconCommand.reconSession.get(sessionCounter)));
+
+		MainMenuUI.displayProgressLabel("Reading Record #" + ReconCommand.reconSession.get(sessionCounter)[1] + "...");
+		sessionCounter++;
             }  // end while loop
 
             // do this if we're in diagnostic mode

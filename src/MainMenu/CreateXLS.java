@@ -97,10 +97,11 @@ public class CreateXLS {
         DoesReconFileExist = true;
         XLS_exists = false;
 
-        // used later - sorry ;o)
-        int i = 0;
+	// used in traversing reconSession list
+	int sessionCounter = 0;
 
         // get serial number and start date of test
+	System.out.println("Issuing reads to determine XLS file name...");
         ConfirmSN = ReconCommand.GetSerialNumber();
         ReconCommand.LoadNewRecord();
         ReconCommand.LoadNextRecord();
@@ -139,49 +140,41 @@ public class CreateXLS {
             XL_Decimal100_Format = new WritableCellFormat(new NumberFormat("0.00"));
             XL_Decimal100_Format.setAlignment(Alignment.CENTRE);
 
-            Thread.sleep(10);
-            WriteComm.main(ScanComm.scannedPort, ReconCommand.CheckNewRecord); //Check the Recon to see if a new record exists.
-            Thread.sleep(10);
-            ReconCommand.DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
-            ReconCommand.DeviceResponse_parsed = StringUtils.split(ReconCommand.DeviceResponse, ",");
+	    // move to next record
+	    sessionCounter++;
 
-            while (!(ReconCommand.DeviceResponse_parsed[2].equals("Z"))) {
+            while (sessionCounter < ReconCommand.reconSession.size()) {
 
-                Thread.sleep(10);
-                WriteComm.main(ScanComm.scannedPort, ReconCommand.ReadNextRecord);
-                Thread.sleep(10);
-                ReconCommand.DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
-                ReconCommand.DeviceResponse_parsed = StringUtils.split(ReconCommand.DeviceResponse, ",");
-                MainMenuUI.displayProgressLabel("Reading Record #" + ReconCommand.DeviceResponse_parsed[1] + "...");
+                MainMenuUI.displayProgressLabel("Reading Record #" + ReconCommand.reconSession.get(sessionCounter)[1] + "...");
 
                 //Spreadsheet Stuff
                 //Move this to another method so we can have a semblance of order...
-                if (!(ReconCommand.DeviceResponse_parsed[2].equals("Z"))) {
+                if (!(ReconCommand.reconSession.get(sessionCounter)[2].equals("Z"))) {
                     int rows_total = sheet.getRows();
                     sheet.insertRow(rows_total + 1);
                     //This i incrementer is used for determining when to record the counts per hour.
-                    if ((ReconCommand.DeviceResponse_parsed[2].equals("S")) || (ReconCommand.DeviceResponse_parsed[2].equals("I"))) {
+                    if ((ReconCommand.reconSession.get(sessionCounter)[2].equals("S")) || (ReconCommand.reconSession.get(sessionCounter)[2].equals("I"))) {
                         i++;
                     }
-                    Recon_RecordNumber = new Number(0, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[1]));
+                    Recon_RecordNumber = new Number(0, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[1]));
                     sheet.addCell(Recon_RecordNumber);
-                    Recon_Flag = new Label(1, rows_total, ReconCommand.DeviceResponse_parsed[2]);
+                    Recon_Flag = new Label(1, rows_total, ReconCommand.reconSession.get(sessionCounter)[2]);
                     sheet.addCell(Recon_Flag);
-                    Recon_Year = new Number(2, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[3]));
+                    Recon_Year = new Number(2, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[3]));
                     sheet.addCell(Recon_Year);
-                    Recon_Month = new Number(3, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[4]));
+                    Recon_Month = new Number(3, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[4]));
                     sheet.addCell(Recon_Month);
-                    Recon_Day = new Number(4, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[5]));
+                    Recon_Day = new Number(4, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[5]));
                     sheet.addCell(Recon_Day);
-                    Recon_Hour = new Number(5, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[6]));
+                    Recon_Hour = new Number(5, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[6]));
                     sheet.addCell(Recon_Hour);
-                    Recon_Minute = new Number(6, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[7]));
+                    Recon_Minute = new Number(6, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[7]));
                     sheet.addCell(Recon_Minute);
-                    Recon_Second = new Number(7, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[8]));
+                    Recon_Second = new Number(7, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[8]));
                     sheet.addCell(Recon_Second);
-                    Recon_Movements = new Number(8, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[9]));
+                    Recon_Movements = new Number(8, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[9]));
                     sheet.addCell(Recon_Movements);
-                    Recon_Chamber1Count = new Number(9, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[10]));
+                    Recon_Chamber1Count = new Number(9, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[10]));
                     sheet.addCell(Recon_Chamber1Count);
                     //Calculate counts per hour, discarding the first two rows in any spreadsheet.
                     //I had originally used the modulus function (i.e. rows_total%6), but this didn't account for
@@ -197,36 +190,36 @@ public class CreateXLS {
                         sheet.addCell(Recon_Chamber2RadonConc);
                         i = 0;
                     }
-                    Recon_Chamber2Count = new Number(12, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[11]));
+                    Recon_Chamber2Count = new Number(12, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[11]));
                     sheet.addCell(Recon_Chamber2Count);
-                    Recon_MainInputVoltage = new Number(15, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[12]), XL_Decimal100_Format);
+                    Recon_MainInputVoltage = new Number(15, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[12]), XL_Decimal100_Format);
                     sheet.addCell(Recon_MainInputVoltage);
-                    Recon_BattVoltage = new Number(16, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[13]), XL_Decimal100_Format);
+                    Recon_BattVoltage = new Number(16, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[13]), XL_Decimal100_Format);
                     sheet.addCell(Recon_BattVoltage);
-                    Recon_HumidityMin = new Number(17, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[14]), XL_Decimal10_Format);
+                    Recon_HumidityMin = new Number(17, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[14]), XL_Decimal10_Format);
                     sheet.addCell(Recon_HumidityMin);
-                    Recon_HumidityAvg = new Number(18, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[15]), XL_Decimal10_Format);
+                    Recon_HumidityAvg = new Number(18, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[15]), XL_Decimal10_Format);
                     sheet.addCell(Recon_HumidityAvg);
-                    Recon_HumidityMax = new Number(19, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[16]), XL_Decimal10_Format);
+                    Recon_HumidityMax = new Number(19, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[16]), XL_Decimal10_Format);
                     sheet.addCell(Recon_HumidityMax);
-                    Recon_PressureMin = new Number(20, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[17]), XL_Decimal10_Format);
+                    Recon_PressureMin = new Number(20, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[17]), XL_Decimal10_Format);
                     sheet.addCell(Recon_PressureMin);
-                    Recon_PressureAvg = new Number(21, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[18]), XL_Decimal10_Format);
+                    Recon_PressureAvg = new Number(21, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[18]), XL_Decimal10_Format);
                     sheet.addCell(Recon_PressureAvg);
-                    Recon_PressureMax = new Number(22, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[19]), XL_Decimal10_Format);
+                    Recon_PressureMax = new Number(22, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[19]), XL_Decimal10_Format);
                     sheet.addCell(Recon_PressureMax);
-                    Recon_TemperatureMin = new Number(23, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[20]), XL_Decimal100_Format);
+                    Recon_TemperatureMin = new Number(23, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[20]), XL_Decimal100_Format);
                     sheet.addCell(Recon_TemperatureMin);
-                    Recon_TemperatureAvg = new Number(24, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[21]), XL_Decimal100_Format);
+                    Recon_TemperatureAvg = new Number(24, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[21]), XL_Decimal100_Format);
                     sheet.addCell(Recon_TemperatureAvg);
-                    Recon_TemperatureMax = new Number(25, rows_total, Double.parseDouble(ReconCommand.DeviceResponse_parsed[22]), XL_Decimal100_Format);
+                    Recon_TemperatureMax = new Number(25, rows_total, Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[22]), XL_Decimal100_Format);
                     sheet.addCell(Recon_TemperatureMax);
-                    Recon_CurrentAvg = new Number(26, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[23]));
+                    Recon_CurrentAvg = new Number(26, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[23]));
                     sheet.addCell(Recon_CurrentAvg);
-                    Recon_HVSupply = new Number(27, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[24]));
+                    Recon_HVSupply = new Number(27, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[24]));
                     sheet.addCell(Recon_HVSupply);
                     //Note: we need to strip the carriage return at the end of the DeviceResponse_parsed array, by using the replaceAll function call shown below.
-                    Recon_RecordsInSample = new Number(28, rows_total, Long.parseLong(ReconCommand.DeviceResponse_parsed[25].replaceAll("[\n\r]", "")));
+                    Recon_RecordsInSample = new Number(28, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[25].replaceAll("[\n\r]", "")));
                     sheet.addCell(Recon_RecordsInSample);
                     //The following is a bit of a hack, but it should work for adding CF1 and CF2 to the first row only, to serve as a constant.
                     if (rows_total == 1) {
@@ -236,6 +229,8 @@ public class CreateXLS {
                         sheet.addCell(Recon_CF2);
                     }
                 } // end if
+
+		sessionCounter++;
             } // end while loop
 
             //Created Named Ranges for spreadsheet graph
