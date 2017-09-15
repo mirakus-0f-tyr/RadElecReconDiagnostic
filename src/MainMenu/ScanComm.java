@@ -217,6 +217,7 @@ public class ScanComm {
     
     static void DownloadNewRecord(SerialPort scannedPort) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         try {
+	    ReconCommand.DetermineFileName();
 	    ReconCommand.DownloadReconSessionToRAM();
 
 	    // create the files

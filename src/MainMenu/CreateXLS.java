@@ -60,12 +60,12 @@ public class CreateXLS {
     public static Number Recon_CF1 = null;
     public static Number Recon_CF2 = null;
 
-    public static String ConfirmSN;
-    public static String XLS_name;
-    public static File XLS_file;
-    public static long fileIteration;
-    public static boolean DoesReconFileExist;
-    public static boolean XLS_exists;
+    //public static String ConfirmSN;
+    //public static String XLS_name;
+    //public static File XLS_file;
+    //public static long fileIteration;
+    //public static boolean DoesReconFileExist;
+    //public static boolean XLS_exists;
 
     //Variable declarations
     public static double AvgHumidity = 0;
@@ -90,19 +90,10 @@ public class CreateXLS {
     public static long i = 0;
 
     public static void main() throws BiffException, WriteException, InterruptedException, IOException {
-        // reset all variables used here
-        ConfirmSN = null;
-        XLS_name = null;
-        fileIteration = 1;
-        DoesReconFileExist = true;
-        XLS_exists = false;
 
 	// used in traversing reconSession list
 	int sessionCounter = 0;
 
-        // get serial number and start date of test
-	System.out.println("Issuing reads to determine XLS file name...");
-        ConfirmSN = ReconCommand.GetSerialNumber();
         ReconCommand.LoadNewRecord();
         ReconCommand.LoadNextRecord();
 
@@ -111,26 +102,10 @@ public class CreateXLS {
         CF1 = Double.parseDouble(CF_Array[0]) / 1000; //We need to add error-handling for this...
         CF2 = Double.parseDouble(CF_Array[1]) / 1000; //We need to add error-handling for this, too...
 
-        //This while loop will determine the file iteration in the naming process, so that we're not overwriting previously
-        //created files. This will basically append -x to the end of a file name, where x is the long file iteration counter.
-        while (DoesReconFileExist == true) {
-            XLS_name = "data/Recon_" + ConfirmSN + "_" + ReconCommand.DeviceResponse_parsed[4] + ReconCommand.DeviceResponse_parsed[5] + ReconCommand.DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
-            XLS_file = new File(XLS_name);
-            XLS_exists = XLS_file.exists();
-
-            if (!(XLS_exists == true)) {
-                DoesReconFileExist = false;
-            }
-
-            if (DoesReconFileExist == true) {
-                fileIteration++;
-            }
-        }
-
         try {
             //For Excel spreadsheet. Ye gods, this sub is turning into a bloody hornet's nest...
             Workbook workbook = Workbook.getWorkbook(new File("ReconTemplate.xls"));
-            XLfile = Workbook.createWorkbook(new File("data/Recon_" + ConfirmSN + "_" + ReconCommand.DeviceResponse_parsed[4] + ReconCommand.DeviceResponse_parsed[5] + ReconCommand.DeviceResponse_parsed[3] + "-" + fileIteration + ".xls"), workbook);
+            XLfile = Workbook.createWorkbook(new File(ReconCommand.filenameXLS), workbook);
             workbook.close();
             sheet = XLfile.getSheet(0);
             //Excel formats, so everything doesn't get passed over as a lousy string.

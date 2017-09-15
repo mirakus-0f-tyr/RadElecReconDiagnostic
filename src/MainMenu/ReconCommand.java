@@ -8,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
+import java.io.File;
 
 class ReconCommand {
 
@@ -26,7 +27,9 @@ class ReconCommand {
     public static String DeviceResponse;
     public static String[] DeviceResponse_parsed;
 
-    public static LinkedList<String[]> reconSession;
+    public static LinkedList<String[]> reconSession; // container to hold Recon samples
+    public static String filenameTXT;
+    public static String filenameXLS;
 
     public static String GetSerialNumber() {
         WriteComm.main(ScanComm.scannedPort, ReconConfirm);
@@ -87,11 +90,43 @@ class ReconCommand {
 	}
     }
 
+    // Loads filenames into strings here so that it does not need to be done
+    // in CreateTXT and CreateXLS individually
     public static void DetermineFileName() {
-        // TODO:
-        // If we're going to grab values from the units to name the files, we should do it ahead of time
-	// and save to memory, that way a file save is NEVER interuppted to do another serialPort read that might
-	// possibly fail, and leave a file unsaved/mis-named, etc.
+
+	String TXT_name = null;
+        File TXT_file = null;
+        long fileIteration = 1;
+        boolean DoesReconFileExist = true;
+        boolean TXT_exists = false;
+	String XLS_name = null;
+        File XLS_file = null;
+	boolean XLS_exists = false;
+
+	// get serial number and populate strings we will be searching for values
+	String ConfirmSN = ReconCommand.GetSerialNumber();
+	LoadNewRecord();
+	LoadNextRecord();
+
+	//This while loop will determine the file iteration in the naming process, so that we're not overwriting previously
+        //created files. This will basically append -x to the end of a file name, where x is the long file iteration counter.
+        while(DoesReconFileExist==true) {
+            TXT_name = "data/Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
+            XLS_name = "data/Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
+            TXT_file = new File(TXT_name);
+            XLS_file = new File(XLS_name);
+            TXT_exists = TXT_file.exists();
+            XLS_exists = XLS_file.exists();
+            if(!((TXT_exists==true)||(XLS_exists==true))) {
+                DoesReconFileExist = false;
+            }
+            if(DoesReconFileExist==true) {
+                fileIteration++;
+            }
+        }
+
+	filenameTXT = new String(TXT_name);
+	filenameXLS = new String(XLS_name);
     }
 
     // this is not necessary yet, but here's the method anyway

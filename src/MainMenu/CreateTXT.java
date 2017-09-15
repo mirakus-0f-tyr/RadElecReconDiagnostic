@@ -27,13 +27,6 @@ public class CreateTXT {
         String ReconDurationSetting = "Unknown";
         String ReconCalDate = "Unknown";
 
-        String ConfirmSN = null;
-        String TXT_name = null;
-        File TXT_file = null;
-        long fileIteration = 1;
-        boolean DoesReconFileExist = true;
-        boolean TXT_exists = false;
-
         double AvgHumidity = 0;
         double AvgTemperature = 0;
         double AvgPressure = 0;
@@ -76,41 +69,19 @@ public class CreateTXT {
 
         LinkedList<CountContainer> AllHourlyCounts = new LinkedList(); // list which will hold groups of hourly counts
 
-        // get serial number
-        ConfirmSN = ReconCommand.GetSerialNumber();
-
         // pull CF's
         String[] CF_Array = ScanComm.CheckCalibrationFactors(ScanComm.scannedPort); //Let's pull the calibration factors
         CF1 = Double.parseDouble(CF_Array[0]) / 1000; //We need to add error-handling for this...
         CF2 = Double.parseDouble(CF_Array[1]) / 1000; //We need to add error-handling for this, too...
         ReconCalDate = ScanComm.GetCalibrationDate(ScanComm.scannedPort);
 
-        // load next record from Recon, prior to attempting naming detection below
-	System.out.println("Issuing reads to determine TXT file name...");
         ReconCommand.LoadNewRecord();
         ReconWaitTime = ReconCommand.DeviceResponse_parsed[12];
         ReconDurationSetting = ReconCommand.DeviceResponse_parsed[13];
-        ReconCommand.LoadNextRecord();
-
-        //This while loop will determine the file iteration in the naming process, so that we're not overwriting previously
-        //created files. This will basically append -x to the end of a file name, where x is the long file iteration counter.
-        while (DoesReconFileExist == true) {
-            TXT_name = "data/Recon_" + ConfirmSN + "_" + ReconCommand.DeviceResponse_parsed[4] + ReconCommand.DeviceResponse_parsed[5] + ReconCommand.DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
-            TXT_file = new File(TXT_name);
-            TXT_exists = TXT_file.exists();
-
-            if (!(TXT_exists == true)) {
-                DoesReconFileExist = false;
-            }
-
-            if (DoesReconFileExist == true) {
-                fileIteration++;
-            }
-        }
 
         // create text file
         try {
-            writer = new PrintWriter(TXT_name, "UTF-8");
+            writer = new PrintWriter(ReconCommand.filenameTXT, "UTF-8");
 
 	    // print first line of data (start of test)
             writer.println(Arrays.toString(ReconCommand.reconSession.get(sessionCounter)));
