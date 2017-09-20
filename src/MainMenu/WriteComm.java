@@ -15,9 +15,9 @@ public class WriteComm {
     public static void main(SerialPort commPort, String ReconCommand) {
         SerialPort serialPort = commPort;
         try {
-            commPort.purgePort(15);
             Thread.sleep(10);
             serialPort.writeString(ReconCommand); //Write command to Recon
+            MainMenuUI.lastReconCommand = ReconCommand; //Store the last written command (for non-responsive instrument)
         }
         catch (SerialPortException ex) {
             System.out.println(ex);
