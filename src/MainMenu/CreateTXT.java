@@ -226,7 +226,7 @@ public class CreateTXT {
             if (MainMenuUI.unitType == "US") {
                 writer.println("Unit: pCi/L");
             } else {
-                writer.println("Unit: bQ/M3");
+                writer.println("Unit: Bq/m3");
             }
 
             // get size of AllHourlyCounts
@@ -265,9 +265,9 @@ public class CreateTXT {
                 writer.println("Chamber 2 Avg pCi/L = " + df.format((double) avgResult2));
                 writer.println("Average pCi/L = " + df.format((double) (avgResult1 + avgResult2) / 2));
             } else {
-                writer.println("Chamber 1 Avg bQ/M3 = " + si.format((double) (avgResult1 * 37)));
-                writer.println("Chamber 2 Avg bQ/M3 = " + si.format((double) (avgResult2 * 37)));
-                writer.println("Average bQ/M3 = " + si.format((double) (avgResult1 + avgResult2) / 2 * 37));
+                writer.println("Chamber 1 Avg Bq/m3 = " + si.format((double) (avgResult1 * 37)));
+                writer.println("Chamber 2 Avg Bq/m3 = " + si.format((double) (avgResult2 * 37)));
+                writer.println("Average Bq/m3 = " + si.format((double) (avgResult1 + avgResult2) / 2 * 37));
             }
         } catch (FileNotFoundException ex) {
         }

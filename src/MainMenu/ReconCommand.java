@@ -81,12 +81,12 @@ class ReconCommand {
         LoadNewRecord();
 
 	// parse and add to list
-	reconSession.add(DeviceResponse_parsed);
+	reconSession.add(CountLimiter.main(DeviceResponse_parsed));
 
 	// run :RN and parse until Z record complete
 	while (!(DeviceResponse_parsed[2].equals("Z"))) {
 	    LoadNextRecord();
-	    reconSession.add(DeviceResponse_parsed);
+	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
 	}
     }
 

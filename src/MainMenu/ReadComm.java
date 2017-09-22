@@ -25,7 +25,7 @@ public class ReadComm {
         try {
             Thread.sleep(10);
             String buffer = serialPort.readString();
-
+            System.out.println(buffer);
             if(buffer == null) {
                 buffer = NoResponseHandler(serialPort, byteLength);
             }
