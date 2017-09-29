@@ -219,9 +219,7 @@ public class ScanComm {
 	        CreateTXT.main();
 	    }
 
-	    // we should check if files were actually written successfully!
-            MainMenuUI.displayProgressLabel("Files written successfully.");
-            System.out.println("Files written successfully.");
+	    MainMenuUI.checkFilesWrittenSuccessfully();
         }
 
         catch (InterruptedException ex) {

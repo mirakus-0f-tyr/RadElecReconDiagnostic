@@ -895,6 +895,36 @@ public static void parseReportTXT() {
     
 }
 
+public static void checkFilesWrittenSuccessfully() {
+// For now the method only checks if the files exist. There are occasions when
+// the file will exist but still might not have been written correctly.
+// This should be expanded as we encounter any such files.
+
+    File txt_file = new File(ReconCommand.filenameTXT);
+    File xls_file = new File(ReconCommand.filenameXLS);
+
+    if (diagnosticMode) {
+        if (txt_file.exists() && xls_file.exists()) {
+	    displayProgressLabel("TXT and XLS written successfully.");
+	    System.out.println("TXT and XLS written successfully.");
+	}
+	else {
+	    displayProgressLabel("Error: Problem saving TXT and XLS files.");
+	    System.out.println("Error: Problem saving TXT and XLS files.");
+	}
+    }
+    else {
+        if (txt_file.exists()) {
+	    displayProgressLabel("TXT file written successfully.");
+	    System.out.println("TXT file written successfully.");
+	}
+	else {
+	    displayProgressLabel("Error: Problem saving TXT file.");
+	    System.out.println("Error: Problem saving TXT file.");
+	}
+    }
+}
+
 private class MySwingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
