@@ -100,6 +100,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblLoadedFile.setVisible(false);
         lblLoadedFileName.setVisible(false);
         btnUpdateTXTFile.setVisible(false);
+	btnSyncTime.setVisible(false);
         lblVersion.setText(version);
     }
 
@@ -139,6 +140,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         txtCustomerInfo = new javax.swing.JTextArea();
         lblTestSiteInfo1 = new javax.swing.JLabel();
         btnUpdateTXTFile = new javax.swing.JButton();
+        btnSyncTime = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Diagnostic Tool");
@@ -331,6 +333,15 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
+        btnSyncTime.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnSyncTime.setToolTipText("Sync Recon time to PC time. Must have Recon connected.");
+        btnSyncTime.setLabel("Sync Time");
+        btnSyncTime.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSyncTimeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -395,7 +406,9 @@ public class MainMenuUI extends javax.swing.JFrame {
                                         .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(btnSyncTime, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)))
                         .addGap(8, 8, 8)))
                 .addContainerGap())
         );
@@ -441,7 +454,10 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addComponent(lblTestSiteInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(btnUpdateTXTFile))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(btnUpdateTXTFile)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSyncTime)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -548,6 +564,11 @@ public class MainMenuUI extends javax.swing.JFrame {
 	worker.execute();
     }//GEN-LAST:event_btnUpdateTXTFileActionPerformed
 
+    private void btnSyncTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSyncTimeActionPerformed
+        SyncReconTime worker = new SyncReconTime();
+	worker.execute();
+    }//GEN-LAST:event_btnSyncTimeActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -600,6 +621,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JButton btnEraseReconData;
     private javax.swing.JButton btnGeneratePDF;
     private javax.swing.JButton btnOpenSavedFile;
+    private javax.swing.JButton btnSyncTime;
     private javax.swing.JButton btnUpdateTXTFile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
@@ -918,7 +940,12 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
                 btnGeneratePDF.setVisible(false);
                 btnEraseReconData.setVisible(true);
             }
+
+	    btnSyncTime.setVisible(true);
         }
+	else
+	    btnSyncTime.setVisible(false); // disable the sync time button if no Recon is connected
+
         btnConnect.setEnabled(true);
         return null;
     }
@@ -1068,6 +1095,24 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     // be a good idea to add checks
     oldFileName = "data/" + lblLoadedFileName.getText();
     MainMenu.FileUpdater.UpdateTXTFile(new File(oldFileName));
+    btnDownloadSession.setEnabled(true);
+    btnOpenSavedFile.setEnabled(true);
+    btnGeneratePDF.setEnabled(true);
+    btnEraseReconData.setEnabled(true);
+
+    return null;
+    }
+}
+
+private class SyncReconTime extends SwingWorker<Void, Void>{
+    @Override
+    protected Void doInBackground() throws Exception {
+    btnDownloadSession.setEnabled(false);
+    btnOpenSavedFile.setEnabled(false);
+    btnGeneratePDF.setEnabled(false);
+    btnEraseReconData.setEnabled(false);
+    System.out.println("SyncTime button pressed.");
+    ScanComm.run(7);
     btnDownloadSession.setEnabled(true);
     btnOpenSavedFile.setEnabled(true);
     btnGeneratePDF.setEnabled(true);

@@ -20,9 +20,7 @@ class ReconCommand {
     public static String ClearMemoryCommand = ":CM\r\n";
     public static String ClearSessionCommand = ":CD\r\n";
     public static String ReadCalibrationFactors = ":RL\r\n";
-    //public static String WriteCalibrationFactors = ":WL,xyz,xyz";
     public static String ReadTime = ":RT\r\n";
-    //public static String WriteTime = ":WT,x/x/x/y/y/y";
 
     public static String DeviceResponse;
     public static String[] DeviceResponse_parsed;
@@ -53,20 +51,18 @@ class ReconCommand {
         DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
     }
 
-    // Beginnings of a method for setting the Recon time from computer system time.
-    // Not complete...
+    // set the computer system time to the Recon
     public static void SetReconTimeFromPC() {
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("YY,MM,DD,hh,mm,ss"); // this format causes an exception - fix
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy,MM,dd,hh,mm,ss");
 	String strCurrentTime;
-	String[] reconFormattedTime;
 
 	// get computer system time
 	LocalDateTime currentTime = LocalDateTime.now();
 	strCurrentTime = currentTime.format(formatter);
 
-	// rip apart system time into string we can convert to the following
-
-	// issue :WT,YY,MM,DD,hh,mm,ss
+	// issue :WT
+	System.out.println("Issuing :WT instruction to write time...");
+	WriteComm.main(ScanComm.scannedPort, ":WT," + strCurrentTime + "\r\n");
     }
 
     // download Recon session into memory, making data available for multitude of data exporters
