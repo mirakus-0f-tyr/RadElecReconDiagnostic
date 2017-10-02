@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
-
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -30,7 +30,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.6.0";
+    public static String version = "v0.6.4";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -46,13 +46,6 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static double targetRnCAvg;
 
     // variables for config.txt file values
-    // These values will be the last set preferences
-    // and populate the configuration fields.
-    // DiagMode - diagnostic mode on or off
-    // UnitType - last set to device, US or SI units
-    // WaitTime - last set to device, wait time
-    // TestDur  - last set to device, test duration
-    // DispRes  - last set to device, disp results on/off
     public static boolean diagnosticMode = false;
     public static String unitType = "US";
     public static int waitTime = 0;
@@ -60,6 +53,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean displayStatus = false;
     public static int displaySig = 1;
     public static int openPDFWind = 1;
+    public static int testClearMode = 1; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -717,6 +711,7 @@ public static void createConfigTXT() {
             pw.print("UnitType=US\n");
             pw.print("DisplaySig=1\n");
 	    pw.print("OpenPDFWindow=1\n");
+	    pw.print("TestClearMode=1\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create config.txt file!");
@@ -772,7 +767,9 @@ public static void parseConfigTXT() {
             }
 	      else if(strLine.contains("OpenPDFWindow=")) {
 	        openPDFWind = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse opening reports folder preference
-            }
+            } else if(strLine.contains("TestClearMode=")) {
+	        testClearMode = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse preference for session clear mode
+	    }
         }
 
 	// cleanup buffered reader
@@ -923,6 +920,36 @@ public static void checkFilesWrittenSuccessfully() {
 	    System.out.println("Error: Problem saving TXT file.");
 	}
     }
+}
+
+// This method will determine how to proceed with clearing a session based on user preference.
+// The assumption is that a user who is in diagnostic mode will always manage their sessions
+// manually, so this method checks the mode before actually doing anything.
+public static void HandleSessionClear() {
+	if (diagnosticMode || testClearMode == 0)
+	    return;
+
+	try {
+	    if (testClearMode == 1) {
+	        // prompt user and either issue :CD or do nothing
+	        int response = JOptionPane.showConfirmDialog(null, "Recon data has been saved to " + ReconCommand.filenameTXT + ". Clear this test from the unit?", "Clear test from Recon?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+
+		if (response == JOptionPane.NO_OPTION)
+		    return;
+		else if (response == JOptionPane.YES_OPTION) {
+		    ScanComm.ClearSessionMemory(ScanComm.scannedPort);
+		    ScanComm.CheckReconProtocol(ScanComm.scannedPort);
+		}
+		else if (response == JOptionPane.CLOSED_OPTION)
+		    return;
+	    }
+	    else if (testClearMode == 2) {
+	        ScanComm.ClearSessionMemory(ScanComm.scannedPort);
+		ScanComm.CheckReconProtocol(ScanComm.scannedPort);
+	    }
+	}
+
+	catch (Exception ex) {}
 }
 
 private class MySwingWorker extends SwingWorker<Void, Void>{

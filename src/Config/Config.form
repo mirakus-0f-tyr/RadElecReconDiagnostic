@@ -178,20 +178,31 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cboAppMode" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
-                          <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboUnitSystem" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="149" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
-                          <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Component id="lblClearOldTest" min="-2" pref="185" max="-2" attributes="0"/>
+                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="cboClearOldTests" max="32767" attributes="0"/>
+                                      <Component id="cboAppMode" alignment="1" pref="123" max="32767" attributes="0"/>
+                                      <Component id="lblAppMode" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cboUnitSystem" alignment="1" pref="123" max="32767" attributes="0"/>
+                                  </Group>
+                                  <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace pref="149" max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
+                                  <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
                       </Group>
                   </Group>
               </Group>
@@ -211,15 +222,21 @@
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblUnits" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="cboPDFFolder" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboUnitSystem" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Component id="lblClearOldTest" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cboUnitSystem" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboPDFFolder" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="162" max="32767" attributes="0"/>
+                      <Component id="cboClearOldTests" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="113" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -299,6 +316,29 @@
                     <StringItem index="1" value="No"/>
                   </StringArray>
                 </Property>
+              </Properties>
+              <AuxValues>
+                <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+              </AuxValues>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblClearOldTest">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Dialog" size="12" style="0"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Clear Old Tests From Recon"/>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cboClearOldTests">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="3">
+                    <StringItem index="0" value="Never"/>
+                    <StringItem index="1" value="Prompt"/>
+                    <StringItem index="2" value="Always"/>
+                  </StringArray>
+                </Property>
+                <Property name="toolTipText" type="java.lang.String" value="Clear old tests from Recon as you download them?"/>
               </Properties>
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>

@@ -220,6 +220,7 @@ public class ScanComm {
 	    }
 
 	    MainMenuUI.checkFilesWrittenSuccessfully();
+	    MainMenuUI.HandleSessionClear();
         }
 
         catch (InterruptedException ex) {

@@ -49,16 +49,19 @@ public class Config extends javax.swing.JFrame {
             String strUnitSystem;
             String strDisplaySig;
 	    String strPDFWindow;
+	    String strTestClearMode;
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
             strDisplaySig = findDisplaySig();
 	    strPDFWindow = findPDFWindow();
+	    strTestClearMode = findTestClearMode();
             LoadReportTXT();
             loadDeploymentVariables();
             cboAppMode.setSelectedItem(strAppMode);
             cboUnitSystem.setSelectedItem(strUnitSystem);
             cboDisplaySig.setSelectedItem(strDisplaySig);
 	    cboPDFFolder.setSelectedItem(strPDFWindow);
+	    cboClearOldTests.setSelectedItem(strTestClearMode);
             
         } catch (IOException e) {
             System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
@@ -91,6 +94,8 @@ public class Config extends javax.swing.JFrame {
         lblDisplaySignature = new java.awt.Label();
         lblPDFFolder = new javax.swing.JLabel();
         cboPDFFolder = new javax.swing.JComboBox<>();
+        lblClearOldTest = new javax.swing.JLabel();
+        cboClearOldTests = new javax.swing.JComboBox<>();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -211,6 +216,12 @@ public class Config extends javax.swing.JFrame {
 
         cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
 
+        lblClearOldTest.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        lblClearOldTest.setText("Clear Old Tests From Recon");
+
+        cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Never", "Prompt", "Always" }));
+        cboClearOldTests.setToolTipText("Clear old tests from Recon as you download them?");
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -218,16 +229,23 @@ public class Config extends javax.swing.JFrame {
             .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
-                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPDFFolder)
-                    .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addComponent(lblClearOldTest, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(cboClearOldTests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cboAppMode, 0, 123, Short.MAX_VALUE)
+                                .addComponent(lblAppMode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(cboUnitSystem, 0, 123, Short.MAX_VALUE))
+                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 149, Short.MAX_VALUE)
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPDFFolder)
+                            .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
         );
         pnlSettingsLayout.setVerticalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,13 +260,18 @@ public class Config extends javax.swing.JFrame {
                     .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPDFFolder))
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addComponent(lblPDFFolder)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(12, 12, 12)
+                .addComponent(lblClearOldTest)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(162, Short.MAX_VALUE))
+                .addComponent(cboClearOldTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(113, Short.MAX_VALUE))
         );
 
         lblPDFFolder.getAccessibleContext().setAccessibleName("lblPDFFolder");
@@ -606,9 +629,39 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find DisplaySig. There was a problem loading the settings.");
+            System.out.println("ERROR: Unable to parse config.txt in order to find OpenPDFWindow. There was a problem loading the settings.");
         }
         return "OpenPDFWindow";
+    }
+
+    private String findTestClearMode() {
+        String config_info = "config/config.txt";
+	try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
+            //Although this means that the order of the configuration parameters is unimportant, a single blank
+            //line will terminate the for loop (and halt the parsing process).
+            //For unexpected values in DisplaySig value (or if it's missing), we default to an DisplaySig=1.
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("TestClearMode=")) {
+                    //Cool, we've found what we're looking for...
+                    if(strLine.endsWith("0")) {
+                        br.close();
+                        return "Never";
+                    } else if (strLine.endsWith("1")) {
+                        br.close();
+                        return "Prompt";
+                    } else if (strLine.endsWith("2")) {
+		        br.close();
+			return "Always";
+		    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to parse config.txt in order to find TestClearMode. There was a problem loading the settings.");
+        }
+	return "TestClearMode";
     }
 
     public void LoadReportTXT() {
@@ -729,6 +782,15 @@ public class Config extends javax.swing.JFrame {
 	        strInput = strInput.replace("OpenPDFWindow=1", "OpenPDFWindow=0");
 	    }
 
+	    // handling clear-old-tests preference
+	    if (cboClearOldTests.getSelectedItem().equals("Never")) {
+	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=0");
+	    } else if (cboClearOldTests.getSelectedItem().equals("Prompt")) {
+	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=1");
+	    } else if (cboClearOldTests.getSelectedItem().equals("Always")) {
+	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=2");
+	    }
+
             FileOutputStream fileOut = new FileOutputStream(config_info);
             fileOut.write(strInput.getBytes());
             fileOut.close();
@@ -843,12 +905,14 @@ public class Config extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JComboBox cboAppMode;
+    private javax.swing.JComboBox<String> cboClearOldTests;
     private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox<String> cboPDFFolder;
     private javax.swing.JComboBox cboUnitSystem;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
     private java.awt.Label lblAppMode;
+    private javax.swing.JLabel lblClearOldTest;
     private java.awt.Label lblComment;
     private java.awt.Label lblCompanyAddress;
     private java.awt.Label lblCompanyName;
