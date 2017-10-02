@@ -1142,7 +1142,7 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnGeneratePDF.setEnabled(false);
     btnEraseReconData.setEnabled(false);
     System.out.println("SyncTime button pressed.");
-    ScanComm.run(7);
+    CRM_Parameters = ScanComm.run(7);
     btnDownloadSession.setEnabled(true);
     btnOpenSavedFile.setEnabled(true);
     btnGeneratePDF.setEnabled(true);

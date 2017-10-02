@@ -53,7 +53,7 @@ class ReconCommand {
 
     // set the computer system time to the Recon
     public static void SetReconTimeFromPC() {
-	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy,MM,dd,hh,mm,ss");
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy,MM,dd,HH,mm,ss");
 	String strCurrentTime;
 
 	// get computer system time
