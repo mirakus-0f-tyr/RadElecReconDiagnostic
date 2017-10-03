@@ -84,6 +84,14 @@ class ReconCommand {
 	    LoadNextRecord();
 	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
 	}
+
+	// check that record numbers are sequential - that one was not skipped in the case of interrupted download
+	for (int c = 0; c < reconSession.size() - 1; c++) { // stop before Z
+	    if (Integer.parseInt(reconSession.get(c)[1]) + 1 != Integer.parseInt(reconSession.get(c + 1)[1])) {
+		System.out.println("Sequential record check failed. Restarting download.");
+		DownloadReconSessionToRAM(); // restart the download because we missed a record
+	    }
+	}
     }
 
     // Loads filenames into strings here so that it does not need to be done
