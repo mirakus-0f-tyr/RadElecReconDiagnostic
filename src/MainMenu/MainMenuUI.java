@@ -926,30 +926,30 @@ public static void checkFilesWrittenSuccessfully() {
 // The assumption is that a user who is in diagnostic mode will always manage their sessions
 // manually, so this method checks the mode before actually doing anything.
 public static void HandleSessionClear() {
-	if (diagnosticMode || testClearMode == 0)
-	    return;
+    if (diagnosticMode || testClearMode == 0)
+	return;
 
-	try {
-	    if (testClearMode == 1) {
-	        // prompt user and either issue :CD or do nothing
-	        int response = JOptionPane.showConfirmDialog(null, "Recon data has been saved to " + ReconCommand.filenameTXT + ". Clear this test from the unit?", "Clear test from Recon?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
+    try {
+	if (testClearMode == 1) {
+	    // prompt user and either issue :CD or do nothing
+	    int response = JOptionPane.showConfirmDialog(null, "Recon data has been saved to " + ReconCommand.filenameTXT + ". Clear this test from the unit?", "Clear test from Recon?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 
-		if (response == JOptionPane.NO_OPTION)
-		    return;
-		else if (response == JOptionPane.YES_OPTION) {
-		    ScanComm.ClearSessionMemory(ScanComm.scannedPort);
-		    ScanComm.CheckReconProtocol(ScanComm.scannedPort);
-		}
-		else if (response == JOptionPane.CLOSED_OPTION)
-		    return;
-	    }
-	    else if (testClearMode == 2) {
+	    if (response == JOptionPane.NO_OPTION)
+	        return;
+	    else if (response == JOptionPane.YES_OPTION) {
 	        ScanComm.ClearSessionMemory(ScanComm.scannedPort);
 		ScanComm.CheckReconProtocol(ScanComm.scannedPort);
 	    }
+	    else if (response == JOptionPane.CLOSED_OPTION)
+	        return;
+        }
+        else if (testClearMode == 2) {
+	    ScanComm.ClearSessionMemory(ScanComm.scannedPort);
+	    ScanComm.CheckReconProtocol(ScanComm.scannedPort);
 	}
+    }
 
-	catch (Exception ex) {}
+    catch (Exception ex) {}
 }
 
 private class MySwingWorker extends SwingWorker<Void, Void>{
