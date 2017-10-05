@@ -229,19 +229,15 @@ public class CreateTXT {
                 writer.println("Unit: Bq/m3");
             }
 
-            // get size of AllHourlyCounts
-            // for size, perform =
-            for (int loopCount1 = 0; loopCount1 < AllHourlyCounts.size(); loopCount1++) {
-
+            // write hourly radon values
+	    for (int loopCount1 = 0; loopCount1 < AllHourlyCounts.size(); loopCount1++) {
                 if (MainMenuUI.unitType == "US") {
                     writer.println("Hour: " + (Integer.toString(loopCount1)));
 
-                    // if the result is a whole number, df.format will not show the .0 - fix later if necessary
                     writer.println("Ch1: " + df.format((double) AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1) + "\tCh2: " + df.format((double) AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2));
                 } else { // assuming SI
                     writer.println("Hour: " + (Integer.toString(loopCount1)));
 
-                    // if the result is a whole number, df.format will not show the .0 - fix later if necessary
                     writer.println("Ch1: " + si.format((double) AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1 * 37) + "\tCh2: " + si.format((double) AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2 * 37));
                 }
 
