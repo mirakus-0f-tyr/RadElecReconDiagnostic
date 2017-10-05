@@ -133,6 +133,13 @@ class ReconCommand {
 	filenameXLS = new String(XLS_name);
     }
 
+    public static boolean SetOptionFlag() {
+        boolean opSuccess = false;
+	short flag; // binary number we will be working with - remember to perform operations to UNSIGN this variable
+
+	return opSuccess;
+    }
+
     // this is not necessary yet, but here's the method anyway
     public static void ClearResponse() {
         DeviceResponse = "";
