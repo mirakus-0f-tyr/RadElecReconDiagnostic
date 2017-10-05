@@ -195,12 +195,21 @@
                                   </Group>
                                   <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="149" max="32767" attributes="0"/>
+                              <EmptySpace pref="114" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
-                                  <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
+                                          <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="btnOpenFlagSelect" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -235,8 +244,11 @@
                       <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
                       <Component id="lblClearOldTest" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cboClearOldTests" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="113" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboClearOldTests" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnOpenFlagSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="112" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -343,6 +355,14 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JButton" name="btnOpenFlagSelect">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Display Options"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOpenFlagSelectActionPerformed"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
