@@ -539,10 +539,10 @@ public class Config extends javax.swing.JFrame {
     }//GEN-LAST:event_formWindowOpened
 
     private void btnOpenFlagSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFlagSelectActionPerformed
-        javax.swing.JFrame frameOptions = new FlagForm();
-	frameOptions.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        frameOptions.setLocationRelativeTo(null);
-        frameOptions.setVisible(true);
+        javax.swing.JFrame flagOptions = new FlagForm();
+	flagOptions.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
+        flagOptions.setLocationRelativeTo(null);
+        flagOptions.setVisible(true);
     }//GEN-LAST:event_btnOpenFlagSelectActionPerformed
 
     private String findAppMode() {

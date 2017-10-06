@@ -11,6 +11,12 @@ package Config;
  */
 public class FlagForm extends javax.swing.JFrame {
 
+    // flag preferences
+    public static String displayPreferencePres;
+    public static String displayPreferenceTemp;
+    public static String displayPreferenceDual;
+    public static String displayPreferenceUnits;
+
     /**
      * Creates new form FlagForm
      */
@@ -48,6 +54,11 @@ public class FlagForm extends javax.swing.JFrame {
         lblExposureUnits.setText("Radon Unit");
 
         cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "inHG", "mBar" }));
+        cboPressureSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboPressureSelectActionPerformed(evt);
+            }
+        });
 
         cboTemperatureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "F", "C" }));
         cboTemperatureSelect.addActionListener(new java.awt.event.ActionListener() {
@@ -64,8 +75,18 @@ public class FlagForm extends javax.swing.JFrame {
         });
 
         cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pCi/L", "Bq/M3", "CPH", "CPHs" }));
+        cboRadonUnitSelect.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboRadonUnitSelectActionPerformed(evt);
+            }
+        });
 
         btnApplySpecial.setText("Apply");
+        btnApplySpecial.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnApplySpecialActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -126,13 +147,37 @@ public class FlagForm extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void cboDualChamberSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDualChamberSelectActionPerformed
+        if (cboDualChamberSelect.getSelectedItem().equals("Yes"))
+	    displayPreferenceDual = "yes";
+	else
+	    displayPreferenceDual = "no";
+    }//GEN-LAST:event_cboDualChamberSelectActionPerformed
+
     private void cboTemperatureSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTemperatureSelectActionPerformed
-        // TODO add your handling code here:
+        if (cboTemperatureSelect.getSelectedItem().equals("F"))
+	    displayPreferenceTemp = "F";
+	else
+	    displayPreferenceTemp = "C";
     }//GEN-LAST:event_cboTemperatureSelectActionPerformed
 
-    private void cboDualChamberSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDualChamberSelectActionPerformed
+    private void cboRadonUnitSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboRadonUnitSelectActionPerformed
+        if (cboRadonUnitSelect.getSelectedItem().equals("pCi/L"))
+	    displayPreferenceUnits = "pCi/L";
+	else
+	    displayPreferenceUnits = "Bq/m3";
+    }//GEN-LAST:event_cboRadonUnitSelectActionPerformed
+
+    private void cboPressureSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPressureSelectActionPerformed
+        if (cboPressureSelect.getSelectedItem().equals("inHG"))
+	    displayPreferencePres = "inHG";
+	else
+	    displayPreferencePres = "mBar";
+    }//GEN-LAST:event_cboPressureSelectActionPerformed
+
+    private void btnApplySpecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplySpecialActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_cboDualChamberSelectActionPerformed
+    }//GEN-LAST:event_btnApplySpecialActionPerformed
 
     /**
      * @param args the command line arguments
