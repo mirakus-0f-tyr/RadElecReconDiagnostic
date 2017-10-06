@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.io.File;
 
+import Config.FlagForm;
+
 class ReconCommand {
 
     public static String ReconConfirm = ":RV\r\n";
@@ -134,9 +136,45 @@ class ReconCommand {
     }
 
     public static boolean SetOptionFlag() {
-        boolean opSuccess = false;
-	short flag; // binary number we will be working with - remember to perform operations to UNSIGN this variable
+	// OPTIONS TO BE SET WITH FLAG VARIABLE
+	// Pressure----------------------
+	// InHG		0000 0000
+	// mBar		0000 0001
+	// Temperature-------------------
+	// F		0000 0000
+	// C		0000 0100
+	// Blind Flag--------------------
+	// Show all	0000 0000
+	// Show none	0000 1000
+	// Dual Chamber------------------
+	// Combine	0000 0000
+	// Show both	0001 0000
+	// Exposure Units----------------
+	// pCi/L	0000 0000
+	// Bq/m3	0010 0000
+	// CPH		0100 0000
+	// CPHs		0110 0000
+	// ------------------------------
+	// Process: add all of the options the user wants, convert to hex and write that value to the unit.
 
+        boolean opSuccess = false;
+
+	// binary number we will be writing to the unit
+	short flag = 0;
+
+	if (FlagForm.displayPreferencePres == "mBar")
+	    flag += 0b00000001;
+	if (FlagForm.displayPreferenceTemp == "C")
+	    flag += 0b00000100;
+	if (FlagForm.displayPreferenceDual == "yes")
+	    flag += 0b00010000;
+	if (FlagForm.displayPreferenceUnits == "Bq/m3")
+	    flag += 0b00100000;
+
+	System.out.println("Flag hex value: " + Integer.toHexString(flag));
+	WriteComm.main(ScanComm.scannedPort, ":WF" + flag + "\r\n");
+
+	opSuccess = true;
 	return opSuccess;
     }
 

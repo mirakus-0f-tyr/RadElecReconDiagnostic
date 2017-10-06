@@ -51,6 +51,7 @@ public class ScanComm {
     //5 = Clear Memory and All Data Dump
     //6 = Download end-user text file - do not generate spreadsheet
     //7 = synchronize Recon time to PC
+    //8 = write flag to Recon (display options)
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
         System.out.println("Beginning to scan Comm ports...");
@@ -137,6 +138,11 @@ public class ScanComm {
 		        System.out.println("Setting Recon time...");
 			ReconCommand.SetReconTimeFromPC();
 			MainMenuUI.displayProgressLabel("Time synchronization complete.");
+		    } else if (OptArgs == 8) {
+			if (ReconCommand.SetOptionFlag()) {
+			    System.out.println("Display options saved to unit.");
+			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
+			}
 		    }
                 }
             scannedPort.closePort();

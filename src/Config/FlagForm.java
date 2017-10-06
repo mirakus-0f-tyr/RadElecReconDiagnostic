@@ -5,6 +5,7 @@
  */
 package Config;
 
+import MainMenu.ScanComm;
 /**
  *
  * @author john
@@ -12,10 +13,10 @@ package Config;
 public class FlagForm extends javax.swing.JFrame {
 
     // flag preferences
-    public static String displayPreferencePres;
-    public static String displayPreferenceTemp;
-    public static String displayPreferenceDual;
-    public static String displayPreferenceUnits;
+    public static String displayPreferencePres = "mBar";
+    public static String displayPreferenceTemp = "F";
+    public static String displayPreferenceDual = "no";
+    public static String displayPreferenceUnits = "pCi/L";
 
     /**
      * Creates new form FlagForm
@@ -53,7 +54,7 @@ public class FlagForm extends javax.swing.JFrame {
 
         lblExposureUnits.setText("Radon Unit");
 
-        cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "inHG", "mBar" }));
+        cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mBar", "inHG" }));
         cboPressureSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboPressureSelectActionPerformed(evt);
@@ -67,7 +68,7 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
-        cboDualChamberSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
+        cboDualChamberSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No", "Yes" }));
         cboDualChamberSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboDualChamberSelectActionPerformed(evt);
@@ -176,7 +177,13 @@ public class FlagForm extends javax.swing.JFrame {
     }//GEN-LAST:event_cboPressureSelectActionPerformed
 
     private void btnApplySpecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplySpecialActionPerformed
-        // TODO add your handling code here:
+	System.out.println("Attempting to write flag value.");
+
+	try {
+	   ScanComm.run(8);
+	}
+
+	catch (Exception anyEx) {};
     }//GEN-LAST:event_btnApplySpecialActionPerformed
 
     /**
