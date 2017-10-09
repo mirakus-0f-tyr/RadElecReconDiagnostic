@@ -73,6 +73,29 @@ public class MainMenuUI extends javax.swing.JFrame {
      */
     public MainMenuUI() {
         //Auto-generated GUI builder
+
+	// check existence of critical directories before proceeding
+	File configDir = new File("config");
+	if (!configDir.exists()) {
+            System.out.println("Config directory does not exist.  Creating...");
+            configDir.mkdir();
+        }
+	File dataDir = new File("data");
+	if (!dataDir.exists()) {
+            System.out.println("Data directory does not exist.  Creating...");
+            dataDir.mkdir();
+        }
+	File reportDir = new File("reports");
+	if (!reportDir.exists()) {
+            System.out.println("Reports directory does not exist.  Creating...");
+            reportDir.mkdir();
+        }
+
+	// check existence of ReconTemplate.xls and inform user if it's not there
+	File xlsTemplate = new File("ReconTemplate.xls");
+	if (!xlsTemplate.exists())
+	    System.out.println("XLS template not present. You will not be able to create XLS files.");
+
         parseCompanyTXT();
 	parseConfigTXT();
         parseDeploymentTXT();
