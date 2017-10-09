@@ -143,6 +143,8 @@ public class ScanComm {
 			    System.out.println("Display options saved to unit.");
 			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
 			}
+			else
+			    System.out.println("ERROR: Display options flag NOT written successfully.");
 		    }
                 }
             scannedPort.closePort();

@@ -157,10 +157,10 @@ class ReconCommand {
 	// ------------------------------
 	// Process: add all of the options the user wants, convert to hex and write that value to the unit.
 
-        boolean opSuccess = false;
+        //boolean opSuccess = false;
 
-	// binary number we will be writing to the unit
-	short flag = 0;
+	//String flagResponse = null; // value read from unit to verify success
+	short flag = 0; // binary number we will be writing to the unit
 
 	if (FlagForm.displayPreferencePres == "mBar")
 	    flag += 0b00000001;
@@ -170,12 +170,30 @@ class ReconCommand {
 	    flag += 0b00010000;
 	if (FlagForm.displayPreferenceUnits == "Bq/m3")
 	    flag += 0b00100000;
+	if (FlagForm.displayPreferenceUnits == "CPH")
+	    flag += 0b01000000;
 
-	System.out.println("Flag hex value: " + Integer.toHexString(flag));
-	WriteComm.main(ScanComm.scannedPort, ":WF" + flag + "\r\n");
+	System.out.println("Attempting to write flag: " + Integer.toHexString(flag));
+	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
 
-	opSuccess = true;
-	return opSuccess;
+	// THIS CHECK NEEDS TO BE FIXED - WE DON'T WANT A MISTAKE IN SETTING THIS VALUE TO THE UNIT
+	WriteComm.main(ScanComm.scannedPort, ":RF\r\n");
+	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
+	/*DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
+
+	flagResponse = DeviceResponse.substring(6);
+	flagResponse = StringUtils.stripStart(flagResponse, "0");
+	System.out.println(Integer.toHexString(flag));
+	System.out.println(Integer.toHexString(Integer.parseInt(flagResponse)));
+	if (Integer.toHexString(flag).equals(Integer.toHexString(Integer.parseInt(flagResponse))))
+	    opSuccess = true;
+	else {
+	    opSuccess = false;
+	    System.out.println("Value returned by :RF does not match what was written. Flag write failed.");
+	}*/
+
+	//return opSuccess;
+	return true;
     }
 
     // this is not necessary yet, but here's the method anyway

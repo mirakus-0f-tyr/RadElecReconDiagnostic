@@ -75,7 +75,7 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
-        cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pCi/L", "Bq/M3", "CPH", "CPHs" }));
+        cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pCi/L", "Bq/m3", "CPH" }));
         cboRadonUnitSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboRadonUnitSelectActionPerformed(evt);
@@ -165,8 +165,10 @@ public class FlagForm extends javax.swing.JFrame {
     private void cboRadonUnitSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboRadonUnitSelectActionPerformed
         if (cboRadonUnitSelect.getSelectedItem().equals("pCi/L"))
 	    displayPreferenceUnits = "pCi/L";
-	else
+	else if (cboRadonUnitSelect.getSelectedItem().equals("Bq/m3"))
 	    displayPreferenceUnits = "Bq/m3";
+	else if (cboRadonUnitSelect.getSelectedItem().equals("CPH"))
+	    displayPreferenceUnits = "CPH";
     }//GEN-LAST:event_cboRadonUnitSelectActionPerformed
 
     private void cboPressureSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPressureSelectActionPerformed
