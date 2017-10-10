@@ -153,14 +153,12 @@ class ReconCommand {
 	// pCi/L	0000 0000
 	// Bq/m3	0010 0000
 	// CPH		0100 0000
-	// CPHs		0110 0000
 	// ------------------------------
 	// Process: add all of the options the user wants, convert to hex and write that value to the unit.
 
-        //boolean opSuccess = false;
-
-	//String flagResponse = null; // value read from unit to verify success
+	String flagResponse = null; // value read from unit to verify success
 	short flag = 0; // binary number we will be writing to the unit
+	int comp = 0; // comparison value
 
 	if (FlagForm.displayPreferencePres == "mBar")
 	    flag += 0b00000001;
@@ -176,24 +174,26 @@ class ReconCommand {
 	System.out.println("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
 
-	// THIS CHECK NEEDS TO BE FIXED - WE DON'T WANT A MISTAKE IN SETTING THIS VALUE TO THE UNIT
-	WriteComm.main(ScanComm.scannedPort, ":RF\r\n");
+	WriteComm.main(ScanComm.scannedPort, ":RF\r\n"); // load the written value so we can double-check
 	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
-	/*DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
+	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
 
-	flagResponse = DeviceResponse.substring(6);
-	flagResponse = StringUtils.stripStart(flagResponse, "0");
-	System.out.println(Integer.toHexString(flag));
-	System.out.println(Integer.toHexString(Integer.parseInt(flagResponse)));
-	if (Integer.toHexString(flag).equals(Integer.toHexString(Integer.parseInt(flagResponse))))
-	    opSuccess = true;
+	// search device response until we've found the part we're interested in
+	for (int c = 0; c < DeviceResponse.length(); c++) {
+	    if (DeviceResponse.charAt(c) == '0' && (DeviceResponse.charAt(c+1) == '0')) {
+	        flagResponse = DeviceResponse.substring(c);
+		break;
+	    }
+	}
+
+	// parse number contained in string as hexadecimal value for purposes of comparison
+	comp = Integer.parseInt(flagResponse, 16);
+
+	if (flag == comp)
+	    return true;
 	else {
-	    opSuccess = false;
-	    System.out.println("Value returned by :RF does not match what was written. Flag write failed.");
-	}*/
-
-	//return opSuccess;
-	return true;
+	    return false;
+	}
     }
 
     // this is not necessary yet, but here's the method anyway
