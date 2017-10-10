@@ -13,15 +13,19 @@ import MainMenu.ScanComm;
 public class FlagForm extends javax.swing.JFrame {
 
     // flag preferences
-    public static String displayPreferencePres = "mBar";
-    public static String displayPreferenceTemp = "F";
-    public static String displayPreferenceDual = "no";
-    public static String displayPreferenceUnits = "pCi/L";
+    public static String displayPreferencePres;
+    public static String displayPreferenceTemp;
+    public static String displayPreferenceDual;
+    public static String displayPreferenceUnits;
 
     /**
      * Creates new form FlagForm
      */
     public FlagForm() {
+	displayPreferencePres = "mBar";
+	displayPreferenceTemp = "F";
+	displayPreferenceDual = "no";
+	displayPreferenceUnits = "pCi/L";
         initComponents();
     }
 
@@ -185,6 +189,7 @@ public class FlagForm extends javax.swing.JFrame {
 	   ScanComm.run(8);
 	}
 
+	// needs proper handling
 	catch (Exception anyEx) {};
     }//GEN-LAST:event_btnApplySpecialActionPerformed
 
