@@ -49,6 +49,7 @@ public class FlagForm extends javax.swing.JFrame {
         btnApplySpecial = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setAlwaysOnTop(true);
 
         lblPressure.setText("Pres. Unit");
 
