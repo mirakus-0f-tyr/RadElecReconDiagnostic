@@ -10,6 +10,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.LinkedList;
 import java.io.File;
 
+import Config.FlagForm;
+
 class ReconCommand {
 
     public static String ReconConfirm = ":RV\r\n";
@@ -131,6 +133,67 @@ class ReconCommand {
 
 	filenameTXT = new String(TXT_name);
 	filenameXLS = new String(XLS_name);
+    }
+
+    public static boolean SetOptionFlag() {
+	// OPTIONS TO BE SET WITH FLAG VARIABLE
+	// Pressure----------------------
+	// InHG		0000 0000
+	// mBar		0000 0001
+	// Temperature-------------------
+	// F		0000 0000
+	// C		0000 0100
+	// Blind Flag--------------------
+	// Show all	0000 0000
+	// Show none	0000 1000
+	// Dual Chamber------------------
+	// Combine	0000 0000
+	// Show both	0001 0000
+	// Exposure Units----------------
+	// pCi/L	0000 0000
+	// Bq/m3	0010 0000
+	// CPH		0100 0000
+	// ------------------------------
+	// Process: add all of the options the user wants, convert to hex and write that value to the unit.
+
+	String flagResponse = null; // value read from unit to verify success
+	short flag = 0; // binary number we will be writing to the unit
+	int comp = 0; // comparison value
+
+	if (FlagForm.displayPreferencePres == "mBar")
+	    flag += 0b00000001;
+	if (FlagForm.displayPreferenceTemp == "C")
+	    flag += 0b00000100;
+	if (FlagForm.displayPreferenceDual == "yes")
+	    flag += 0b00010000;
+	if (FlagForm.displayPreferenceUnits == "Bq/m3")
+	    flag += 0b00100000;
+	if (FlagForm.displayPreferenceUnits == "CPH")
+	    flag += 0b01000000;
+
+	System.out.println("Attempting to write flag: " + Integer.toHexString(flag));
+	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
+
+	WriteComm.main(ScanComm.scannedPort, ":RF\r\n"); // load the written value so we can double-check
+	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
+	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
+
+	// search device response until we've found the part we're interested in
+	for (int c = 0; c < DeviceResponse.length(); c++) {
+	    if (DeviceResponse.charAt(c) == '0' && (DeviceResponse.charAt(c+1) == '0')) {
+	        flagResponse = DeviceResponse.substring(c);
+		break;
+	    }
+	}
+
+	// parse number contained in string as hexadecimal value for purposes of comparison
+	comp = Integer.parseInt(flagResponse, 16);
+
+	if (flag == comp)
+	    return true;
+	else {
+	    return false;
+	}
     }
 
     // this is not necessary yet, but here's the method anyway

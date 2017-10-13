@@ -12,6 +12,11 @@
 - Windows: It was observed in one case that repeatedly clicking Connect button did not result in the unit being recognized, although the unit
   was recognized by Windows in Device Manager.  It is unclear what caused this...a reboot fixed the problem, but something happened.
 
+SETTING THE DISPLAY FLAG VALUE
+The method now appears to be writing the flag correctly. What is returned by :RF after setting is always what should have been
+written, but there have been some occasions where issuing :RF in a console after power cycle will reveal that the flag was not successfully
+"saved" when the unit is turned off. I believe this is an unknown firmware problem and not a problem with this app, but keep eyes out for this.
+
 OTHER THINGS WE NEED TO DO
 
 - have an installer
