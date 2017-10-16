@@ -5,6 +5,8 @@
  */
 package MainMenu;
 
+import static java.lang.Math.abs;
+
 /**
  *
  * @author Rad Elec Inc.
@@ -30,32 +32,39 @@ public class CountLimiter {
         long counts_Ch1 = Long.parseLong(DeviceResponse[10]); //Assign Ch1 counts to local variable
         long counts_Ch2 = Long.parseLong(DeviceResponse[11]); //Assign Ch2 counts to local variable
         
-        //Chamber 1
-        if(counts_Ch1 > 50 && counts_Ch1 > (2 * lastCount_1)) { //Only consider limiting counts if >50 AND greater than twice the last counts
-            if(lastCount_1 <= 3) {
-                counts_Ch1 = 6;
-            } else if(lastCount_1 <= 6) {
-                counts_Ch1 = 12;
-            } else if(lastCount_1 <= 50) {
-                counts_Ch1 = lastCount_1 * 2;
-            } else {
-                counts_Ch1 = (long) (lastCount_1 * 1.1);
-            }
-            override_Ch1 = "true(" + Long.parseLong(DeviceResponse[10]) + ")"; //We performed an override for chamber 1. Let's mark it.
+        //RPD Section
+        //Let's first determine the RPD -- if the two chambers are markedly divergent, let's throttle the high one.
+        double RPD = 0;
+        if((counts_Ch1 > 0 || counts_Ch2 > 0)) {
+            RPD = abs((counts_Ch1 - counts_Ch2) / ((counts_Ch1 + counts_Ch2)/2)) * 100;
+        }
+        if((counts_Ch1 > 20) && (RPD > 50) && ((counts_Ch2 < counts_Ch1))) {
+            counts_Ch1 = (long) Math.ceil(counts_Ch2 * 1.1)+1;
+            override_Ch1 = "true(" + Long.parseLong(DeviceResponse[10]) + ")"; //We performed an override for chamber 1 due to unacceptable RPD. Let's mark it.
+        } else if((counts_Ch2 > 20) && (RPD > 50) && (counts_Ch1 < counts_Ch2)) {
+            counts_Ch2 = (long) Math.ceil(counts_Ch1 * 1.1)+1;
+            override_Ch2 = "true(" + Long.parseLong(DeviceResponse[11]) + ")"; //We performed an override for chamber 2 due to unacceptable RPD. Let's mark it.
         }
         
-        //Chamber 2
-        if(counts_Ch2 > 50 && counts_Ch2 > (2 * lastCount_2)) { //Only consider limiting counts if >50 AND greater than twice the last counts
-            if(lastCount_2 <= 3) {
-                counts_Ch2 = 6;
-            } else if(lastCount_2 <= 6) {
-                counts_Ch2 = 12;
-            } else if(lastCount_2 <= 50) {
-                counts_Ch2 = lastCount_2 * 2;
+        //Last Count Logical Check Section
+        //This is independent from the RPD section, as it is possible that both chambers experience interference simultaneously.
+        //Chamber 1
+        if(counts_Ch1 > 20 && counts_Ch1 > (2 * lastCount_1)) { //Only limit counts if >50 AND greater than twice the last counts
+            if(lastCount_1 <= 50) {
+                counts_Ch1 = lastCount_1 * 2 + 1;
             } else {
-                counts_Ch2 = (long) (lastCount_2 * 1.1);
+                counts_Ch1 = (long) Math.ceil(lastCount_1 * 1.1)+1;
             }
-            override_Ch2 = "true(" + Long.parseLong(DeviceResponse[11]) + ")";
+            override_Ch1 = "true(" + Long.parseLong(DeviceResponse[10]) + ")"; //We performed an override for chamber 1 due to abnormally high counts. Let's mark it.
+        }  
+        //Chamber 2
+        if(counts_Ch2 > 20 && counts_Ch2 > (2 * lastCount_2)) { //Only consider limiting counts if >50 AND greater than twice the last counts
+            if(lastCount_2 <= 50) {
+                counts_Ch2 = lastCount_2 * 2+1;
+            } else {
+                counts_Ch2 = (long) Math.ceil(lastCount_2 * 1.1)+1;
+            }
+            override_Ch2 = "true(" + Long.parseLong(DeviceResponse[11]) + ")"; //We performed an override for chamber 1 due to abnormally high counts. Let's mark it.
         }
         
         MainMenuUI.LastCount_Ch1 = counts_Ch1; //Assign Ch1 Last Count to global -- being sure to use the modified value of counts_Ch1
