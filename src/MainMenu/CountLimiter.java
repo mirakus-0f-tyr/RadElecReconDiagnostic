@@ -36,8 +36,9 @@ public class CountLimiter {
         //Let's first determine the RPD -- if the two chambers are markedly divergent, let's throttle the high one.
         double RPD = 0;
         if((counts_Ch1 > 0 || counts_Ch2 > 0)) {
-            RPD = abs((counts_Ch1 - counts_Ch2) / ((counts_Ch1 + counts_Ch2)/2)) * 100;
+            RPD = abs((counts_Ch1 - counts_Ch2) / (((double)counts_Ch1 + (double)counts_Ch2)/2)) * 100;
         }
+        
         if((counts_Ch1 > 20) && (RPD > 50) && ((counts_Ch2 < counts_Ch1))) {
             counts_Ch1 = (long) Math.ceil(counts_Ch2 * 1.1)+1;
             override_Ch1 = "true(" + Long.parseLong(DeviceResponse[10]) + ")"; //We performed an override for chamber 1 due to unacceptable RPD. Let's mark it.
