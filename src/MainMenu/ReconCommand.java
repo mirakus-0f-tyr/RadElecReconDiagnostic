@@ -53,6 +53,13 @@ class ReconCommand {
         DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
     }
 
+    public static void LoadSpecifiedRecord(String number) {
+	WriteComm.main(ScanComm.scannedPort, ":RN" + number + "\r\n");
+	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
+	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
+	DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
+    }
+
     // set the computer system time to the Recon
     public static void SetReconTimeFromPC() {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy,MM,dd,HH,mm,ss");
@@ -75,24 +82,26 @@ class ReconCommand {
 	else
 	    reconSession = new LinkedList();
 
-        // run :RB
-        LoadNewRecord();
+	// run :RB
+	LoadNewRecord();
+
+	// init value to start of current test
+	int recordIterator = Integer.parseInt(DeviceResponse_parsed[1]);
 
 	// parse and add to list
 	reconSession.add(CountLimiter.main(DeviceResponse_parsed));
 
 	// run :RN and parse until Z record complete
 	while (!(DeviceResponse_parsed[2].equals("Z"))) {
+	    ++recordIterator; // what the current sample number SHOULD be
 	    LoadNextRecord();
-	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
-	}
 
-	// check that record numbers are sequential - that one was not skipped in the case of interrupted download
-	for (int c = 0; c < reconSession.size() - 1; c++) { // stop before Z
-	    if (Integer.parseInt(reconSession.get(c)[1]) + 1 != Integer.parseInt(reconSession.get(c + 1)[1])) {
-		System.out.println("Sequential record check failed. Restarting download.");
-		DownloadReconSessionToRAM(); // restart the download because we missed a record
+	    if (recordIterator != Integer.parseInt(DeviceResponse_parsed[1])) {
+	        System.out.println("Re-reading sample #" + Integer.toString(recordIterator));
+		LoadSpecifiedRecord(Integer.toString(recordIterator));
 	    }
+
+	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
 	}
     }
 
