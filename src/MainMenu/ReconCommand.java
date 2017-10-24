@@ -30,6 +30,7 @@ class ReconCommand {
     public static LinkedList<String[]> reconSession; // container to hold Recon samples
     public static String filenameTXT;
     public static String filenameXLS;
+    public static boolean longTermMode;
 
     public static String GetSerialNumber() {
         WriteComm.main(ScanComm.scannedPort, ReconConfirm);
@@ -82,8 +83,12 @@ class ReconCommand {
 	else
 	    reconSession = new LinkedList();
 
-	// run :RB
+	// run :RB and check ST/LT mode
 	LoadNewRecord();
+
+	longTermMode = false;
+	if (DeviceResponse_parsed[14].equals("6"))
+	    longTermMode = true;
 
 	// init value to start of current test
 	int recordIterator = Integer.parseInt(DeviceResponse_parsed[1]);

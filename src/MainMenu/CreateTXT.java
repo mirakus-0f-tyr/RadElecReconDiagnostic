@@ -116,14 +116,24 @@ public class CreateTXT {
                     ch1Counter += Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[10]);
                     ch2Counter += Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[11]);
 
-                    if (tenMinuteCounter == 6) {
-                        AllHourlyCounts.addLast(new CountContainer(ch1Counter, ch2Counter)); // add new grouping of hourly totals to the list
+		    if (ReconCommand.longTermMode) {
+		        if (tenMinuteCounter == 2) {
+		            AllHourlyCounts.addLast(new CountContainer(ch1Counter, ch2Counter));
+			    ch1Counter = 0;
+			    ch2Counter = 0;
+			    tenMinuteCounter = 0;
+		        }
+		    }
+		    else {
+                        if (tenMinuteCounter == 6) {
+                            AllHourlyCounts.addLast(new CountContainer(ch1Counter, ch2Counter)); // add new grouping of hourly totals to the list
 
-                        // clear chamber counters
-                        ch1Counter = 0;
-                        ch2Counter = 0;
-                        tenMinuteCounter = 0;
-                    }
+                            // clear chamber counters
+                            ch1Counter = 0;
+                            ch2Counter = 0;
+                            tenMinuteCounter = 0;
+                        }
+		    }
                 }
 
 		if (sessionCounter > 0) // we've already written that one outside the loop
