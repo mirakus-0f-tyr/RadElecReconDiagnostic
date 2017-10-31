@@ -107,6 +107,10 @@ class ReconCommand {
 	    }
 
 	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
+
+	    // check for rollover of memory
+	    if (Integer.parseInt(DeviceResponse_parsed[1]) == 6143)
+	        recordIterator = -1;
 	}
     }
 
