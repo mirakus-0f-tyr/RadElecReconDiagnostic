@@ -91,6 +91,7 @@ class ReconCommand {
 	    longTermMode = true;
 
 	// init value to start of current test
+	// NOTE FOR FUTURE: We could use this number with LoadSpecifiedRecord(), eliminating the need for a comparison below
 	int recordIterator = Integer.parseInt(DeviceResponse_parsed[1]);
 
 	// parse and add to list

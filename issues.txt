@@ -1,3 +1,5 @@
+- Add handling for wait times and TEST
+
 - CreatePDF - "WARNING: Warning: You did not close a PDF Document" appears regularly but the final document seems okay
 
 - connection errors during comm port scanning - usually solved with another connect attempt, but why is this happening?
@@ -18,8 +20,6 @@ written, but there have been some occasions where issuing :RF in a console after
 "saved" when the unit is turned off. I believe this is an unknown firmware problem and not a problem with this app, but keep eyes out for this.
 
 OTHER THINGS WE NEED TO DO
-
-- have an installer
 
 - have a convenient way for users to update
 

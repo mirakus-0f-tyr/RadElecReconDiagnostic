@@ -109,7 +109,6 @@ public class CreateTXT {
                     AvgHumidity = (AvgHumidity + Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[15]));
                     AvgPressure = (AvgPressure + Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[18]));
                     AvgTemperature = (AvgTemperature + Double.parseDouble(ReconCommand.reconSession.get(sessionCounter)[21]));
-                    //System.out.println("AvgHum=" + AvgHumidity + ", AvgPress=" + AvgPressure + ", AvgTemp=" + AvgTemperature);
 
                     // section of code to tally counts and push hourly values into linked list for later analysis
                     // if (!LTMode) - do not forget this won't work for LT mode!
@@ -243,26 +242,24 @@ public class CreateTXT {
 	    for (int loopCount1 = 0; loopCount1 < AllHourlyCounts.size(); loopCount1++) {
                 if (MainMenuUI.unitType == "US") {
                     writer.println("Hour: " + (Integer.toString(loopCount1)));
-
                     writer.println("Ch1: " + df.format((double) AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1) + "\tCh2: " + df.format((double) AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2));
                 } else { // assuming SI
                     writer.println("Hour: " + (Integer.toString(loopCount1)));
 
                     writer.println("Ch1: " + si.format((double) AllHourlyCounts.get(loopCount1).getCh1HourlyCount() / CF1 * 37) + "\tCh2: " + si.format((double) AllHourlyCounts.get(loopCount1).getCh2HourlyCount() / CF2 * 37));
                 }
-
             }
 
             // perform averaging of results
             // first summing
-            for (int loopCount2 = 0; loopCount2 < AllHourlyCounts.size(); loopCount2++) {
+            for (int loopCount2 = 4; loopCount2 < AllHourlyCounts.size(); loopCount2++) {
                 avgResult1 += (AllHourlyCounts.get(loopCount2).getCh1HourlyCount() / CF1);
                 avgResult2 += (AllHourlyCounts.get(loopCount2).getCh2HourlyCount() / CF2);
             }
 
             // then dividing
-            avgResult1 = avgResult1 / (double) AllHourlyCounts.size();
-            avgResult2 = avgResult2 / (double) AllHourlyCounts.size();
+            avgResult1 = avgResult1 / (double)(AllHourlyCounts.size() - 4);
+            avgResult2 = avgResult2 / (double)(AllHourlyCounts.size() - 4);
 
             writer.println("\n");
 
