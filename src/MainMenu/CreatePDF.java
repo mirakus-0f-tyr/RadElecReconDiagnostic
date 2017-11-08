@@ -36,6 +36,8 @@ import static MainMenu.MainMenuUI.displaySig;
 
 import static MainMenu.CreateGraph.OverallAvgRnC;
 import static MainMenu.CreateGraph.HourlyReconData;
+import static MainMenu.MainMenuUI.excludeFirst4Hours;
+import java.awt.Color;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -410,6 +412,14 @@ public class CreatePDF {
                     contents.beginText();
                     contents.setFont(fontDefault, fontSize);
                     contents.newLineAtOffset(marginSide, PDF_Y);
+                    
+                    //Shade the first four hours of the report (if this option is enabled)
+                    if( excludeFirst4Hours && arrayCounter < 4) {
+                        contents.setNonStrokingColor(Color.gray);
+                    } else {
+                        contents.setNonStrokingColor(Color.black);
+                    }
+                    
                     //Record #
                     textLine = HourlyReconData.get(arrayCounter).get(0);
                     contents.showText(textLine);
@@ -439,7 +449,7 @@ public class CreatePDF {
                     contents.showText(textLine);
 
                     contents.endText();
-
+                    
 		    if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
                         //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
                         contents.close();
@@ -448,7 +458,7 @@ public class CreatePDF {
                         contents = new PDPageContentStream(doc, page_detailed);
                         PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
                         DrawCompanyHeader(contents, page_detailed, fontDefault, marginTop);
-                        DrawTitleHeader(contents, page_detailed, "Radon Detailed Report", fontBold, fontDefault);
+                        DrawTitleHeader(contents, page_detailed, "Hourly Radon Report", fontBold, fontDefault);
                         DrawCustomerTestSiteBlock(contents, page_detailed, fontBold, fontDefault);
                         drawTestSummaryBlock(contents, page, fontDefault, fontBold);
                         DrawAverageRadonBanner(contents, page_chart, fontBold, true);

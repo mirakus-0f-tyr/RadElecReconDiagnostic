@@ -9,6 +9,7 @@ import static MainMenu.LoadSavedFile.LoadedReconTXTFile;
 import static MainMenu.LoadSavedFile.LoadedReconCF1;
 import static MainMenu.LoadSavedFile.LoadedReconCF2;
 import static MainMenu.LoadSavedFile.strUnitSystem;
+import static MainMenu.MainMenuUI.excludeFirst4Hours;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.awt.BasicStroke;
@@ -36,6 +37,7 @@ import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.labels.StandardCrosshairLabelGenerator;
 import org.jfree.chart.panel.CrosshairOverlay;
 import org.jfree.chart.plot.Crosshair;
+import org.jfree.chart.plot.IntervalMarker;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.chart.renderer.xy.StandardXYBarPainter;
 import org.jfree.chart.renderer.xy.XYBarRenderer;
@@ -44,6 +46,7 @@ import org.jfree.data.general.DatasetUtilities;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
+import org.jfree.ui.Layer;
 import org.jfree.ui.RectangleAnchor;
 import org.jfree.ui.RectangleEdge;
 
@@ -217,6 +220,14 @@ public class CreateGraph extends JFrame {
             
             JFreeChart chart = new JFreeChart("Radon Concentration", getFont(), plot, true);
             chart.setBackgroundPaint(Color.white);
+            
+            //This will shade the first four hours of the graph
+            if (excludeFirst4Hours) {
+                final IntervalMarker ExcludedGraphShade = new IntervalMarker(0,4);
+                ExcludedGraphShade.setAlpha(0.3f);
+                plot.addDomainMarker(ExcludedGraphShade, Layer.FOREGROUND);
+            }
+            
             return chart;
         }
 
@@ -353,7 +364,11 @@ public class CreateGraph extends JFrame {
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter)); //This will calculate hourly average temperature (in Celsius)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
                                 
-                                TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
+                                //If we are excluding first four hours, let's not add them to TotalAvgRnC
+                                if((hourCounter>4) && excludeFirst4Hours) {
+                                    TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
+                                }
+                                
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
                                 
                                 //Add to HourlyReconData array, to be used in our PDF (only SI-specific elements to be added)
@@ -374,7 +389,11 @@ public class CreateGraph extends JFrame {
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp/avgCounter)*9/5+32); //This will calculate hourly average temperature (in Fahrenheit)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
                                 
-                                TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
+                                //If we are excluding first four hours, let's not add them to TotalAvgRnC and TotalHourCounter
+                                if((hourCounter>4) && excludeFirst4Hours) {
+                                    TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
+                                }
+                                
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
                                 
                                 //Add to HourlyReconData array, to be used in our PDF (only US-specific elements to be added)
@@ -408,7 +427,12 @@ public class CreateGraph extends JFrame {
                 }
             }
             
-            OverallAvgRnC = TotalAvgRnC / TotalHourCounter; //Assign Overall Average Radon Concentration
+            //Assign Overall Average Radon Concentration
+            if(excludeFirst4Hours) {
+                OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-4); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
+            } else {
+                OverallAvgRnC = TotalAvgRnC / TotalHourCounter;
+            } 
             
             //We need to add each completed series to the dataset, or we won't have any data to display.
             //Only display AvRnC series for End-User Mode, whereas display both chambers for diagnostic mode.
