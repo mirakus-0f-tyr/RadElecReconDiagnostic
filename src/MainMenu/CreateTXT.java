@@ -251,15 +251,24 @@ public class CreateTXT {
             }
 
             // perform averaging of results
-            // first summing
-            for (int loopCount2 = 4; loopCount2 < AllHourlyCounts.size(); loopCount2++) {
-                avgResult1 += (AllHourlyCounts.get(loopCount2).getCh1HourlyCount() / CF1);
-                avgResult2 += (AllHourlyCounts.get(loopCount2).getCh2HourlyCount() / CF2);
-            }
+	    if (MainMenuUI.excludeFirst4Hours) {
+                for (int loopCount2 = 4; loopCount2 < AllHourlyCounts.size(); loopCount2++) {
+		    avgResult1 += (AllHourlyCounts.get(loopCount2).getCh1HourlyCount() / CF1);
+		    avgResult2 += (AllHourlyCounts.get(loopCount2).getCh2HourlyCount() / CF2);
+                }
 
-            // then dividing
-            avgResult1 = avgResult1 / (double)(AllHourlyCounts.size() - 4);
-            avgResult2 = avgResult2 / (double)(AllHourlyCounts.size() - 4);
+		avgResult1 = avgResult1 / (double)(AllHourlyCounts.size() - 4);
+		avgResult2 = avgResult2 / (double)(AllHourlyCounts.size() - 4);
+	    }
+	    else {
+		for (int loopCount2 = 0; loopCount2 < AllHourlyCounts.size(); loopCount2++) {
+		    avgResult1 += (AllHourlyCounts.get(loopCount2).getCh1HourlyCount() / CF1);
+		    avgResult2 += (AllHourlyCounts.get(loopCount2).getCh2HourlyCount() / CF2);
+                }
+
+		avgResult1 = avgResult1 / (double)AllHourlyCounts.size();
+		avgResult2 = avgResult2 / (double)AllHourlyCounts.size();
+	    }
 
             writer.println("\n");
 
