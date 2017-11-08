@@ -93,7 +93,7 @@ public class CreateTXT {
                     StartDate = LocalDateTime.of(TempYear, Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[4]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[5]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[6]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[7]), Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[8]));
                 }
 
-                if (ReconCommand.reconSession.get(sessionCounter)[2].equals("I")) {
+                if (ReconCommand.reconSession.get(sessionCounter)[2].equals("I") && BeginAveraging == true) {
                     tenMinuteCounter++;
                 }
 
