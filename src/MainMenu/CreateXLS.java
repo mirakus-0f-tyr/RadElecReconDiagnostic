@@ -114,9 +114,6 @@ public class CreateXLS {
 	    sessionCounter++;
 
             while (sessionCounter < ReconCommand.reconSession.size()) {
-
-                MainMenuUI.displayProgressLabel("Reading Record #" + ReconCommand.reconSession.get(sessionCounter)[1] + "...");
-
                 //Spreadsheet Stuff
                 //Move this to another method so we can have a semblance of order...
                 if (!(ReconCommand.reconSession.get(sessionCounter)[2].equals("Z"))) {

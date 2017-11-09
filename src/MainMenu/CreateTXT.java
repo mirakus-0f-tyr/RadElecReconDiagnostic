@@ -138,7 +138,6 @@ public class CreateTXT {
 		if (sessionCounter > 0) // we've already written that one outside the loop
                     writer.println(Arrays.toString(ReconCommand.reconSession.get(sessionCounter)));
 
-		MainMenuUI.displayProgressLabel("Reading Record #" + ReconCommand.reconSession.get(sessionCounter)[1] + "...");
 		sessionCounter++;
             }  // end while loop
 

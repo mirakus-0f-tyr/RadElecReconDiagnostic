@@ -101,6 +101,7 @@ class ReconCommand {
 	while (!(DeviceResponse_parsed[2].equals("Z"))) {
 	    ++recordIterator; // what the current sample number SHOULD be
 	    LoadNextRecord();
+	    MainMenuUI.displayProgressLabel("Reading Record #" + DeviceResponse_parsed[1] + "...");
 
 	    if (recordIterator != Integer.parseInt(DeviceResponse_parsed[1])) {
 	        System.out.println("Re-reading sample #" + Integer.toString(recordIterator));
