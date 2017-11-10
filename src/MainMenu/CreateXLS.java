@@ -83,11 +83,13 @@ public class CreateXLS {
     public static long testMinutes = 0;
     public static long testSeconds = 0;
     public static long i = 0;
+    public static boolean startReached;
 
     public static void main() throws BiffException, WriteException, InterruptedException, IOException {
 
 	// used in traversing reconSession list
 	int sessionCounter = 0;
+	startReached = false;
 
         ReconCommand.LoadNewRecord();
         ReconCommand.LoadNextRecord();
@@ -119,10 +121,16 @@ public class CreateXLS {
                 if (!(ReconCommand.reconSession.get(sessionCounter)[2].equals("Z"))) {
                     int rows_total = sheet.getRows();
                     sheet.insertRow(rows_total + 1);
+
                     //This i incrementer is used for determining when to record the counts per hour.
-                    if ((ReconCommand.reconSession.get(sessionCounter)[2].equals("S")) || (ReconCommand.reconSession.get(sessionCounter)[2].equals("I"))) {
-                        i++;
-                    }
+		    if ((ReconCommand.reconSession.get(sessionCounter)[2].equals("S"))) {
+			startReached = true;
+			i++;
+		    }
+
+		    if ((ReconCommand.reconSession.get(sessionCounter)[2].equals("I")) && startReached)
+			i++;
+
                     Recon_RecordNumber = new Number(0, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[1]));
                     sheet.addCell(Recon_RecordNumber);
                     Recon_Flag = new Label(1, rows_total, ReconCommand.reconSession.get(sessionCounter)[2]);
