@@ -365,7 +365,7 @@ public class CreateGraph extends JFrame {
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
                                 
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC
-                                if((TotalHourCounter>4) && excludeFirst4Hours) {
+                                if(((TotalHourCounter>4) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
                                 }
                                 
@@ -390,7 +390,7 @@ public class CreateGraph extends JFrame {
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
                                 
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC and TotalHourCounter
-                                if((TotalHourCounter>4) && excludeFirst4Hours) {
+                                if(((TotalHourCounter>4) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
                                 }
                                 
@@ -431,6 +431,7 @@ public class CreateGraph extends JFrame {
             if(excludeFirst4Hours) {
                 OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-4); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
             } else {
+                System.out.println("TotalAvgRnC = " + TotalAvgRnC + "  / TotalHourCounter = " + TotalHourCounter);
                 OverallAvgRnC = TotalAvgRnC / TotalHourCounter;
             } 
             

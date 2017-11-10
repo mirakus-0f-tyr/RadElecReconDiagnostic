@@ -473,6 +473,14 @@ public class CreatePDF {
                     contents.beginText();
                     contents.setFont(fontDefault, fontSize);
                     contents.newLineAtOffset(marginSide, PDF_Y);
+                    
+                    //Shade the first four hours of the report (if this option is enabled)
+                    if( excludeFirst4Hours && arrayCounter < 4) {
+                        contents.setNonStrokingColor(Color.gray);
+                    } else {
+                        contents.setNonStrokingColor(Color.black);
+                    }
+                    
                     //Record #
                     textLine = HourlyReconData.get(arrayCounter).get(0);
                     contents.showText(textLine);
