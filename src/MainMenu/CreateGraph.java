@@ -431,7 +431,6 @@ public class CreateGraph extends JFrame {
             if(excludeFirst4Hours) {
                 OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-4); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
             } else {
-                System.out.println("TotalAvgRnC = " + TotalAvgRnC + "  / TotalHourCounter = " + TotalHourCounter);
                 OverallAvgRnC = TotalAvgRnC / TotalHourCounter;
             } 
             
