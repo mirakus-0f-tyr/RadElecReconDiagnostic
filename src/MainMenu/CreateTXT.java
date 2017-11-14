@@ -17,6 +17,28 @@ import java.util.Arrays;
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
+// lightweight container object used in calculating radon
+class CountContainer {
+    private int chamber1HourlyCount;
+    private int chamber2HourlyCount;
+
+    public CountContainer(int ch1, int ch2)
+    {
+	chamber1HourlyCount = ch1;
+	chamber2HourlyCount = ch2;
+    }
+
+    public int getCh1HourlyCount()
+    {
+	return chamber1HourlyCount;
+    }
+
+    public int getCh2HourlyCount()
+    {
+	return chamber2HourlyCount;
+    }
+}
+
 public class CreateTXT {
 
     public static PrintWriter writer; // declaration - is defined later
