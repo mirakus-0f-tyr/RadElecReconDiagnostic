@@ -123,7 +123,7 @@ public class Config extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Config");
-        setAlwaysOnTop(false);
+        setAlwaysOnTop(true);
         setName("frmOptions"); // NOI18N
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -197,6 +197,7 @@ public class Config extends javax.swing.JFrame {
         pnlSettings.setBackground(new java.awt.Color(204, 204, 204));
 
         cboAppMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "End-User", "Diagnostic" }));
+        cboAppMode.setEnabled(false);
 
         lblAppMode.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblAppMode.setText("App Mode");

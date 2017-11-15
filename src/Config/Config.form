@@ -262,6 +262,7 @@
                     <StringItem index="1" value="Diagnostic"/>
                   </StringArray>
                 </Property>
+                <Property name="enabled" type="boolean" value="false"/>
               </Properties>
             </Component>
             <Component class="java.awt.Label" name="lblAppMode">
