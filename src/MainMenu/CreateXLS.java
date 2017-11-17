@@ -91,8 +91,9 @@ public class CreateXLS {
 	int sessionCounter = 0;
 	startReached = false;
 
-        ReconCommand.LoadNewRecord();
-        ReconCommand.LoadNextRecord();
+	// why is this being done here?
+	//ReconCommand.LoadNewRecord();
+	//ReconCommand.LoadNextRecord();
 
         // pull CF's
         String[] CF_Array = ScanComm.CheckCalibrationFactors(ScanComm.scannedPort); //Let's pull the calibration factors
