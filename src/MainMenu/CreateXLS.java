@@ -90,6 +90,7 @@ public class CreateXLS {
 	// used in traversing reconSession list
 	int sessionCounter = 0;
 	startReached = false;
+	int countRow = 0; // row where we will be writing count/concentration data - experimental
 
 	// why is this being done here?
 	//ReconCommand.LoadNewRecord();
@@ -126,6 +127,12 @@ public class CreateXLS {
                     //This i incrementer is used for determining when to record the counts per hour.
 		    if ((ReconCommand.reconSession.get(sessionCounter)[2].equals("S"))) {
 			startReached = true;
+
+			if (ReconCommand.longTermMode)
+			    countRow = rows_total + 2;
+			else
+			    countRow = rows_total + 6;
+
 			i++;
 		    }
 
@@ -152,24 +159,34 @@ public class CreateXLS {
                     sheet.addCell(Recon_Movements);
                     Recon_Chamber1Count = new Number(9, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[10]));
                     sheet.addCell(Recon_Chamber1Count);
+
                     //Calculate counts per hour, discarding the first two rows in any spreadsheet.
                     //I had originally used the modulus function (i.e. rows_total%6), but this didn't account for
                     //the variable number of "W" flags a given data session may have.
+		    //----------------------------------------------------------------------------------------
+		    //Note about using countRow variable: the information is still being written at the E record, if countRow = that number.
+		    //What this means is that we will sometimes be providing a last "hour" even though that hour might not have completed.
+		    //The commented if statements below are a possible workaround, but there may be legit cases where a last, full
+		    //hour will fall on the E record. Evaluate.
 		    if (ReconCommand.longTermMode) {
-			if ((rows_total > 4) && (i >= 2)) {
-			    Recon_Chamber1CountPerHour = new Formula(10, (rows_total - 1), "SUM(J" + (rows_total - 1) + ":J" + rows_total + ")");
+			if (rows_total == countRow) {
+			    //if (!(ReconCommand.reconSession.get(sessionCounter)[2].equals("E"))) {
+			    Recon_Chamber1CountPerHour = new Formula(10, rows_total, "SUM(J" + rows_total + ":J" + (rows_total + 1) + ")");
 			    sheet.addCell(Recon_Chamber1CountPerHour);
-			    Recon_Chamber1RadonConc = new Formula(11, (rows_total - 1), "K" + rows_total + "/$AE$2");
+			    Recon_Chamber1RadonConc = new Formula(11, rows_total, "K" + (rows_total + 1) + "/$AE$2");
 			    sheet.addCell(Recon_Chamber1RadonConc);
-			    Recon_Chamber2CountPerHour = new Formula(13, (rows_total - 1), "SUM(M" + (rows_total - 1) + ":M" + rows_total + ")");
+			    Recon_Chamber2CountPerHour = new Formula(13, rows_total, "SUM(M" + rows_total + ":M" + (rows_total + 1) + ")");
 			    sheet.addCell(Recon_Chamber2CountPerHour);
-			    Recon_Chamber2RadonConc = new Formula(14, (rows_total - 1), "N" + rows_total + "/$AF$2");
+			    Recon_Chamber2RadonConc = new Formula(14, rows_total, "N" + (rows_total + 1) + "/$AF$2");
 			    sheet.addCell(Recon_Chamber2RadonConc);
 			    i = 0;
+			    countRow = rows_total + 2;
+			    //}
                         }
 		    }
 		    else {
-			if ((rows_total > 7) && (i >= 6)) {
+			if (rows_total == countRow) {
+			    //if (!(ReconCommand.reconSession.get(sessionCounter)[2].equals("E"))) {
 			    Recon_Chamber1CountPerHour = new Formula(10, rows_total, "SUM(J" + (rows_total - 4) + ":J" + (rows_total + 1) + ")");
 			    sheet.addCell(Recon_Chamber1CountPerHour);
 			    Recon_Chamber1RadonConc = new Formula(11, rows_total, "K" + (rows_total + 1) + "/$AE$2");
@@ -179,6 +196,8 @@ public class CreateXLS {
 			    Recon_Chamber2RadonConc = new Formula(14, rows_total, "N" + (rows_total + 1) + "/$AF$2");
 			    sheet.addCell(Recon_Chamber2RadonConc);
 			    i = 0;
+			    countRow = rows_total + 6;
+			    //}
                         }
 		    }
                     Recon_Chamber2Count = new Number(12, rows_total, Long.parseLong(ReconCommand.reconSession.get(sessionCounter)[11]));
