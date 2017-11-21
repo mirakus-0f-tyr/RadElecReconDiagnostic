@@ -59,8 +59,6 @@ import org.jfree.ui.RectangleEdge;
 public class CreateGraph extends JFrame {
     
     public static double OverallAvgRnC = 0;
-    public static double Ch1_TotalCounts = 0;
-    public static double Ch2_TotalCounts = 0;
     
     public static ArrayList<ArrayList<String>> HourlyReconData = new ArrayList<>();
     
@@ -394,8 +392,6 @@ public class CreateGraph extends JFrame {
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC and TotalHourCounter
                                 if(((TotalHourCounter>3) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
-                                    System.out.println((((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2));
-                                    System.out.println("TotalAvgRnC = " + TotalAvgRnC + " (@hour = " + TotalHourCounter + ")");
                                 }
                                 
                                 TotalHourCounter += 1; //Overall Hour Counter
@@ -434,10 +430,8 @@ public class CreateGraph extends JFrame {
             //Assign Overall Average Radon Concentration
             if(excludeFirst4Hours) {
                 OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-4); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
-                System.out.println("TotalAvgRnC = " + TotalAvgRnC);
-                System.out.println("Total Hours = " + (TotalHourCounter-4));
             } else {
-                OverallAvgRnC = TotalAvgRnC / (TotalHourCounter);
+                OverallAvgRnC = TotalAvgRnC / TotalHourCounter;
             } 
             
             //We need to add each completed series to the dataset, or we won't have any data to display.
