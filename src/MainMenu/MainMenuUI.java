@@ -30,7 +30,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.7.5";
+    public static String version = "v0.7.6";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -119,7 +119,11 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblLoadedFileName.setVisible(false);
         btnUpdateTXTFile.setVisible(false);
 	btnSyncTime.setVisible(false);
-        lblVersion.setText(version);
+        if(diagnosticMode) {
+            lblVersion.setText(version+" [DIAGNOSTIC]");
+        } else {
+            lblVersion.setText(version);
+        }
     }
 
     /**
@@ -731,7 +735,6 @@ public static void createConfigTXT() {
     String configTXT = "config/config.txt";
         try {
             PrintWriter pw = new PrintWriter(configTXT);
-            pw.print("DiagMode=0\n");
             pw.print("UnitType=US\n");
             pw.print("DisplaySig=1\n");
 	    pw.print("OpenPDFWindow=1\n");
@@ -754,8 +757,8 @@ public static void parseConfigTXT() {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
         for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
-            if(strLine.contains("DiagMode=")) {
-                diagnosticMode = strLine.endsWith("1"); //Defaults to End-User mode, only switching to Diagnostic mode if properly applied in config.
+            if(strLine.equals("DiagMode=0011")) {
+                diagnosticMode = true; //Defaults to End-User mode, only switching to Diagnostic mode if properly applied in config.          
             } else if(strLine.contains("UnitType=")) { //Defaults to US units if anything unexpected appears.
                 if(strLine.contains("SI")) {
                     unitType = "SI";

@@ -178,41 +178,30 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="0" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
-                              <Component id="lblClearOldTest" min="-2" pref="185" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="lblClearOldTest" alignment="0" min="-2" pref="185" max="-2" attributes="0"/>
                           <Group type="102" alignment="1" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                                              <Component id="cboClearOldTests" max="32767" attributes="0"/>
-                                              <Component id="cboAppMode" alignment="1" pref="123" max="32767" attributes="0"/>
-                                              <Component id="lblAppMode" alignment="0" min="-2" max="-2" attributes="0"/>
-                                              <Component id="cboUnitSystem" alignment="1" pref="123" max="32767" attributes="0"/>
-                                          </Group>
-                                          <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace pref="126" max="32767" attributes="0"/>
-                                      <Group type="103" groupAlignment="0" attributes="0">
-                                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
-                                          <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
-                                          <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
-                                      </Group>
+                                  <Group type="103" alignment="0" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="cboClearOldTests" max="32767" attributes="0"/>
+                                      <Component id="cboUnitSystem" alignment="1" min="-2" pref="123" max="-2" attributes="0"/>
                                   </Group>
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
-                                      <Component id="btnOpenFlagSelect" min="-2" max="-2" attributes="0"/>
-                                  </Group>
+                                  <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace min="23" pref="23" max="-2" attributes="0"/>
+                              <EmptySpace min="62" pref="62" max="-2" attributes="0"/>
                           </Group>
                       </Group>
+                      <EmptySpace pref="64" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="btnOpenFlagSelect" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
+                          <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -221,58 +210,37 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblAppMode" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cboAppMode" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboDisplaySig" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
+                              <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
+                              <Component id="cboDisplaySig" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
                               <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="3" attributes="0">
-                                  <Component id="cboPDFFolder" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cboUnitSystem" alignment="3" min="-2" max="-2" attributes="0"/>
-                              </Group>
+                              <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
+                                      <Component id="cboUnitSystem" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                              <Component id="lblClearOldTest" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="cboClearOldTests" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                      <Component id="lblClearOldTest" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="cboClearOldTests" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="btnOpenFlagSelect" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace pref="112" max="32767" attributes="0"/>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Component id="btnOpenFlagSelect" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="127" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
           </Layout>
           <SubComponents>
-            <Component class="javax.swing.JComboBox" name="cboAppMode">
-              <Properties>
-                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
-                    <StringItem index="0" value="End-User"/>
-                    <StringItem index="1" value="Diagnostic"/>
-                  </StringArray>
-                </Property>
-                <Property name="enabled" type="boolean" value="false"/>
-              </Properties>
-            </Component>
-            <Component class="java.awt.Label" name="lblAppMode">
-              <Properties>
-                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-                  <Font name="Calibri" size="12" style="0"/>
-                </Property>
-                <Property name="text" type="java.lang.String" value="App Mode"/>
-              </Properties>
-            </Component>
             <Component class="java.awt.Label" name="lblUnits">
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">

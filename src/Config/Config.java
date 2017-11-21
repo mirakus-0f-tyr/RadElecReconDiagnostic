@@ -57,7 +57,7 @@ public class Config extends javax.swing.JFrame {
 	    strTestClearMode = findTestClearMode();
             LoadReportTXT();
             loadDeploymentVariables();
-            cboAppMode.setSelectedItem(strAppMode);
+            //cboAppMode.setSelectedItem(strAppMode);
             cboUnitSystem.setSelectedItem(strUnitSystem);
             cboDisplaySig.setSelectedItem(strDisplaySig);
 	    cboPDFFolder.setSelectedItem(strPDFWindow);
@@ -86,16 +86,14 @@ public class Config extends javax.swing.JFrame {
         txtAddress2 = new java.awt.TextField();
         txtAddress3 = new java.awt.TextField();
         pnlSettings = new java.awt.Panel();
-        cboAppMode = new javax.swing.JComboBox();
-        lblAppMode = new java.awt.Label();
         lblUnits = new java.awt.Label();
         cboUnitSystem = new javax.swing.JComboBox();
         cboDisplaySig = new javax.swing.JComboBox();
         lblDisplaySignature = new java.awt.Label();
         lblPDFFolder = new javax.swing.JLabel();
-        cboPDFFolder = new javax.swing.JComboBox<>();
+        cboPDFFolder = new javax.swing.JComboBox<String>();
         lblClearOldTest = new javax.swing.JLabel();
-        cboClearOldTests = new javax.swing.JComboBox<>();
+        cboClearOldTests = new javax.swing.JComboBox<String>();
         btnOpenFlagSelect = new javax.swing.JButton();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
@@ -196,12 +194,6 @@ public class Config extends javax.swing.JFrame {
 
         pnlSettings.setBackground(new java.awt.Color(204, 204, 204));
 
-        cboAppMode.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "End-User", "Diagnostic" }));
-        cboAppMode.setEnabled(false);
-
-        lblAppMode.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        lblAppMode.setText("App Mode");
-
         lblUnits.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblUnits.setText("Unit System");
 
@@ -216,12 +208,12 @@ public class Config extends javax.swing.JFrame {
         lblPDFFolder.setText("Open PDF Folder");
         lblPDFFolder.setToolTipText("");
 
-        cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
+        cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
         lblClearOldTest.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
         lblClearOldTest.setText("Clear Old Tests From Recon");
 
-        cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Never", "Prompt", "Always" }));
+        cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Never", "Prompt", "Always" }));
         cboClearOldTests.setToolTipText("Clear old tests from Recon as you download them?");
 
         btnOpenFlagSelect.setText("Display Options");
@@ -235,60 +227,52 @@ public class Config extends javax.swing.JFrame {
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlSettingsLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlSettingsLayout.createSequentialGroup()
-                        .addComponent(lblClearOldTest, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addComponent(lblClearOldTest, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
-                                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(cboClearOldTests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cboAppMode, 0, 123, Short.MAX_VALUE)
-                                        .addComponent(lblAppMode, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(cboUnitSystem, 0, 123, Short.MAX_VALUE))
-                                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
-                                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblPDFFolder)
-                                    .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
-                                .addGap(0, 0, Short.MAX_VALUE)
-                                .addComponent(btnOpenFlagSelect)))
-                        .addGap(23, 23, 23))))
+                            .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(cboClearOldTests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(62, 62, 62)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(btnOpenFlagSelect)
+                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblPDFFolder)
+                    .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(23, 23, 23))
         );
         pnlSettingsLayout.setVerticalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(0, 0, 0)
-                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboAppMode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, 0)
+                        .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblPDFFolder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(12, 12, 12)
-                .addComponent(lblClearOldTest)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboClearOldTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnOpenFlagSelect))
-                .addContainerGap(112, Short.MAX_VALUE))
+                        .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(pnlSettingsLayout.createSequentialGroup()
+                                .addGap(22, 22, 22)
+                                .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(12, 12, 12)
+                        .addComponent(lblClearOldTest)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(cboClearOldTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(18, 18, 18)
+                .addComponent(btnOpenFlagSelect)
+                .addContainerGap(127, Short.MAX_VALUE))
         );
 
         lblPDFFolder.getAccessibleContext().setAccessibleName("lblPDFFolder");
@@ -774,14 +758,6 @@ public class Config extends javax.swing.JFrame {
         
             //Only rewrite to the config file if there was a change.
         
-            //Handle Diagnostic Mode
-            if (cboAppMode.getSelectedItem().equals("Diagnostic")) {
-                strInput = strInput.replace("DiagMode=0", "DiagMode=1");
-            }
-            else {
-                strInput = strInput.replace("DiagMode=1", "DiagMode=0");
-            }
-        
             //Handle Unit System
             if (cboUnitSystem.getSelectedItem().equals("SI")) {
                 strInput = strInput.replace("UnitType=US", "UnitType=SI");
@@ -929,14 +905,12 @@ public class Config extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOpenFlagSelect;
-    private javax.swing.JComboBox cboAppMode;
     private javax.swing.JComboBox<String> cboClearOldTests;
     private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox<String> cboPDFFolder;
     private javax.swing.JComboBox cboUnitSystem;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
-    private java.awt.Label lblAppMode;
     private javax.swing.JLabel lblClearOldTest;
     private java.awt.Label lblComment;
     private java.awt.Label lblCompanyAddress;
