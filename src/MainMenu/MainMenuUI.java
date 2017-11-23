@@ -47,6 +47,7 @@ public class MainMenuUI extends javax.swing.JFrame {
 
     // variables for config.txt file values
     public static boolean diagnosticMode = false;
+    public static boolean countLimiter = true;
     public static boolean excludeFirst4Hours = true;
     public static String unitType = "US";
     public static int waitTime = 0;
@@ -790,7 +791,9 @@ public static void parseConfigTXT() {
         for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
             if(strLine.equals("DiagMode=0011")) {
                 diagnosticMode = true; //Defaults to End-User mode, only switching to Diagnostic mode if properly applied in config.          
-            } else if(strLine.contains("UnitType=")) { //Defaults to US units if anything unexpected appears.
+            } else if (strLine.contains("COUNT_LIMITER=OFF")) {
+		countLimiter = false;
+	    } else if(strLine.contains("UnitType=")) { //Defaults to US units if anything unexpected appears.
                 if(strLine.contains("SI")) {
                     unitType = "SI";
                 } else {

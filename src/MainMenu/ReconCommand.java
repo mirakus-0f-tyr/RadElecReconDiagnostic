@@ -95,7 +95,10 @@ class ReconCommand {
 	int recordIterator = Integer.parseInt(DeviceResponse_parsed[1]);
 
 	// parse and add to list
-	reconSession.add(CountLimiter.main(DeviceResponse_parsed));
+	if (MainMenuUI.countLimiter)
+	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
+	else
+	    reconSession.add(DeviceResponse_parsed);
 
 	// run :RN and parse until Z record complete
 	while (!(DeviceResponse_parsed[2].equals("Z"))) {
@@ -112,7 +115,10 @@ class ReconCommand {
 		LoadSpecifiedRecord(Integer.toString(recordIterator));
 	    }
 
+	if (MainMenuUI.countLimiter)
 	    reconSession.add(CountLimiter.main(DeviceResponse_parsed));
+	else
+	    reconSession.add(DeviceResponse_parsed);
 
 	    // check for rollover of memory
 	    if (Integer.parseInt(DeviceResponse_parsed[1]) == 6143)
