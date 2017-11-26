@@ -165,7 +165,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         btnSyncTime = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("Rad Elec Recon Diagnostic Tool");
+        setTitle("Rad Elec Recon Download Tool");
         setIconImages(null);
         setResizable(false);
 
@@ -178,7 +178,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         });
 
         lblRadonScoutQuickCal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblRadonScoutQuickCal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MainMenu/RadElecReconDiagnostic.png"))); // NOI18N
+        lblRadonScoutQuickCal.setIcon(new javax.swing.ImageIcon(getClass().getResource("/MainMenu/RadElecReconDownloadTool.png"))); // NOI18N
 
         jLabel1.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
 
@@ -346,7 +346,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblTestSiteInfo1.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         lblTestSiteInfo1.setText("Customer Information");
 
-        btnUpdateTXTFile.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnUpdateTXTFile.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnUpdateTXTFile.setText("Update TXT");
         btnUpdateTXTFile.setToolTipText("Update currently opened file with updated customer and test site info.");
         btnUpdateTXTFile.addActionListener(new java.awt.event.ActionListener() {
@@ -355,7 +355,7 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
-        btnSyncTime.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        btnSyncTime.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         btnSyncTime.setToolTipText("Sync Recon time to PC time. Must have Recon connected.");
         btnSyncTime.setLabel("Sync Time");
         btnSyncTime.addActionListener(new java.awt.event.ActionListener() {

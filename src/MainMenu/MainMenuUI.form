@@ -3,7 +3,7 @@
 <Form version="1.5" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
   <Properties>
     <Property name="defaultCloseOperation" type="int" value="3"/>
-    <Property name="title" type="java.lang.String" value="Rad Elec Recon Diagnostic Tool"/>
+    <Property name="title" type="java.lang.String" value="Rad Elec Recon Download Tool"/>
     <Property name="iconImages" type="java.util.List" editor="org.netbeans.modules.form.ComponentChooserEditor">
       <ComponentRef name="null"/>
     </Property>
@@ -222,7 +222,7 @@
       <Properties>
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-          <Image iconType="3" name="/MainMenu/RadElecReconDiagnostic.png"/>
+          <Image iconType="3" name="/MainMenu/RadElecReconDownloadTool.png"/>
         </Property>
       </Properties>
     </Component>
@@ -585,7 +585,7 @@
     <Component class="javax.swing.JButton" name="btnUpdateTXTFile">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Dialog" size="12" style="0"/>
+          <Font name="Calibri" size="12" style="0"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Update TXT"/>
         <Property name="toolTipText" type="java.lang.String" value="Update currently opened file with updated customer and test site info."/>
@@ -597,7 +597,7 @@
     <Component class="javax.swing.JButton" name="btnSyncTime">
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
-          <Font name="Dialog" size="12" style="0"/>
+          <Font name="Calibri" size="12" style="0"/>
         </Property>
         <Property name="toolTipText" type="java.lang.String" value="Sync Recon time to PC time. Must have Recon connected."/>
         <Property name="label" type="java.lang.String" value="Sync Time"/>
