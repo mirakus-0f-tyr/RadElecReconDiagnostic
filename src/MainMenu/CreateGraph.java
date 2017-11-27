@@ -347,13 +347,16 @@ public class CreateGraph extends JFrame {
                             //Add values to series independent of unitType (i.e. humidity and movement)
                             AvgHumidity_Series.add(hourCounter, hourlyAvgHumidity / avgCounter); //This will calculate hourly average humidity
                             
-                            //Movement Logic Handling
-                            //The Recon is too sensitive / high resolution when it comes to movements.
-                            //We need to tone them down.
-                            //If the hourlyMovements are less than 100, then let's flat-out ignore them.
-                            //Also, let's divide our final value by 100, and then truncate it.
-                            if(hourlyMovement>=100) {
-                                Movement_Series.add(hourCounter, Math.round(hourlyMovement/100));
+                            //Movement / "Tilt" Logic Handling
+                            //This is now dependent upon the tilt sensitivity, as defined on a scale from
+                            //zero (low sensitivity) to 10 (high sensitivity).
+                            if(hourlyMovement>=1000-(MainMenuUI.tiltSensitivity*100)) {
+                                //long movementFiltered = Math.round(hourlyMovement/(1025-(Math.pow(2,MainMenuUI.tiltSensitivity))));
+                                //System.out.println("HourCounter=" + hourCounter + " / FilteredTilts="+movementFiltered + " / RawMovement=" + hourlyMovement + " (Sensitivity="+MainMenuUI.tiltSensitivity+")");
+                                Movement_Series.add(hourCounter, Math.round(hourlyMovement/(1025-(Math.pow(2,MainMenuUI.tiltSensitivity)))));
+                                hourlyMovement = Math.round(hourlyMovement/(1025-(Math.pow(2,MainMenuUI.tiltSensitivity))));
+                            } else {
+                                hourlyMovement = 0; //If the tilts do not exceed the sensitivity threshold, then we reduce them to zero.
                             }
                             
                             //Add values to series that are dependent upon unitType
@@ -378,7 +381,7 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(3, formatZero.format(hourlyAvgTemp/avgCounter)); //Hourly Avg Temperature (in Celsius) Index = 3
                                 arrLine.add(4, formatTenth.format(hourlyAvgPress / avgCounter)); //Hourly Avg Pressure (in mbar) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
-                                arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
+                                arrLine.add(6, formatZero.format(Math.round(hourlyMovement))); //Movement/Tilt Index = 6
                                 arrLine.add(7, formatSI_RnC.format(((tempCounts_Ch1/LoadedReconCF1)*37))); //Hourly Chamber 1 radon concentration Index = 7
                                 arrLine.add(8, formatSI_RnC.format(((tempCounts_Ch2/LoadedReconCF2)*37))); //Hourly Chamber 2 radon concentration Index = 8
                                 
@@ -403,7 +406,7 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(3, formatZero.format((hourlyAvgTemp/avgCounter)*9/5+32)); //Hourly Avg Temperature (in Fahrenheit) Index = 3
                                 arrLine.add(4, formatTenth.format((hourlyAvgPress / avgCounter)*0.02952998751)); //Hourly Avg Pressure (in inHg) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
-                                arrLine.add(6, formatZero.format(Math.round(hourlyMovement/100))); //Movement/Tilt Index = 6
+                                arrLine.add(6, formatZero.format(Math.round(hourlyMovement))); //Movement/Tilt Index = 6
                                 arrLine.add(7, formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1))); //Hourly Chamber 1 radon concentration Index = 7
                                 arrLine.add(8, formatUS_RnC.format((tempCounts_Ch2/LoadedReconCF2))); //Hourly Chamber 2 radon concentration Index = 8
                             }

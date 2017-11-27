@@ -55,6 +55,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int displaySig = 1;
     public static int openPDFWind = 1;
     public static int testClearMode = 1; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
+    public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -739,6 +740,7 @@ public static void createConfigTXT() {
             pw.print("DisplaySig=1\n");
 	    pw.print("OpenPDFWindow=1\n");
 	    pw.print("TestClearMode=1\n");
+            pw.print("TiltSensitivity=5\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create config.txt file!");
@@ -796,7 +798,23 @@ public static void parseConfigTXT() {
 	        openPDFWind = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse opening reports folder preference
             } else if(strLine.contains("TestClearMode=")) {
 	        testClearMode = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse preference for session clear mode
-	    }
+	    } else if(strLine.contains("TiltSensitivity=")) {
+                String[] strSplitTiltSensitivity = strLine.split("=");
+                if(strLine.length() < 17) {
+                    tiltSensitivity = 5; //If there isn't any value after TiltSensitivity=, then let's just default to 5.
+                } else {
+                    try {
+                        tiltSensitivity = Integer.parseInt(strSplitTiltSensitivity[1]);
+                    } catch (NumberFormatException e) {
+                        tiltSensitivity = 5;
+                    }
+                    if(tiltSensitivity>10) {
+                        tiltSensitivity = 10;
+                    } else if (tiltSensitivity < 0) {
+                        tiltSensitivity = 0;
+                    }
+                }
+            }
         }
 
 	// cleanup buffered reader

@@ -50,11 +50,13 @@ public class Config extends javax.swing.JFrame {
             String strDisplaySig;
 	    String strPDFWindow;
 	    String strTestClearMode;
+            int intTiltSensitivity;
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
             strDisplaySig = findDisplaySig();
 	    strPDFWindow = findPDFWindow();
 	    strTestClearMode = findTestClearMode();
+            intTiltSensitivity = findTiltSensitivity();
             LoadReportTXT();
             loadDeploymentVariables();
             //cboAppMode.setSelectedItem(strAppMode);
@@ -62,6 +64,7 @@ public class Config extends javax.swing.JFrame {
             cboDisplaySig.setSelectedItem(strDisplaySig);
 	    cboPDFFolder.setSelectedItem(strPDFWindow);
 	    cboClearOldTests.setSelectedItem(strTestClearMode);
+            sliderTilts.setValue(intTiltSensitivity);
             
         } catch (IOException e) {
             System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
@@ -95,6 +98,8 @@ public class Config extends javax.swing.JFrame {
         lblClearOldTest = new javax.swing.JLabel();
         cboClearOldTests = new javax.swing.JComboBox<String>();
         btnOpenFlagSelect = new javax.swing.JButton();
+        sliderTilts = new javax.swing.JSlider();
+        lblTiltSlider = new javax.swing.JLabel();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -205,12 +210,15 @@ public class Config extends javax.swing.JFrame {
         lblDisplaySignature.setText("Signature Options");
 
         lblPDFFolder.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblPDFFolder.setForeground(new java.awt.Color(0, 0, 0));
         lblPDFFolder.setText("Open PDF Folder");
         lblPDFFolder.setToolTipText("");
 
         cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
 
-        lblClearOldTest.setFont(new java.awt.Font("Dialog", 0, 12)); // NOI18N
+        lblClearOldTest.setBackground(new java.awt.Color(255, 255, 255));
+        lblClearOldTest.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblClearOldTest.setForeground(new java.awt.Color(0, 0, 0));
         lblClearOldTest.setText("Clear Old Tests From Recon");
 
         cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Never", "Prompt", "Always" }));
@@ -223,29 +231,50 @@ public class Config extends javax.swing.JFrame {
             }
         });
 
+        sliderTilts.setMajorTickSpacing(2);
+        sliderTilts.setMaximum(10);
+        sliderTilts.setMinorTickSpacing(1);
+        sliderTilts.setPaintLabels(true);
+        sliderTilts.setPaintTicks(true);
+        sliderTilts.setSnapToTicks(true);
+        sliderTilts.setToolTipText("This slider determines the sensitivity of the tilt sensor. Slide it to the left if you'd like low sensitivity, and to the right if you'd like high sensitivity.");
+
+        lblTiltSlider.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblTiltSlider.setForeground(new java.awt.Color(0, 0, 0));
+        lblTiltSlider.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblTiltSlider.setText("Tilt Sensitivity (0=Low, 10=High)");
+        lblTiltSlider.setToolTipText("");
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
+            .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblClearOldTest, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(cboClearOldTests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(62, 62, 62)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
-                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnOpenFlagSelect)
-                    .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblPDFFolder)
-                    .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23))
+                            .addComponent(lblClearOldTest, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
+                                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(cboClearOldTests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(62, 62, 62)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(btnOpenFlagSelect)
+                            .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblPDFFolder)
+                            .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(23, 23, 23))
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(lblTiltSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(sliderTilts, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         pnlSettingsLayout.setVerticalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -272,7 +301,11 @@ public class Config extends javax.swing.JFrame {
                         .addComponent(cboClearOldTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(btnOpenFlagSelect)
-                .addContainerGap(127, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
+                .addComponent(lblTiltSlider)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(sliderTilts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         lblPDFFolder.getAccessibleContext().setAccessibleName("lblPDFFolder");
@@ -671,6 +704,40 @@ public class Config extends javax.swing.JFrame {
         }
 	return "TestClearMode";
     }
+    
+    public int findTiltSensitivity() {
+        String config_info = "config/config.txt";
+        String[] strSplitTiltSensitivity;
+        int intTiltSensitivity = 5;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
+            //Although this means that the order of the configuration parameters is unimportant, a single blank
+            //line will terminate the for loop (and halt the parsing process).
+            //For unexpected values in TiltSensitivity= (or if it's missing), we default to 5.
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("TiltSensitivity=")) {
+                    strSplitTiltSensitivity = strLine.split("=");
+                    if (strLine.length() >= 17) { //Only continue if TiltSensitivity equals something in the config.txt file...
+                        try {
+                            intTiltSensitivity = Integer.parseInt(strSplitTiltSensitivity[1]);
+                        } catch (NumberFormatException e) {
+                            intTiltSensitivity = 5;
+                        }
+                        if(intTiltSensitivity > 10) {
+                            intTiltSensitivity = 10;
+                        } else if(intTiltSensitivity < 0) {
+                            intTiltSensitivity = 0;
+                        }
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to parse config.txt in order to find the Tilt Sensitivity. There was a problem loading the settings.");
+        }
+        return intTiltSensitivity;
+    }
 
     public void LoadReportTXT() {
         //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
@@ -790,7 +857,16 @@ public class Config extends javax.swing.JFrame {
 	    } else if (cboClearOldTests.getSelectedItem().equals("Always")) {
 	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=2");
 	    }
-
+            
+            //Handle Tilt Sensitivity value
+            if(strInput.contains("TiltSensitivity=10")) { //This is hacky, but it works for now. We have to be sure to replace an extra character for "10" values.
+                strInput = strInput.replaceAll("TiltSensitivity=\\w\\w", "TiltSensitivity="+Integer.toString(sliderTilts.getValue())); 
+            } else if(strInput.contains("TiltSensitivity=")) {
+                strInput = strInput.replaceAll("TiltSensitivity=\\w", "TiltSensitivity="+Integer.toString(sliderTilts.getValue())); 
+            } else {
+                strInput += "TiltSensitivity="+Integer.toString(sliderTilts.getValue()); //If Tilt Sensitivity doesn't exist in the config, this will add it.
+            }
+            
             FileOutputStream fileOut = new FileOutputStream(config_info);
             fileOut.write(strInput.getBytes());
             fileOut.close();
@@ -924,12 +1000,14 @@ public class Config extends javax.swing.JFrame {
     private java.awt.Label lblRetrievedBy;
     private javax.swing.JLabel lblRoomDeployed;
     private java.awt.Label lblTampering;
+    private javax.swing.JLabel lblTiltSlider;
     private java.awt.Label lblUnits;
     private java.awt.Label lblWeather;
     private java.awt.Panel pnlCompany;
     private java.awt.Panel pnlSettings;
     private java.awt.Panel pnlSettings1;
     private java.awt.Panel pnlSettings2;
+    private javax.swing.JSlider sliderTilts;
     private javax.swing.JTabbedPane tabConfig;
     private java.awt.TextField txtAddress1;
     private java.awt.TextField txtAddress2;
