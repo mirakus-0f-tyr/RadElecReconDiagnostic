@@ -229,6 +229,7 @@ public class ScanComm {
 
 	    MainMenuUI.checkFilesWrittenSuccessfully();
 	    MainMenuUI.HandleSessionClear();
+            MainMenuUI.checkAutoLoadFile();
         }
 
         catch (InterruptedException ex) {

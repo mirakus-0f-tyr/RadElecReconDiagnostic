@@ -50,6 +50,7 @@ public class Config extends javax.swing.JFrame {
             String strDisplaySig;
 	    String strPDFWindow;
 	    String strTestClearMode;
+            boolean boolAutoLoadFile;
             int intTiltSensitivity;
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
@@ -57,6 +58,7 @@ public class Config extends javax.swing.JFrame {
 	    strPDFWindow = findPDFWindow();
 	    strTestClearMode = findTestClearMode();
             intTiltSensitivity = findTiltSensitivity();
+            boolAutoLoadFile = findAutoLoadFile();
             LoadReportTXT();
             loadDeploymentVariables();
             //cboAppMode.setSelectedItem(strAppMode);
@@ -65,7 +67,7 @@ public class Config extends javax.swing.JFrame {
 	    cboPDFFolder.setSelectedItem(strPDFWindow);
 	    cboClearOldTests.setSelectedItem(strTestClearMode);
             sliderTilts.setValue(intTiltSensitivity);
-            
+            chkboxAutoLoadFile.setSelected(boolAutoLoadFile);
         } catch (IOException e) {
             System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
         }
@@ -100,6 +102,7 @@ public class Config extends javax.swing.JFrame {
         btnOpenFlagSelect = new javax.swing.JButton();
         sliderTilts = new javax.swing.JSlider();
         lblTiltSlider = new javax.swing.JLabel();
+        chkboxAutoLoadFile = new javax.swing.JCheckBox();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -245,6 +248,14 @@ public class Config extends javax.swing.JFrame {
         lblTiltSlider.setText("Tilt Sensitivity (0=Low, 10=High)");
         lblTiltSlider.setToolTipText("");
 
+        chkboxAutoLoadFile.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        chkboxAutoLoadFile.setText("Auto-Load File?");
+        chkboxAutoLoadFile.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkboxAutoLoadFileActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -264,17 +275,19 @@ public class Config extends javax.swing.JFrame {
                                 .addGap(62, 62, 62)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(btnOpenFlagSelect)
                             .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPDFFolder)
-                            .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkboxAutoLoadFile))
                         .addGap(23, 23, 23))
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblTiltSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(sliderTilts, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnOpenFlagSelect)
+                        .addContainerGap())))
         );
         pnlSettingsLayout.setVerticalGroup(
             pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -300,15 +313,19 @@ public class Config extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cboClearOldTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
-                .addComponent(btnOpenFlagSelect)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 51, Short.MAX_VALUE)
-                .addComponent(lblTiltSlider)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(sliderTilts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(chkboxAutoLoadFile)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
+                        .addComponent(lblTiltSlider)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(sliderTilts, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnOpenFlagSelect, javax.swing.GroupLayout.Alignment.TRAILING))
                 .addContainerGap())
         );
 
         lblPDFFolder.getAccessibleContext().setAccessibleName("lblPDFFolder");
+        chkboxAutoLoadFile.getAccessibleContext().setAccessibleDescription("After downloading a session, would you like for the created file to load itself automatically?");
 
         tabConfig.addTab("Settings", pnlSettings);
 
@@ -563,6 +580,10 @@ public class Config extends javax.swing.JFrame {
         flagOptions.setVisible(true);
     }//GEN-LAST:event_btnOpenFlagSelectActionPerformed
 
+    private void chkboxAutoLoadFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkboxAutoLoadFileActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_chkboxAutoLoadFileActionPerformed
+
     private String findAppMode() {
         String config_info = "config/config.txt";
         try {
@@ -738,6 +759,27 @@ public class Config extends javax.swing.JFrame {
         }
         return intTiltSensitivity;
     }
+    
+    public boolean findAutoLoadFile() {
+        String config_info = "config/config.txt";
+        String[] strSplitAutoLoadFile;
+        boolean AutoLoadFile = true;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("AutoLoadFile=")) {
+                    strSplitAutoLoadFile = strLine.split("=");
+                    if (strLine.length() >= 14) { //If UnitType= has no value, default to true.
+                        AutoLoadFile = !strSplitAutoLoadFile[1].equals("0");
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            System.out.println("ERROR: Unable to parse config.txt in order to find the AutoLoadFile option. There was a problem loading the settings.");
+        }
+        return AutoLoadFile;        
+    }
 
     public void LoadReportTXT() {
         //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
@@ -867,6 +909,17 @@ public class Config extends javax.swing.JFrame {
                 strInput += "TiltSensitivity="+Integer.toString(sliderTilts.getValue()); //If Tilt Sensitivity doesn't exist in the config, this will add it.
             }
             
+            //Handle Auto-Load File
+            if(chkboxAutoLoadFile.isSelected()) {
+                strInput = strInput.replaceAll("AutoLoadFile=\\w", "AutoLoadFile=1");
+            } else {
+                strInput = strInput.replaceAll("AutoLoadFile=\\w", "AutoLoadFile=0");
+            }
+            if(!strInput.contains("AutoLoadFile=")) { //This should add the line to existing config files that lack it.
+                int isAutoLoadSelected = chkboxAutoLoadFile.isSelected() ? 1 : 0;
+                strInput += "AutoLoadFile=" + Integer.toString(isAutoLoadSelected);
+            }
+            
             FileOutputStream fileOut = new FileOutputStream(config_info);
             fileOut.write(strInput.getBytes());
             fileOut.close();
@@ -985,6 +1038,7 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox<String> cboPDFFolder;
     private javax.swing.JComboBox cboUnitSystem;
+    private javax.swing.JCheckBox chkboxAutoLoadFile;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
     private javax.swing.JLabel lblClearOldTest;

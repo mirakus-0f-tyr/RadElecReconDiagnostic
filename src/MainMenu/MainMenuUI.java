@@ -30,7 +30,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.7.6";
+    public static String version = "v0.8.0";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -56,6 +56,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int openPDFWind = 1;
     public static int testClearMode = 1; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
+    public static boolean autoLoadFile = true;
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -642,10 +643,10 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JButton btnCreateTXT;
     private javax.swing.JButton btnDownloadSession;
     private javax.swing.JButton btnEraseReconData;
-    private javax.swing.JButton btnGeneratePDF;
+    public static javax.swing.JButton btnGeneratePDF;
     private javax.swing.JButton btnOpenSavedFile;
     private javax.swing.JButton btnSyncTime;
-    private javax.swing.JButton btnUpdateTXTFile;
+    public static javax.swing.JButton btnUpdateTXTFile;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -698,10 +699,6 @@ public static void displayFirmwareVersion(String FirmwareVersion) {
 public static void displayDataSessions(String NumSessions) {
     lblDataSessions.setVisible(true);
     lblDataSessions.setText("Data Sessions: " + NumSessions);
-    //Long LongSessions = Long.parseLong(NumSessions);
-    //if(LongSessions == 0) {
-    //    MainMenuUI.displayProgressLabel("No data sessions in memory.");
-    //}
 }
 
 public void parseCompanyTXT() {
@@ -716,7 +713,6 @@ public void parseCompanyTXT() {
     } catch (IOException e) {
         System.out.println("WARNING: Unable to parse company.txt file... attempting to create file.");
         createCompanyTXT();
-        //e.printStackTrace();
     }
 }
 
@@ -741,6 +737,7 @@ public static void createConfigTXT() {
 	    pw.print("OpenPDFWindow=1\n");
 	    pw.print("TestClearMode=1\n");
             pw.print("TiltSensitivity=5\n");
+            pw.print("AutoLoadFile=1\n;");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create config.txt file!");
@@ -814,6 +811,8 @@ public static void parseConfigTXT() {
                         tiltSensitivity = 0;
                     }
                 }
+            } else if(strLine.contains("AutoLoadFile=")) {
+                autoLoadFile = !strLine.contains("0");
             }
         }
 
@@ -995,6 +994,38 @@ public static void HandleSessionClear() {
     }
 
     catch (Exception ex) {}
+}
+
+public static void checkAutoLoadFile() {
+    
+    File txt_file = new File(ReconCommand.filenameTXT);
+    String[] strSplitFileName;
+    String strSimpleFileName = "unknown";
+    
+    if (txt_file.exists() && autoLoadFile) {
+	try {
+            System.out.println("Attempting to automagically load the downloaded session...");
+            LoadSavedFile.main(ReconCommand.filenameTXT);
+            strSplitFileName = ReconCommand.filenameTXT.split("/");
+            strSimpleFileName = strSplitFileName[1];
+            System.out.println("File loaded: " + strSimpleFileName);
+            lblLoadedFileName.setText(strSimpleFileName);
+            lblLoadedFile.setVisible(true);
+            lblLoadedFileName.setVisible(true);
+            btnGeneratePDF.setVisible(true);
+            btnUpdateTXTFile.setVisible(true);
+            btnGeneratePDF.setEnabled(true);
+            btnUpdateTXTFile.setEnabled(true);
+        } catch (Exception ex) {
+            System.out.println("ERROR when auto-loading the file!");
+            lblLoadedFile.setVisible(false);
+            lblLoadedFileName.setVisible(false);
+            btnGeneratePDF.setVisible(false);
+            btnUpdateTXTFile.setVisible(false);
+            btnGeneratePDF.setEnabled(false);
+            btnUpdateTXTFile.setEnabled(false);
+        }
+    }
 }
 
 private class MySwingWorker extends SwingWorker<Void, Void>{
