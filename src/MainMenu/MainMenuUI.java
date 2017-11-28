@@ -767,7 +767,7 @@ public static void createConfigTXT() {
 	    pw.print("OpenPDFWindow=1\n");
 	    pw.print("TestClearMode=1\n");
             pw.print("TiltSensitivity=5\n");
-            pw.print("AutoLoadFile=1\n;");
+            pw.print("AutoLoadFile=1\n");
             pw.close();
         } catch (FileNotFoundException ex) {
             System.out.println("ERROR: Unable to create config.txt file!");
