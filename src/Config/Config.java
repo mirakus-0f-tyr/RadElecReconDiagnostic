@@ -906,7 +906,7 @@ public class Config extends javax.swing.JFrame {
             } else if(strInput.contains("TiltSensitivity=")) {
                 strInput = strInput.replaceAll("TiltSensitivity=\\w", "TiltSensitivity="+Integer.toString(sliderTilts.getValue())); 
             } else {
-                strInput += "TiltSensitivity="+Integer.toString(sliderTilts.getValue()); //If Tilt Sensitivity doesn't exist in the config, this will add it.
+                strInput += "TiltSensitivity="+Integer.toString(sliderTilts.getValue()) + "\n"; //If Tilt Sensitivity doesn't exist in the config, this will add it.
             }
             
             //Handle Auto-Load File
@@ -917,7 +917,7 @@ public class Config extends javax.swing.JFrame {
             }
             if(!strInput.contains("AutoLoadFile=")) { //This should add the line to existing config files that lack it.
                 int isAutoLoadSelected = chkboxAutoLoadFile.isSelected() ? 1 : 0;
-                strInput += "AutoLoadFile=" + Integer.toString(isAutoLoadSelected);
+                strInput += "AutoLoadFile=" + Integer.toString(isAutoLoadSelected) + "\n";
             }
             
             FileOutputStream fileOut = new FileOutputStream(config_info);
