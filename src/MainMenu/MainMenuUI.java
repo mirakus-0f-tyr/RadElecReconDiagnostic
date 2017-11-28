@@ -1005,11 +1005,11 @@ public static void checkAutoLoadFile() {
     if (txt_file.exists() && autoLoadFile) {
 	try {
             System.out.println("Attempting to automagically load the downloaded session...");
-            LoadSavedFile.main(ReconCommand.filenameTXT);
             strSplitFileName = ReconCommand.filenameTXT.split("/");
             strSimpleFileName = strSplitFileName[1];
-            System.out.println("File loaded: " + strSimpleFileName);
             lblLoadedFileName.setText(strSimpleFileName);
+            LoadSavedFile.main(ReconCommand.filenameTXT);
+            System.out.println("File loaded: " + strSimpleFileName);
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
             btnGeneratePDF.setVisible(true);

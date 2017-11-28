@@ -46,6 +46,7 @@ public class CreateTXT {
 	String ReconWaitTime = "Unknown";
         String ReconDurationSetting = "Unknown";
         String ReconCalDate = "Unknown";
+        String strInstrumentSerial = "Unknown";
 
         double AvgHumidity = 0;
         double AvgTemperature = 0;
@@ -94,6 +95,7 @@ public class CreateTXT {
         CF1 = Double.parseDouble(CF_Array[0]) / 1000; //We need to add error-handling for this...
         CF2 = Double.parseDouble(CF_Array[1]) / 1000; //We need to add error-handling for this, too...
         ReconCalDate = ScanComm.GetCalibrationDate(ScanComm.scannedPort);
+        strInstrumentSerial = ReconCommand.GetSerialNumber();
 
         ReconCommand.LoadNewRecord();
         ReconWaitTime = ReconCommand.DeviceResponse_parsed[12];
@@ -175,6 +177,7 @@ public class CreateTXT {
                 writer.println("\r\n");
 
                 writer.println("SUMMARY:");
+                writer.println("Instrument Serial: " + strInstrumentSerial);
                 writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
                 writer.println("End Date/Time: " + EndDate.format(DateTimeDisplay));
                 Duration radonDuration = Duration.between(StartDate, EndDate);
@@ -217,7 +220,8 @@ public class CreateTXT {
                 writer.println("Test site information:");
                 writer.println(MainMenuUI.txtTestSiteInfo.getText());
                 writer.println("\r\n");
-
+                
+                writer.println("Instrument Serial: " + strInstrumentSerial);
                 writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
                 writer.println("End Date/Time: " + EndDate.format(DateTimeDisplay));
 

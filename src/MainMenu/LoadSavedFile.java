@@ -35,7 +35,7 @@ public class LoadSavedFile {
     public static String strStartDate = "Unknown Start Date";
     public static String strEndDate = "Unknown End Date";
     public static String strUnitSystem = "US";
-    public static String strInstrumentSerial = "Unknown Serial";
+    public static String strInstrumentSerial = "Unknown";
     public static String strDeployedBy = "Unknown";
     public static String strRetrievedBy = "Unknown";
     public static String strAnalyzedBy = "Unknown";
@@ -65,7 +65,7 @@ public class LoadSavedFile {
             
             Config getUnits = new Config();
             strUnitSystem = getUnits.findUnitSystem();
-            strInstrumentSerial = getReconSerial();
+            strInstrumentSerial = getReconSerialFromFileName(); //We should still call this, as it will work with older text files.
             
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(ReconTXTFile)));
             
@@ -87,6 +87,11 @@ public class LoadSavedFile {
                         arrLine.clear(); //If we don't clear arrLine, it will turn into one massive, single-dimensional string array...
                         System.out.println("Checking Status: "+ Arrays.toString(LoadedReconTXTFile.get(i).toArray()));
                         i++;
+                    }
+                    if(strLine.contains("Instrument Serial: ")) {
+                        strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
+                        strInstrumentSerial = strLine_parsed[2];
+                        System.out.println("Serial# found and parsed: " + strInstrumentSerial);
                     }
                     if(strLine.contains("Chamber 1 CF: ")) {
                         strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
@@ -134,7 +139,7 @@ public class LoadSavedFile {
 		    }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {
-                        if(strLine.contains("Start Date/Time:") || strLine.contains("SUMMARY:")) {
+                        if(strLine.contains("Instrument Serial:") || strLine.contains("SUMMARY:")) {
                             testSiteFlag = false;
                             if (strTestSiteInfo.length() > 1) {
                                 strTestSiteInfo = strTestSiteInfo.trim(); //trim any anteceding or succeeding line-feeds...
@@ -194,10 +199,10 @@ public class LoadSavedFile {
         }
     }
     
-    public static String getReconSerial() {
-        //I think this is a poor way to retrieve the serial number.
-        //This is fragile and will break if the user renames the file.
-        //Should we add it into the text file?
+    public static String getReconSerialFromFileName() {
+        //The instrument serial is now stored in the TXT file, as of v0.8.2.
+        //This method only exists to maintain backwards compatibility with
+        //older text files and to serve as a fallback if no serial# is found.
         if(MainMenu.MainMenuUI.lblLoadedFileName.getText().length() > 0) {
             String[] str_Parsed = MainMenu.MainMenuUI.lblLoadedFileName.getText().split("_");
             if(str_Parsed.length > 2) {
@@ -208,4 +213,5 @@ public class LoadSavedFile {
         }
         return "Unknown Serial";
     }
+    
 }
