@@ -1092,6 +1092,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
+      btnSyncTime.setEnabled(false);
       System.out.println("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
       btnConnect.setEnabled(true);
@@ -1099,6 +1100,8 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(true);
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
+      btnSyncTime.setEnabled(true);
+      
       return null;
     }
 }
@@ -1111,6 +1114,7 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
+      btnSyncTime.setEnabled(false);
       System.out.println("AllDataDump button pressed.");
       CRM_Parameters = ScanComm.run(5);
       btnConnect.setEnabled(true);
@@ -1118,6 +1122,8 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(true);
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
+      btnSyncTime.setEnabled(true);
+      
       return null;
     }
 }
@@ -1130,6 +1136,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
+      btnSyncTime.setEnabled(false);
       System.out.println("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       btnConnect.setEnabled(true);
@@ -1137,6 +1144,8 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(true);
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
+      btnSyncTime.setEnabled(true);
+      
       return null;
     }
 }
@@ -1149,6 +1158,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(false);
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
+      btnSyncTime.setEnabled(false);
       System.out.println("Clear Memory button pressed.");
       CRM_Parameters = ScanComm.run(4);
       btnConnect.setEnabled(true);
@@ -1156,6 +1166,8 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnClearMemory.setEnabled(true);
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
+      btnSyncTime.setEnabled(true);
+      
       return null;
     }
 }
@@ -1169,12 +1181,14 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       btnOpenSavedFile.setEnabled(false);
       btnGeneratePDF.setEnabled(false);
       btnEraseReconData.setEnabled(false);
+      btnSyncTime.setEnabled(false);
       System.out.println("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
       btnDownloadSession.setEnabled(true);
       btnOpenSavedFile.setEnabled(true);
       btnGeneratePDF.setEnabled(true);
       btnEraseReconData.setEnabled(true);
+      btnSyncTime.setEnabled(true);
 
       return null;
     }
@@ -1189,6 +1203,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       btnOpenSavedFile.setEnabled(false);
       btnGeneratePDF.setEnabled(false);
       btnEraseReconData.setEnabled(false);
+      btnSyncTime.setEnabled(false);
       System.out.println("Generate PDF button pressed.");
       CreatePDF generate_pdf = new CreatePDF();
       generate_pdf.main();
@@ -1210,7 +1225,8 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       btnOpenSavedFile.setEnabled(true);
       btnGeneratePDF.setEnabled(true);
       btnEraseReconData.setEnabled(true);
-
+      btnSyncTime.setEnabled(true);
+      
       return null;
     }
 }
@@ -1222,6 +1238,7 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     btnOpenSavedFile.setEnabled(false);
     btnGeneratePDF.setEnabled(false);
     btnEraseReconData.setEnabled(false);
+    btnSyncTime.setEnabled(false);
     System.out.println("Update TXT file button pressed.");
     String oldFileName;
     // the file SHOULD already be loaded before this function is called, but it might
@@ -1232,7 +1249,8 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     btnOpenSavedFile.setEnabled(true);
     btnGeneratePDF.setEnabled(true);
     btnEraseReconData.setEnabled(true);
-
+    btnSyncTime.setEnabled(true);
+    
     return null;
     }
 }
@@ -1244,12 +1262,14 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnOpenSavedFile.setEnabled(false);
     btnGeneratePDF.setEnabled(false);
     btnEraseReconData.setEnabled(false);
+    btnSyncTime.setEnabled(false);
     System.out.println("SyncTime button pressed.");
     CRM_Parameters = ScanComm.run(7);
     btnDownloadSession.setEnabled(true);
     btnOpenSavedFile.setEnabled(true);
     btnGeneratePDF.setEnabled(true);
     btnEraseReconData.setEnabled(true);
+    btnSyncTime.setEnabled(true);
 
     return null;
     }
