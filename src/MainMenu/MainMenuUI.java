@@ -30,7 +30,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.8.0";
+    public static String version = "v0.8.3";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -165,6 +165,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblTestSiteInfo1 = new javax.swing.JLabel();
         btnUpdateTXTFile = new javax.swing.JButton();
         btnSyncTime = new javax.swing.JButton();
+        btnOpenPDF = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Download Tool");
@@ -366,6 +367,16 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
+        btnOpenPDF.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        btnOpenPDF.setText("Open PDF Folder");
+        btnOpenPDF.setToolTipText("Opens the PDF directory, where your generated reports are stored.");
+        btnOpenPDF.setName(""); // NOI18N
+        btnOpenPDF.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOpenPDFActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -374,7 +385,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.DEFAULT_SIZE, 664, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblVersion))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -412,27 +423,27 @@ public class MainMenuUI extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                    .addComponent(btnEraseReconData, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(btnEraseReconData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(btnSyncTime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnOpenSavedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnOpenSavedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnClearSession, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnDownloadSession, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnCreateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(btnSyncTime, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 136, Short.MAX_VALUE)))
+                                    .addComponent(btnClearSession, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnDownloadSession, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnCreateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(btnOpenPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(8, 8, 8)))
                 .addContainerGap())
         );
@@ -454,7 +465,11 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblDataSessions, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel1))
+                        .addComponent(jLabel1)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addComponent(lblTestSiteInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnCreateTXT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -466,22 +481,22 @@ public class MainMenuUI extends javax.swing.JFrame {
                             .addComponent(btnOpenSavedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnEraseReconData, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblTestSiteInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnUpdateTXTFile)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSyncTime)))
+                            .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnOpenPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(6, 6, 6)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnEraseReconData, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnUpdateTXTFile)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSyncTime)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(0, 102, Short.MAX_VALUE)))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -593,6 +608,20 @@ public class MainMenuUI extends javax.swing.JFrame {
 	worker.execute();
     }//GEN-LAST:event_btnSyncTimeActionPerformed
 
+    private void btnOpenPDFActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenPDFActionPerformed
+        Desktop desktop = null;
+        File reportsdir = new File("reports");
+        try {
+            if (Desktop.isDesktopSupported()) {
+                desktop = Desktop.getDesktop();
+                desktop.open(reportsdir);
+            }
+            else {
+                System.out.println("ERROR: Opening PDF Folder!");
+            }
+        } catch (IOException ex) { }
+    }//GEN-LAST:event_btnOpenPDFActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -644,6 +673,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JButton btnDownloadSession;
     private javax.swing.JButton btnEraseReconData;
     public static javax.swing.JButton btnGeneratePDF;
+    private javax.swing.JButton btnOpenPDF;
     private javax.swing.JButton btnOpenSavedFile;
     private javax.swing.JButton btnSyncTime;
     public static javax.swing.JButton btnUpdateTXTFile;
@@ -1041,6 +1071,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
         btnAllDataDump.setVisible(false);
         btnDownloadSession.setVisible(false);
         btnOpenSavedFile.setVisible(true);
+        btnOpenPDF.setVisible(true);
         btnGeneratePDF.setVisible(false);
         btnEraseReconData.setVisible(false);
         lblLoadedFile.setVisible(false);
@@ -1062,6 +1093,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
                 btnClearMemory.setVisible(true);
                 btnClearSession.setVisible(true);
                 btnAllDataDump.setVisible(true);
+                btnOpenPDF.setVisible(true);
             }
             else {
                 btnCreateTXT.setVisible(false);
@@ -1072,6 +1104,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
                 btnOpenSavedFile.setVisible(true);
                 btnGeneratePDF.setVisible(false);
                 btnEraseReconData.setVisible(true);
+                btnOpenPDF.setVisible(true);
             }
 
 	    btnSyncTime.setVisible(true);
@@ -1093,6 +1126,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
+      btnOpenPDF.setEnabled(false);
       System.out.println("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
       btnConnect.setEnabled(true);
@@ -1101,6 +1135,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
       btnSyncTime.setEnabled(true);
+      btnOpenPDF.setEnabled(true);
       
       return null;
     }
@@ -1115,6 +1150,7 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
+      btnOpenPDF.setEnabled(false);
       System.out.println("AllDataDump button pressed.");
       CRM_Parameters = ScanComm.run(5);
       btnConnect.setEnabled(true);
@@ -1123,6 +1159,7 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
       btnSyncTime.setEnabled(true);
+      btnOpenPDF.setEnabled(true);
       
       return null;
     }
@@ -1137,6 +1174,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
+      btnOpenPDF.setEnabled(false);
       System.out.println("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       btnConnect.setEnabled(true);
@@ -1145,6 +1183,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
       btnSyncTime.setEnabled(true);
+      btnOpenPDF.setEnabled(true);
       
       return null;
     }
@@ -1159,6 +1198,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(false);
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
+      btnOpenPDF.setEnabled(false);
       System.out.println("Clear Memory button pressed.");
       CRM_Parameters = ScanComm.run(4);
       btnConnect.setEnabled(true);
@@ -1167,6 +1207,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnClearSession.setEnabled(true);
       btnAllDataDump.setEnabled(true);
       btnSyncTime.setEnabled(true);
+      btnOpenPDF.setEnabled(true);
       
       return null;
     }
@@ -1182,6 +1223,7 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       btnGeneratePDF.setEnabled(false);
       btnEraseReconData.setEnabled(false);
       btnSyncTime.setEnabled(false);
+      btnOpenPDF.setEnabled(false);
       System.out.println("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
       btnDownloadSession.setEnabled(true);
@@ -1189,6 +1231,7 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       btnGeneratePDF.setEnabled(true);
       btnEraseReconData.setEnabled(true);
       btnSyncTime.setEnabled(true);
+      btnOpenPDF.setEnabled(true);
 
       return null;
     }
@@ -1204,6 +1247,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       btnGeneratePDF.setEnabled(false);
       btnEraseReconData.setEnabled(false);
       btnSyncTime.setEnabled(false);
+      btnOpenPDF.setEnabled(false);
       System.out.println("Generate PDF button pressed.");
       CreatePDF generate_pdf = new CreatePDF();
       generate_pdf.main();
@@ -1226,6 +1270,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       btnGeneratePDF.setEnabled(true);
       btnEraseReconData.setEnabled(true);
       btnSyncTime.setEnabled(true);
+      btnOpenPDF.setEnabled(true);
       
       return null;
     }
@@ -1239,6 +1284,7 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     btnGeneratePDF.setEnabled(false);
     btnEraseReconData.setEnabled(false);
     btnSyncTime.setEnabled(false);
+    btnOpenPDF.setEnabled(false);
     System.out.println("Update TXT file button pressed.");
     String oldFileName;
     // the file SHOULD already be loaded before this function is called, but it might
@@ -1250,6 +1296,7 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     btnGeneratePDF.setEnabled(true);
     btnEraseReconData.setEnabled(true);
     btnSyncTime.setEnabled(true);
+    btnOpenPDF.setEnabled(true);
     
     return null;
     }
@@ -1263,6 +1310,7 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnGeneratePDF.setEnabled(false);
     btnEraseReconData.setEnabled(false);
     btnSyncTime.setEnabled(false);
+    btnOpenPDF.setEnabled(false);
     System.out.println("SyncTime button pressed.");
     CRM_Parameters = ScanComm.run(7);
     btnDownloadSession.setEnabled(true);
@@ -1270,6 +1318,7 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnGeneratePDF.setEnabled(true);
     btnEraseReconData.setEnabled(true);
     btnSyncTime.setEnabled(true);
+    btnOpenPDF.setEnabled(true);
 
     return null;
     }
