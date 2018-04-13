@@ -14,15 +14,19 @@ public class FileUpdater {
 // then writing a final "updated" file with the new information.  This gets the feature in place, but
 // there is likely a much better way to do this.  This method is a minefield.  There is a fair amount of
 // work to be done here, making sure files exist, that everything was done successfully, etc.
-// - Additional issue: this file expects the text files to be in the data directory (no subdirs, etc).  An exception will be thrown otherwise.
     public static void UpdateTXTFile(File oldFile) throws IOException {
 	BufferedReader br = null;
 	String currentLine = null;
 	BufferedWriter bw = null;
 	int customerLineCounter = 0;
 	int testSiteLineCounter = 0;
-	String oldFileName = "data/" + oldFile.getName();
-	String updatedFileName = "data/" + oldFile.getName().substring(0, 18) + "_updated.txt";
+	String oldFileName = oldFile.getCanonicalPath();
+	String updatedFileName = oldFile.getName();
+        int intTrimSuffix = updatedFileName.lastIndexOf(".");
+        if (intTrimSuffix > 0) {
+            updatedFileName = updatedFileName.substring(0,intTrimSuffix);
+        }
+        updatedFileName = "data/" + updatedFileName + "_updated.txt";
 	String tempFileName = "data/temp.txt";
 	File temporaryFile = new File(tempFileName);
 

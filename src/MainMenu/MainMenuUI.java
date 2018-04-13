@@ -71,6 +71,9 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String strRetrievedBy = "Unknown";
     public static String strAnalyzedBy = "Unknown";
     
+    //Loaded File Variables
+    public static String strLoadedFilePath = "Unknown";
+    
     /**
      * Creates new form MainMenuUI
      */
@@ -571,9 +574,9 @@ public class MainMenuUI extends javax.swing.JFrame {
             lblLoadedFileName.setText(SavedReconTXT_Dialog.getSelectedFile().getName());
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
-
             try {
                 LoadSavedFile.main(SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath());
+                strLoadedFilePath = SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath();
             } catch (IOException ex) {
                 System.out.println("ERROR: Unable to determine file path for the loaded file!");
             }
@@ -1288,7 +1291,7 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     String oldFileName;
     // the file SHOULD already be loaded before this function is called, but it might
     // be a good idea to add checks
-    oldFileName = "data/" + lblLoadedFileName.getText();
+    oldFileName = strLoadedFilePath;
     MainMenu.FileUpdater.UpdateTXTFile(new File(oldFileName));
     btnDownloadSession.setEnabled(true);
     btnOpenSavedFile.setEnabled(true);
