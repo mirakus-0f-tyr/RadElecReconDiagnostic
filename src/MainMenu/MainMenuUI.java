@@ -30,7 +30,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.8.3";
+    public static String version = "v0.8.4";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -301,8 +301,8 @@ public class MainMenuUI extends javax.swing.JFrame {
         });
 
         btnEraseReconData.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        btnEraseReconData.setText("Erase Recon Data");
-        btnEraseReconData.setToolTipText("Clear all test sessions from Recon.");
+        btnEraseReconData.setText("Clear Session");
+        btnEraseReconData.setToolTipText("Clears current data session from Recon.");
         btnEraseReconData.setMaximumSize(new java.awt.Dimension(136, 26));
         btnEraseReconData.setMinimumSize(new java.awt.Dimension(136, 26));
         btnEraseReconData.setPreferredSize(new java.awt.Dimension(136, 26));
@@ -466,7 +466,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addComponent(lblDataSessions, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                         .addComponent(lblTestSiteInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -492,8 +492,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnUpdateTXTFile)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSyncTime)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addComponent(btnSyncTime))
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 102, Short.MAX_VALUE)))))
@@ -1199,8 +1198,8 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("Clear Memory button pressed.");
-      CRM_Parameters = ScanComm.run(4);
+      System.out.println("Clear Session button pressed.");
+      CRM_Parameters = ScanComm.run(3);
       btnConnect.setEnabled(true);
       btnCreateTXT.setEnabled(true);
       btnClearMemory.setEnabled(true);

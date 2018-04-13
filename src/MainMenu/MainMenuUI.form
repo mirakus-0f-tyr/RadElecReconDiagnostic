@@ -141,7 +141,7 @@
                       <Component id="lblDataSessions" min="-2" pref="16" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <EmptySpace pref="16" max="32767" attributes="0"/>
                       <Component id="lblTestSiteInfo1" min="-2" pref="17" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jScrollPane2" min="-2" max="-2" attributes="0"/>
@@ -172,7 +172,6 @@
                               <Component id="btnUpdateTXTFile" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnSyncTime" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="32767" attributes="0"/>
                           </Group>
                           <Group type="102" attributes="0">
                               <Component id="btnAllDataDump" min="-2" max="-2" attributes="0"/>
@@ -462,8 +461,8 @@
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Calibri" size="12" style="0"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Erase Recon Data"/>
-        <Property name="toolTipText" type="java.lang.String" value="Clear all test sessions from Recon."/>
+        <Property name="text" type="java.lang.String" value="Clear Session"/>
+        <Property name="toolTipText" type="java.lang.String" value="Clears current data session from Recon."/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[136, 26]"/>
         </Property>
