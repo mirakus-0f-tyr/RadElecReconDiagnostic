@@ -19,3 +19,4 @@ v0.5.12 - End-User Mode: Open Saved File now pulls a text file and stores it in 
 v0.5.13 - Primitive graph should now load, to display Ch1_Counts and Ch2_Counts (soon these will be updated into valid data; it's more proof-of-concept).
 v0.8.4 - Changed "Erase Recon Data" to "Clear Session", and altered its call from :CM (clear all memory) to :CD (clear current session). This will improve its functionality for our end-users, who are currently terrified to use it.
 v0.8.5 - Altered FileUpdater so that the file to be updated can (a) be loaded from any directory and (b) have a custom filename.
+v0.8.6 - Fix DrawCustomerTestSiteBlock() in CreatePDF class to properly sanitize customer and test site strings. This should fix at least some lock-ups when generating a PDF report.
