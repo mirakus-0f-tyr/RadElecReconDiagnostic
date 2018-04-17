@@ -347,17 +347,9 @@ public class CreateGraph extends JFrame {
                             //Add values to series independent of unitType (i.e. humidity and movement)
                             AvgHumidity_Series.add(hourCounter, hourlyAvgHumidity / avgCounter); //This will calculate hourly average humidity
                             
-                            //Movement / "Tilt" Logic Handling
-                            //This is now dependent upon the tilt sensitivity, as defined on a scale from
-                            //zero (low sensitivity) to 10 (high sensitivity).
-                            if(hourlyMovement>=1000-(MainMenuUI.tiltSensitivity*100)) {
-                                //long movementFiltered = Math.round(hourlyMovement/(1025-(Math.pow(2,MainMenuUI.tiltSensitivity))));
-                                //System.out.println("HourCounter=" + hourCounter + " / FilteredTilts="+movementFiltered + " / RawMovement=" + hourlyMovement + " (Sensitivity="+MainMenuUI.tiltSensitivity+")");
-                                Movement_Series.add(hourCounter, Math.round(hourlyMovement/(1025-(Math.pow(2,MainMenuUI.tiltSensitivity)))));
-                                hourlyMovement = Math.round(hourlyMovement/(1025-(Math.pow(2,MainMenuUI.tiltSensitivity))));
-                            } else {
-                                hourlyMovement = 0; //If the tilts do not exceed the sensitivity threshold, then we reduce them to zero.
-                            }
+                            //Movement / "Tilt" Logic Handling -- now located in TiltSensitivity.java class!
+                            hourlyMovement = TiltSensitivity.main(hourlyMovement);
+                            Movement_Series.add(hourCounter, hourlyMovement);
                             
                             //Add values to series that are dependent upon unitType
                             if(strUnitSystem.equals("SI")) {
