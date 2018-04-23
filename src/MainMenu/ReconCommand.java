@@ -18,7 +18,7 @@ class ReconCommand {
     public static String ReadProtocol = ":RP\r\n";
     public static String CheckNewRecord = ":RB\r\n";
     public static String ReadNextRecord = ":RN\r\n";
-    public static String ReadFirstRecord = ":RN1\r\n";
+    public static String ReadFirstRecord = ":RN0\r\n";
     public static String ClearMemoryCommand = ":CM\r\n";
     public static String ClearSessionCommand = ":CD\r\n";
     public static String ReadCalibrationFactors = ":RL\r\n";

@@ -173,11 +173,9 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="btnSyncTime" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Group type="102" attributes="0">
-                              <Component id="btnAllDataDump" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="102" max="32767" attributes="0"/>
-                          </Group>
+                          <Component id="btnAllDataDump" min="-2" max="-2" attributes="0"/>
                       </Group>
+                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace type="unrelated" max="-2" attributes="0"/>

@@ -21,3 +21,4 @@ v0.8.4 - Changed "Erase Recon Data" to "Clear Session", and altered its call fro
 v0.8.5 - Altered FileUpdater so that the file to be updated can (a) be loaded from any directory and (b) have a custom filename.
 v0.8.6 - Fix DrawCustomerTestSiteBlock() in CreatePDF class to properly sanitize customer and test site strings. This should fix at least some lock-ups when generating a PDF report.
 v0.8.7 - Create class for TiltSensitivity, to make it easier to find and tweak. Commented out original tilt sensitivity code block in CreateGraph class.
+v0.8.8 - Change ReadFirstRecord declaration in ReconCommand class from :RN1 to :RN0, so that we don't skip over the very first record in memory.
