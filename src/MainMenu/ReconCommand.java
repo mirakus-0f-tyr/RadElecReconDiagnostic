@@ -103,6 +103,10 @@ class ReconCommand {
 	    LoadNextRecord();
 	    MainMenuUI.displayProgressLabel("Reading Record #" + DeviceResponse_parsed[1] + "...");
 
+	    // if it's a D record, skip
+	    if (DeviceResponse_parsed[2].equals("D"))
+		continue;
+
 	    if (recordIterator != Integer.parseInt(DeviceResponse_parsed[1])) {
 	        System.out.println("Re-reading sample #" + Integer.toString(recordIterator));
 		LoadSpecifiedRecord(Integer.toString(recordIterator));
