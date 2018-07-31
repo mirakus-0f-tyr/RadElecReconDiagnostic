@@ -787,6 +787,11 @@ public static void parseConfigTXT() {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
         for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+
+	    // first, check for commented lines
+	    if (strLine.charAt(0) == '#')
+	        continue;
+
             if(strLine.equals("DiagMode=0011")) {
                 diagnosticMode = true; //Defaults to End-User mode, only switching to Diagnostic mode if properly applied in config.          
             } else if (strLine.contains("COUNT_LIMITER=OFF")) {
