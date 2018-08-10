@@ -130,6 +130,9 @@ public class MainMenuUI extends javax.swing.JFrame {
         } else {
             lblVersion.setText(version);
         }
+
+	if (countLimiter)
+	    limiterLabel.setVisible(false);
     }
 
     /**
@@ -170,6 +173,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         btnUpdateTXTFile = new javax.swing.JButton();
         btnSyncTime = new javax.swing.JButton();
         btnOpenPDF = new javax.swing.JButton();
+        limiterLabel = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Download Tool");
@@ -381,6 +385,9 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
+        limiterLabel.setForeground(new java.awt.Color(204, 0, 0));
+        limiterLabel.setText("COUNT LIMITER = OFF");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -389,9 +396,11 @@ public class MainMenuUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.DEFAULT_SIZE, 757, Short.MAX_VALUE)
+                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblVersion))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblVersion)
+                            .addComponent(limiterLabel)))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jScrollPane1)
@@ -456,7 +465,10 @@ public class MainMenuUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(lblRadonScoutQuickCal)
-                    .addComponent(lblVersion))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblVersion)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(limiterLabel)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -497,7 +509,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSyncTime))
                             .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addGap(0, 13, Short.MAX_VALUE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -515,6 +527,8 @@ public class MainMenuUI extends javax.swing.JFrame {
                                 .addComponent(lblLoadedFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addContainerGap())
         );
+
+        limiterLabel.getAccessibleContext().setAccessibleName("limiterLabel");
 
         setSize(new java.awt.Dimension(795, 585));
         setLocationRelativeTo(null);
@@ -691,6 +705,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JLabel lblTestSiteInfo;
     private javax.swing.JLabel lblTestSiteInfo1;
     public static javax.swing.JLabel lblVersion;
+    private javax.swing.JLabel limiterLabel;
     public static javax.swing.JTextArea txtCustomerInfo;
     public static javax.swing.JTextArea txtTestSiteInfo;
     // End of variables declaration//GEN-END:variables
