@@ -42,7 +42,7 @@ public class FileUpdater {
 		    }
 		}
 		if (currentLine.contains("Test site information:")) {
-		    while (!(currentLine.contains("Start Date/Time") || currentLine.contains("SUMMARY"))) {
+		    while (!(currentLine.contains("Instrument Serial") || currentLine.contains("SUMMARY"))) {
 		        currentLine = br.readLine();
 			testSiteLineCounter += 1;
 		    }
