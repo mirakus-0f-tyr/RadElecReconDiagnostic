@@ -95,6 +95,20 @@ public class CreatePDF {
             PDPage page = new PDPage(PDRectangle.A4);
             doc.addPage(page);
             
+            //Check to see if the proper fonts exist.
+            File fontCalibri = new File("fonts/calibri.ttf");
+	    if (fontCalibri.exists()) {
+                System.out.println("Calibri font found!");
+            } else {
+                System.out.println("ERROR: Calibri font NOT found... this is gonna botch up the PDF generation.");
+            }
+            File fontCalibriBold = new File("fonts/calibri_bold.ttf");
+	    if (fontCalibri.exists()) {
+                System.out.println("Calibri Bold font found!");
+            } else {
+                System.out.println("ERROR: Calibri Bold font NOT found... this is gonna botch up the PDF generation.");
+            }
+            
             //Declare the TTF path and filename
             PDFont fontDefault = PDType0Font.load(doc, new File("fonts/calibri.ttf")); //Truetype fonts are easier to utilize when it comes to margins, etc.
             PDFont fontBold = PDType0Font.load(doc, new File("fonts/calibri_bold.ttf")); //Truetype fonts are easier to utilize when it comes to margins, etc.
@@ -117,18 +131,19 @@ public class CreatePDF {
             GetCompanyInfo(); //pull info from the company.txt file, so that we can toss that info onto the PDF.
             DrawCompanyHeader(contents, page, fontDefault, fontSize);
             
+
             //Title Block
             DrawTitleHeader(contents, page, "Radon Test Report", fontBold, fontDefault);
-            
+
             //Customer / Test Site Info Block
             DrawCustomerTestSiteBlock(contents, page, fontBold, fontDefault);
-            
+
             //Test Summary Block
             drawTestSummaryBlock(contents, page, fontDefault, fontBold);
-            
+
             //Average Radon Concentration Banner
             DrawAverageRadonBanner(contents, page, fontBold, true);
-            
+
             //Calibration Line (same PDF_Y as Analyzed By)
             fontSize = 12;
             textLine = "Cal. Date: " + strCalDate + "   Cal. Due: ";
@@ -539,24 +554,21 @@ public class CreatePDF {
             //******************
             
             contents.close();
-            
-	    // check if reports directory exists and write file - create dir if necessary
-	    File reportsDir = new File("reports");
 
-	    if (reportsDir.exists() && reportsDir.isDirectory())
-		doc.save(reportsDir + "/" + PDF_Name);
+	    if (MainMenuUI.reportsDir.exists() && MainMenuUI.reportsDir.isDirectory())
+		doc.save(MainMenuUI.reportsDir + File.separator+ PDF_Name);
 	    else {
 		System.out.println("Reports directory does not exist.  Creating...");
-		reportsDir.mkdir();
-		doc.save(reportsDir + "/" + PDF_Name);
+		MainMenuUI.reportsDir.mkdirs();
+		doc.save(MainMenuUI.reportsDir + File.separator + PDF_Name);
 	    }
             
             //Draw the footer info (page #, version, etc.)
             //It's a bit shoddy, but because we're appending, we need to have already saved it
             //and then re-open the file.
-            File ReconPDF = new File(reportsDir + "/" + PDF_Name);
-            drawFooterInfo(ReconPDF, reportsDir + "/" + PDF_Name);
-
+            File ReconPDF = new File(MainMenuUI.reportsDir + File.separator + PDF_Name);
+            drawFooterInfo(ReconPDF, MainMenuUI.reportsDir + File.separator + PDF_Name);
+            
 	    if (ReconPDF.exists()) {
 		System.out.println(PDF_Name + " has been created.");
 		MainMenu.MainMenuUI.lblSystemConsole.setText("PDF has been created.");

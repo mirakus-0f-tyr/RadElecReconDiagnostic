@@ -28,6 +28,14 @@ import javax.swing.JOptionPane;
  */
 public class MainMenuUI extends javax.swing.JFrame {
     
+    //Operating System Variables
+    public static boolean boolMacOS = false;
+    
+    //Directory Variables
+    public static File configDir = new File("config");
+    public static File dataDir = new File("data");
+    public static File reportsDir = new File("reports");
+    
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
     public static String version = "v0.9.1";
@@ -80,22 +88,26 @@ public class MainMenuUI extends javax.swing.JFrame {
      */
     public MainMenuUI() {
         //Auto-generated GUI builder
-
+        
+        //Determine OS before checking for config/data/reports folders...
+        findOperatingSystem();
+        
 	// check existence of critical directories before proceeding
-	File configDir = new File("config");
+	configDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"config") : new File("config");
 	if (!configDir.exists()) {
+            System.out.println(configDir);
             System.out.println("Config directory does not exist.  Creating...");
-            configDir.mkdir();
+            configDir.mkdirs();
         }
-	File dataDir = new File("data");
+	dataDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"data") : new File("data");
 	if (!dataDir.exists()) {
             System.out.println("Data directory does not exist.  Creating...");
-            dataDir.mkdir();
+            dataDir.mkdirs();
         }
-	File reportDir = new File("reports");
-	if (!reportDir.exists()) {
+	reportsDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"reports") : new File("reports");;
+	if (!reportsDir.exists()) {
             System.out.println("Reports directory does not exist.  Creating...");
-            reportDir.mkdir();
+            reportsDir.mkdirs();
         }
 
 	// check existence of ReconTemplate.xls and inform user if it's not there
@@ -579,7 +591,8 @@ public class MainMenuUI extends javax.swing.JFrame {
         JFileChooser SavedReconTXT_Dialog = new JFileChooser();
         FileNameExtensionFilter filter = new FileNameExtensionFilter("Text Files", "txt"); //This will set the filters we'll allow.
         SavedReconTXT_Dialog.setFileFilter(filter); //Applies the filter to SavedReconTXTDialog
-        File workingDirectory = new File(System.getProperty("user.dir") + File.separator + "data"); //Default location of file dialog will be the data directory.
+        //File workingDirectory = new File(System.getProperty("user.dir") + File.separator + "data"); //Default location of file dialog will be the data directory.
+        File workingDirectory = dataDir;
         SavedReconTXT_Dialog.setCurrentDirectory(workingDirectory); //Sets default directory
         int returnVal = SavedReconTXT_Dialog.showOpenDialog(null); //This instantiates the file dialog window.
         if(returnVal == JFileChooser.APPROVE_OPTION) {
@@ -748,7 +761,7 @@ public static void displayDataSessions(String NumSessions) {
 }
 
 public void parseCompanyTXT() {
-    String company_info = "config/company.txt";
+    String company_info = configDir + File.separator + "company.txt";
     try {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(company_info)));
         strCompanyName = br.readLine();
@@ -763,7 +776,7 @@ public void parseCompanyTXT() {
 }
 
 public void createCompanyTXT() {
-    String companyTXT = "config/company.txt";
+    String companyTXT = configDir + File.separator + "company.txt";
         try {
             PrintWriter pw = new PrintWriter(companyTXT);
 	    pw.println("\n");
@@ -775,7 +788,7 @@ public void createCompanyTXT() {
 }
 
 public static void createConfigTXT() {
-    String configTXT = "config/config.txt";
+    String configTXT = configDir + File.separator + "config.txt";
         try {
             PrintWriter pw = new PrintWriter(configTXT);
             pw.print("UnitType=US\n");
@@ -792,7 +805,7 @@ public static void createConfigTXT() {
 
 public static void parseConfigTXT() {
     // set name of config text file
-    String configTextFile = "config/config.txt";
+    String configTextFile = configDir + File.separator + "config.txt";
     
     // try to parse the config file
     try {
@@ -882,7 +895,7 @@ public static void parseConfigTXT() {
 }
 
 public static void createDeploymentTXT() {
-    String configTXT = "config/deployment.txt";
+    String configTXT = configDir + File.separator + "deployment.txt";
         try {
             PrintWriter pw = new PrintWriter(configTXT);
             pw.print("Protocol: Closed Building Conditions Met\n");
@@ -899,7 +912,7 @@ public static void createDeploymentTXT() {
 
 public static void parseDeploymentTXT() {
     // set name of deployment text file
-    String configTextFile = "config/deployment.txt";
+    String configTextFile = configDir + File.separator + "deployment.txt";
     
     // try to parse the deployment file
     try {  
@@ -939,7 +952,7 @@ public static void parseDeploymentTXT() {
 }
 
 public static void createReportTXT() {
-    String companyTXT = "config/report.txt";
+    String companyTXT = configDir + File.separator + "report.txt";
         try {
             PrintWriter pw = new PrintWriter(companyTXT);
             pw.print("DeployedBy=\n");
@@ -959,7 +972,7 @@ public static void createReportTXT() {
 
 public static void parseReportTXT() {
     // set name of report text file
-    String configTextFile = "config/report.txt";
+    String configTextFile = configDir + File.separator + "report.txt";
     
     // try to parse the report.txt, but only for technicians at the moment...
     try {  
@@ -987,6 +1000,15 @@ public static void parseReportTXT() {
         createReportTXT();
     }
     
+}
+
+public static void findOperatingSystem() {
+    String strOperatingSystem = System.getProperty("os.name");
+    System.out.println("Operating System: " + strOperatingSystem);
+    boolMacOS = strOperatingSystem.startsWith("Mac");
+    if(boolMacOS) {
+        System.out.println("WARNING: Walled garden detected. Redirecting config/data/reports folders to documents...");
+    }
 }
 
 public static void checkFilesWrittenSuccessfully() {
@@ -1276,12 +1298,12 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       generate_pdf.main();
       // once CreatePDF.main returns, open an "explorer" window
       Desktop desktop = null;
-      File reportsdir = new File("reports");
+      //File reportsdir = new File("reports");
       if (openPDFWind == 1) {
           try {
 	      if (Desktop.isDesktopSupported()) {
-	          desktop = Desktop.getDesktop();;
-	          desktop.open(reportsdir);
+	          desktop = Desktop.getDesktop();
+	          desktop.open(reportsDir);
 	      }
 	      else
 	          System.out.println("Opening PDF folder window - unsupported desktop.");

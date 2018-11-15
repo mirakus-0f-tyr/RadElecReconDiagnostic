@@ -26,8 +26,8 @@ public class FileUpdater {
         if (intTrimSuffix > 0) {
             updatedFileName = updatedFileName.substring(0,intTrimSuffix);
         }
-        updatedFileName = "data/" + updatedFileName + "_updated.txt";
-	String tempFileName = "data/temp.txt";
+        updatedFileName = MainMenuUI.dataDir + File.separator + updatedFileName + "_updated.txt";
+	String tempFileName = MainMenuUI.dataDir + File.separator + "temp.txt";
 	File temporaryFile = new File(tempFileName);
 
 	try {
