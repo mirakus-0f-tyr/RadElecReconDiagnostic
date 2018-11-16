@@ -32,8 +32,10 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean boolMacOS = false;
     
     //Directory Variables
+    public static File baseDir = new File("ReconDownloadTool");
     public static File configDir = new File("config");
     public static File dataDir = new File("data");
+    public static File fontsDir = new File("fonts");
     public static File reportsDir = new File("reports");
     
     //Rad Elec Recon Variables
@@ -93,6 +95,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         findOperatingSystem();
         
 	// check existence of critical directories before proceeding
+        
 	configDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"config") : new File("config");
 	if (!configDir.exists()) {
             System.out.println(configDir);
@@ -104,12 +107,20 @@ public class MainMenuUI extends javax.swing.JFrame {
             System.out.println("Data directory does not exist.  Creating...");
             dataDir.mkdirs();
         }
-	reportsDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"reports") : new File("reports");;
+        fontsDir = MainMenuUI.boolMacOS==true ? new File(new File("ReconDownloadTool.app").getAbsolutePath() + File.separator + "Contents" + File.separator + "Java" + File.separator + "fonts") : new File("fonts");
+	if (!fontsDir.exists()) {
+            System.out.println("WARNING: Fonts directory is not found or does not exist.");
+            System.out.println("WARNING: Attempted Fonts directory = " + fontsDir);
+        }
+	reportsDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"reports") : new File("reports");
 	if (!reportsDir.exists()) {
             System.out.println("Reports directory does not exist.  Creating...");
             reportsDir.mkdirs();
         }
-
+        
+        //baseDir is only used in macOS, to place graph.png
+        baseDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool") : new File("ReconDownloadTool");
+        
 	// check existence of ReconTemplate.xls and inform user if it's not there
 	File xlsTemplate = new File("ReconTemplate.xls");
 	if (!xlsTemplate.exists())

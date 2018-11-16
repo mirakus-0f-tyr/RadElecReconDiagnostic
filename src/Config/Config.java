@@ -12,6 +12,7 @@ import static MainMenu.MainMenuUI.strProtocol;
 import static MainMenu.MainMenuUI.strTampering;
 import static MainMenu.MainMenuUI.strWeather;
 import static MainMenu.MainMenuUI.strRoomDeployed;
+import static MainMenu.MainMenuUI.configDir;
 import java.io.*;
 
 /**
@@ -25,7 +26,7 @@ public class Config extends javax.swing.JFrame {
      */
     public Config() {
         initComponents();
-        String company_info = "config/company.txt";
+        String company_info = configDir + File.separator + "company.txt";
         try {
             //Let's start off by parsing the company.txt file, and pulling those values into the company tab.
             //Note that currently this data will only be saved when the Config window is closed.
@@ -541,7 +542,7 @@ public class Config extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
-        String company_info = "config/company.txt";
+        String company_info = configDir + File.separator + "company.txt";
         try {
             System.out.println("Attempting to update config and company files...");
             FileWriter fw = new FileWriter(company_info, false);
@@ -585,7 +586,7 @@ public class Config extends javax.swing.JFrame {
     }//GEN-LAST:event_chkboxAutoLoadFileActionPerformed
 
     private String findAppMode() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
@@ -612,7 +613,7 @@ public class Config extends javax.swing.JFrame {
     }
     
     private String findDisplaySig() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
@@ -639,7 +640,7 @@ public class Config extends javax.swing.JFrame {
     }
     
     public String findUnitSystem() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
         String[] strSplitUnitSystem;
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
@@ -670,7 +671,7 @@ public class Config extends javax.swing.JFrame {
     }
 
     private String findPDFWindow() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
         try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
@@ -697,7 +698,7 @@ public class Config extends javax.swing.JFrame {
     }
 
     private String findTestClearMode() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
 	try {
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
@@ -727,7 +728,7 @@ public class Config extends javax.swing.JFrame {
     }
     
     public int findTiltSensitivity() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
         String[] strSplitTiltSensitivity;
         int intTiltSensitivity = 5;
         try {
@@ -761,7 +762,7 @@ public class Config extends javax.swing.JFrame {
     }
     
     public boolean findAutoLoadFile() {
-        String config_info = "config/config.txt";
+        String config_info = configDir + File.separator + "config.txt";
         String[] strSplitAutoLoadFile;
         boolean AutoLoadFile = true;
         try {
@@ -784,7 +785,7 @@ public class Config extends javax.swing.JFrame {
     public void LoadReportTXT() {
         //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
         //technicians, and everything after that is dedicated to the report text.
-        String report_info = "config/report.txt";
+        String report_info = configDir + File.separator + "report.txt";
         String strLine;
         String strTrimmedLine;
         String strReportText = "";
@@ -853,7 +854,7 @@ public class Config extends javax.swing.JFrame {
         try {
             //This should suffice to write any parameter to the config file.
             //Can be expanded as needed.
-            String config_info = "config/config.txt";
+            String config_info = configDir + File.separator + "config.txt";
             BufferedReader br = new BufferedReader(new FileReader(config_info));
             String strLine;
             StringBuffer inputBuffer = new StringBuffer();
@@ -946,7 +947,7 @@ public class Config extends javax.swing.JFrame {
             //For now, the easiest way to write to this file is just to nuke it and rewrite it.
             //The report.txt file will also be created if it doesn't exist.
         
-            String report_info = "config/report.txt";
+            String report_info = configDir + File.separator + "report.txt";
             PrintWriter pw = new PrintWriter(report_info);
         
             pw.print("DeployedBy=" + txtDeployedBy.getText() + "\n");
@@ -965,7 +966,7 @@ public class Config extends javax.swing.JFrame {
         try {
             //For now, the easiest way to write to this file is just to nuke it and rewrite it.
             //If the file doesn't exist for whatever reason, it will be created.
-            String report_info = "config/deployment.txt";
+            String report_info = configDir + File.separator + "deployment.txt";
             PrintWriter pw = new PrintWriter(report_info);
         
             pw.print("Protocol: " + txtProtocol.getText() + "\n");

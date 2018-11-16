@@ -40,6 +40,7 @@ import static MainMenu.MainMenuUI.excludeFirst4Hours;
 import java.awt.Color;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
@@ -52,6 +53,7 @@ import java.util.Date;
 import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
 
 /**
@@ -96,25 +98,31 @@ public class CreatePDF {
             doc.addPage(page);
             
             //Check to see if the proper fonts exist.
-            File fontCalibri = new File("fonts/calibri.ttf");
-	    if (fontCalibri.exists()) {
+            
+            File fontCalibri = new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf");
+            if (fontCalibri.exists()) {
                 System.out.println("Calibri font found!");
             } else {
-                System.out.println("ERROR: Calibri font NOT found... this is gonna botch up the PDF generation.");
+                System.out.println("ERROR: Calibri font NOT found... switching to embedded Helvetica.");
+                System.out.println("ERROR: Calibri font attempted path = " + fontCalibri);
             }
-            File fontCalibriBold = new File("fonts/calibri_bold.ttf");
-	    if (fontCalibri.exists()) {
+            File fontCalibriBold = new File(MainMenuUI.fontsDir + File.separator + "calibri_bold.ttf");
+            if (fontCalibri.exists()) {
                 System.out.println("Calibri Bold font found!");
             } else {
-                System.out.println("ERROR: Calibri Bold font NOT found... this is gonna botch up the PDF generation.");
+                System.out.println("ERROR: Calibri Bold font NOT found... switching to embedded Helvetica.");
+                System.out.println("ERROR: Calibri Bold font attempted path = " + fontCalibriBold);
             }
             
             //Declare the TTF path and filename
-            PDFont fontDefault = PDType0Font.load(doc, new File("fonts/calibri.ttf")); //Truetype fonts are easier to utilize when it comes to margins, etc.
-            PDFont fontBold = PDType0Font.load(doc, new File("fonts/calibri_bold.ttf")); //Truetype fonts are easier to utilize when it comes to margins, etc.
+            
+            PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
+            PDFont fontBold = fontCalibri.exists() ? PDType0Font.load(doc, new File(MainMenuUI.fontsDir + File.separator + "calibri_bold.ttf")) : PDType1Font.HELVETICA_BOLD; //Truetype fonts are easier to utilize when it comes to margins, etc.
             
             PDPageContentStream contents = new PDPageContentStream(doc, page);
             
+            System.out.println("Beginning PDF creation...");
+             
             //********************
             //Begin PDF Generation
             //This code-block is going to be a tangled mess...
@@ -131,7 +139,6 @@ public class CreatePDF {
             GetCompanyInfo(); //pull info from the company.txt file, so that we can toss that info onto the PDF.
             DrawCompanyHeader(contents, page, fontDefault, fontSize);
             
-
             //Title Block
             DrawTitleHeader(contents, page, "Radon Test Report", fontBold, fontDefault);
 
@@ -143,7 +150,7 @@ public class CreatePDF {
 
             //Average Radon Concentration Banner
             DrawAverageRadonBanner(contents, page, fontBold, true);
-
+            
             //Calibration Line (same PDF_Y as Analyzed By)
             fontSize = 12;
             textLine = "Cal. Date: " + strCalDate + "   Cal. Due: ";
@@ -323,42 +330,14 @@ public class CreatePDF {
             contents.showText(textLine);
             contents.endText();
             
-            //Custom Report Text
             Config customReport = new Config();
             strCustomReportText = customReport.getCustomReportText();
             textLine = strCustomReportText;
             fontSize = 12;
             contents.setFont(fontDefault, fontSize);
             PDF_Y -= 2f*fontSize;
+            
             WrapMultiLineText (contents,page,marginSide,PDF_Y,textLine,fontDefault,fontSize,marginSide);
-            
-            //Bottom Signature Line
-            /*contents.beginText();
-            textLine = "Signature: ";
-            textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize);
-            fontSize = 12;
-            contents.setFont(fontDefault, fontSize);
-            contents.newLineAtOffset(marginSide, marginBottom);
-            contents.showText(textLine);
-            contents.endText();
-            //Draw Signature Line
-            contents.moveTo(marginSide+textWidth, marginBottom); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth()/2 - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            
-            //Bottom Date Line
-            contents.beginText();
-            textLine = "Date: ";
-            textWidth = (fontDefault.getStringWidth(textLine) / 1000 * fontSize);
-            fontSize = 12;
-            contents.setFont(fontDefault, fontSize);
-            contents.newLineAtOffset(page.getMediaBox().getWidth()/2 + 30, marginBottom);
-            contents.showText(textLine);
-            contents.endText();
-            //Draw Date Line
-            contents.moveTo(page.getMediaBox().getWidth()/2 + 30 + textWidth, marginBottom); //getting ready to draw a line (starting coordinates)
-            contents.lineTo(page.getMediaBox().getWidth() - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
-            contents.stroke(); //draw the line, starting at moveTo and ending at lineTo*/
             
             if(displaySig==1) {
                 drawSignatureLine(contents, page, fontDefault); //Draw Signature Line; for now, only if DisplaySig = 1 in options.
@@ -389,7 +368,8 @@ public class CreatePDF {
             DrawAverageRadonBanner(contents, page_chart, fontBold, true);
             
 	    //This draws the graph image (graph.png), which was externalized to the file in the CreateGraph class.
-	    PDImageXObject graphPNG = PDImageXObject.createFromFile("graph.png", doc);
+	    PDImageXObject graphPNG = PDImageXObject.createFromFile(MainMenuUI.boolMacOS==true ? MainMenuUI.baseDir + File.separator + "graph.png" : "graph.png", doc);
+
 	    PDF_Y -= 400;
 	    contents.drawImage(graphPNG, marginSide*2, PDF_Y);
 	    contents.close();
@@ -554,7 +534,9 @@ public class CreatePDF {
             //******************
             
             contents.close();
-
+            
+            System.out.println("End PDF generation stage. Writing to file...");
+            
 	    if (MainMenuUI.reportsDir.exists() && MainMenuUI.reportsDir.isDirectory())
 		doc.save(MainMenuUI.reportsDir + File.separator+ PDF_Name);
 	    else {
@@ -628,7 +610,9 @@ public class CreatePDF {
     }
     
     public static void GetCompanyInfo() {
-        String company_info = "config/company.txt";
+        System.out.println("Called CreatePDF::GetCompanyInfo() for PDF generation...");
+        String company_info = MainMenuUI.configDir + File.separator + "company.txt";
+        System.out.println("CreatePDF::GetCompanyInfo() File Source = " + company_info);
         try {
             //The user may not have opened the Config menu, so we'll need to pull information from the company.txt file explicitly.
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(company_info)));
@@ -637,7 +621,7 @@ public class CreatePDF {
             strCompany_Address2 = br.readLine();
             strCompany_Address3 = br.readLine();
             br.close();
-            
+            System.out.println("CreatePDF::GetCompanyInfo(): Successfully parsed company information for PDF!");
         } catch (IOException e) {
             System.out.println("ERROR: Unable to parse company.txt. There was a problem loading the settings.");
         }
@@ -645,6 +629,7 @@ public class CreatePDF {
     
     public void DrawCompanyHeader(PDPageContentStream contents, PDPage page, PDFont fontDefault, int marginTop) {
         //Note: getCompanyInfo() needs to be called beforehand
+        System.out.println("CreatePDF::DrawCompanyHeader has been called...");
         int fontSize = 14;
         float textHeight = fontDefault.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
         //float PDF_Y = page.getMediaBox().getHeight() - marginTop - textHeight;
@@ -668,8 +653,10 @@ public class CreatePDF {
             contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
             contents.endText();
+            System.out.println("Successfully navigated through DrawCompanyHeader()!");
         } catch (IOException ex) {
-            System.out.println(ex);    
+            System.out.println(ex);
+            System.out.println("ERROR: Unhandled error in CreatePDF::DrawCompanyHeader()!");
         }
     }
     
@@ -1070,7 +1057,8 @@ public class CreatePDF {
     private void drawFooterInfo(File ReconPDF, String FileName) {
         try {
             PDDocument doc = PDDocument.load(ReconPDF);
-            PDFont fontDefault = PDType0Font.load(doc, new File("fonts/calibri.ttf")); //Truetype fonts are easier to utilize when it comes to margins, etc.
+            File fontCalibri = new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf");
+            PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
             if(doc.getNumberOfPages() >= 1) {
                 fontSize = 8;
                 for (int numPages = 0; numPages < doc.getNumberOfPages(); numPages++) {
