@@ -17,6 +17,7 @@ public class FlagForm extends javax.swing.JFrame {
     public static String displayPreferenceTemp;
     public static String displayPreferenceDual;
     public static String displayPreferenceUnits;
+    public static String displayPreferenceNoAvg;
 
     /**
      * Creates new form FlagForm
@@ -26,6 +27,7 @@ public class FlagForm extends javax.swing.JFrame {
 	displayPreferenceTemp = "F";
 	displayPreferenceDual = "no";
 	displayPreferenceUnits = "pCi/L";
+	displayPreferenceNoAvg = "Hourly";
         initComponents();
     }
 
@@ -47,6 +49,8 @@ public class FlagForm extends javax.swing.JFrame {
         cboDualChamberSelect = new javax.swing.JComboBox<>();
         cboRadonUnitSelect = new javax.swing.JComboBox<>();
         btnApplySpecial = new javax.swing.JButton();
+        cboToggleNoAveraging = new javax.swing.JComboBox<>();
+        lblDisplayedReadingInterval = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -94,37 +98,47 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
+        cboToggleNoAveraging.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hourly", "Ten Mins." }));
+        cboToggleNoAveraging.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboToggleNoAveragingActionPerformed(evt);
+            }
+        });
+
+        lblDisplayedReadingInterval.setText("Displayed Reading Interval (Firmware 1.29 and later.)");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblPressure)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(lblDualChamber))
-                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(122, 122, 122)
-                                .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblExposureUnits)
-                                    .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(108, 108, 108)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblTemperature)
-                                    .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 23, Short.MAX_VALUE)))
+                            .addComponent(lblPressure)
+                            .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblExposureUnits)
+                            .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblDualChamber)
+                            .addComponent(lblTemperature)
+                            .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
             .addGroup(layout.createSequentialGroup()
-                .addGap(112, 112, 112)
+                .addContainerGap()
+                .addComponent(lblDisplayedReadingInterval)
+                .addContainerGap(46, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnApplySpecial)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(168, 168, 168))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -145,9 +159,13 @@ public class FlagForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addComponent(lblDisplayedReadingInterval)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnApplySpecial)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         pack();
@@ -194,6 +212,13 @@ public class FlagForm extends javax.swing.JFrame {
 	catch (Exception anyEx) {};
     }//GEN-LAST:event_btnApplySpecialActionPerformed
 
+    private void cboToggleNoAveragingActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboToggleNoAveragingActionPerformed
+        if (cboToggleNoAveraging.getSelectedItem().equals("Ten Mins."))
+	    displayPreferenceNoAvg = "Ten Mins.";
+	else
+	    displayPreferenceNoAvg = "Hourly";
+    }//GEN-LAST:event_cboToggleNoAveragingActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -235,6 +260,8 @@ public class FlagForm extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cboPressureSelect;
     private javax.swing.JComboBox<String> cboRadonUnitSelect;
     private javax.swing.JComboBox<String> cboTemperatureSelect;
+    private javax.swing.JComboBox<String> cboToggleNoAveraging;
+    private javax.swing.JLabel lblDisplayedReadingInterval;
     private javax.swing.JLabel lblDualChamber;
     private javax.swing.JLabel lblExposureUnits;
     private javax.swing.JLabel lblPressure;

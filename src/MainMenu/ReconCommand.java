@@ -184,6 +184,9 @@ class ReconCommand {
 	// Bq/m3	0010 0000
 	// CPH		0100 0000
 	// ------------------------------
+	// No average (i.e. displayed reading is representative of last ten minutes)
+	// ON		1000 0000
+	// ------------------------------
 	// Process: add all of the options the user wants, convert to hex and write that value to the unit.
 
 	String flagResponse = null; // value read from unit to verify success
@@ -200,6 +203,8 @@ class ReconCommand {
 	    flag += 0b00100000;
 	if (FlagForm.displayPreferenceUnits == "CPH")
 	    flag += 0b01000000;
+	if (FlagForm.displayPreferenceNoAvg == "Ten Mins.")
+	    flag += 0b10000000;
 
 	System.out.println("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
