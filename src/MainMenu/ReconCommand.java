@@ -191,7 +191,7 @@ class ReconCommand {
 
 	String flagResponse = null; // value read from unit to verify success
 	short flag = 0; // binary number we will be writing to the unit
-	int comp = 0; // comparison value
+	short comp = 0; // comparison value
 
 	if (FlagForm.displayPreferencePres == "mBar")
 	    flag += 0b00000001;
@@ -222,11 +222,8 @@ class ReconCommand {
 	}
 
 	// parse number contained in string as hexadecimal value for purposes of comparison
-	comp = Integer.parseInt(flagResponse, 16);
+	comp = Short.parseShort(flagResponse, 16);
 
-	if (flag == comp)
-	    return true;
-	else
-	    return false;
+	return (flag == comp);
     }
 }

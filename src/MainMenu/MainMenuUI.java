@@ -589,7 +589,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private void btnConfigActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfigActionPerformed
         JFrame frameOptions = new Config();
         frameOptions.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frameOptions.setLocationRelativeTo(null);
+        frameOptions.setLocationRelativeTo(this);
         frameOptions.setVisible(true);
     }//GEN-LAST:event_btnConfigActionPerformed
 

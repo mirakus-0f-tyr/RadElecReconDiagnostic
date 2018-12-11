@@ -577,7 +577,7 @@ public class Config extends javax.swing.JFrame {
     private void btnOpenFlagSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOpenFlagSelectActionPerformed
         javax.swing.JFrame flagOptions = new FlagForm();
 	flagOptions.setDefaultCloseOperation(javax.swing.JFrame.DISPOSE_ON_CLOSE);
-        flagOptions.setLocationRelativeTo(null);
+        flagOptions.setLocationRelativeTo(this);
         flagOptions.setVisible(true);
     }//GEN-LAST:event_btnOpenFlagSelectActionPerformed
 
