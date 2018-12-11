@@ -226,14 +226,7 @@ class ReconCommand {
 
 	if (flag == comp)
 	    return true;
-	else {
+	else
 	    return false;
-	}
-    }
-
-    // this is not necessary yet, but here's the method anyway
-    public static void ClearResponse() {
-        DeviceResponse = "";
-        DeviceResponse_parsed = null;
     }
 }
