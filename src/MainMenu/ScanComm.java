@@ -21,6 +21,8 @@ import jssc.SerialPortList;
 import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 
+import Config.FlagForm;
+
 public class ScanComm {
    
     public static String ReconWaitTime = "Unknown";
@@ -142,6 +144,7 @@ public class ScanComm {
 			if (ReconCommand.SetOptionFlag()) {
 			    System.out.println("Display options saved to unit.");
 			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
+			    FlagForm.displayOptionsWriteSuccess = true;
 			}
 			else
 			    System.out.println("ERROR: Display options flag NOT written successfully.");

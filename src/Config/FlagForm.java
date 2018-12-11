@@ -6,6 +6,7 @@
 package Config;
 
 import MainMenu.ScanComm;
+import javax.swing.JOptionPane;
 /**
  *
  * @author john
@@ -18,6 +19,7 @@ public class FlagForm extends javax.swing.JFrame {
     public static String displayPreferenceDual;
     public static String displayPreferenceUnits;
     public static String displayPreferenceNoAvg;
+    public static boolean displayOptionsWriteSuccess;
 
     /**
      * Creates new form FlagForm
@@ -203,9 +205,24 @@ public class FlagForm extends javax.swing.JFrame {
 
     private void btnApplySpecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplySpecialActionPerformed
 	System.out.println("Attempting to write flag value.");
+	displayOptionsWriteSuccess = false;
+
+	String selectedOptions = null;
 
 	try {
 	   ScanComm.run(8);
+
+	   // get values for confirmation to user...
+	   if (displayOptionsWriteSuccess) {
+	       selectedOptions = "Temp: " + cboTemperatureSelect.getSelectedItem() + "\r\n" + "Pres: " + cboPressureSelect.getSelectedItem() + "\r\n"
+	       + "Unit: " + cboRadonUnitSelect.getSelectedItem() + "\r\n" + "Dual chamber: " + cboDualChamberSelect.getSelectedItem() + "\r\n" +
+	       "Rdg. updated: " + cboToggleNoAveraging.getSelectedItem() + "\r\n";
+
+	       // inform user
+	       JOptionPane.showMessageDialog(this, "Settings saved successfully:\r\n" + selectedOptions + "\r\n" + "You must turn the Recon off and back on to apply again.");
+	   }
+	   else
+	       JOptionPane.showMessageDialog(this, "ERROR: Options not saved!");
 	}
 
 	// needs proper handling
