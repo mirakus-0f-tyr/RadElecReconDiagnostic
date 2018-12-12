@@ -191,7 +191,7 @@ class ReconCommand {
 
 	String flagResponse = null; // value read from unit to verify success
 	short flag = 0; // binary number we will be writing to the unit
-	short comp = 0; // comparison value
+	short comp = 9999; // comparison value - 0 may be a valid setting, so we use another number
 
 	if (FlagForm.displayPreferencePres == "mBar")
 	    flag += 0b00000001;
