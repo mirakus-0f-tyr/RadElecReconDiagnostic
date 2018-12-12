@@ -219,10 +219,10 @@ public class FlagForm extends javax.swing.JFrame {
 	       "Rdg. updated: " + cboToggleNoAveraging.getSelectedItem() + "\r\n";
 
 	       // inform user
-	       JOptionPane.showMessageDialog(this, "Settings saved successfully:\r\n" + selectedOptions + "\r\n" + "You must turn the Recon off and back on to apply again.");
+	       JOptionPane.showMessageDialog(this, "Settings saved successfully:\r\n" + selectedOptions + "\r\n");
 	   }
 	   else
-	       JOptionPane.showMessageDialog(this, "ERROR: Options not saved!");
+	       JOptionPane.showMessageDialog(this, "ERROR! Please verify Recon is connected\r\nand in I/O mode and try again.");
 	}
 
 	// needs proper handling

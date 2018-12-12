@@ -209,6 +209,14 @@ class ReconCommand {
 	System.out.println("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
 
+	// do not ask the Recon for a response for two seconds...
+	try {
+	    Thread.sleep(2000);
+	}
+	catch (InterruptedException ex) {
+                System.out.println(ex);
+        }
+
 	WriteComm.main(ScanComm.scannedPort, ":RF\r\n"); // load the written value so we can double-check
 	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
 	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
@@ -222,7 +230,10 @@ class ReconCommand {
 	}
 
 	// parse number contained in string as hexadecimal value for purposes of comparison
-	comp = Short.parseShort(flagResponse, 16);
+	if (flagResponse != null)
+	    comp = Short.parseShort(flagResponse, 16);
+	else
+	    System.out.println("flagResponse is null! Cannot compare written value.");
 
 	return (flag == comp);
     }
