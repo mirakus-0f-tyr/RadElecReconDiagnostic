@@ -24,17 +24,53 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="32767" attributes="0"/>
+              <Component id="btnApplySpecial" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="168" max="-2" attributes="0"/>
+          </Group>
           <Group type="102" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblPressure" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboPressureSelect" min="-2" max="-2" attributes="0"/>
-                          <Component id="lblExposureUnits" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="cboRadonUnitSelect" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Component id="lblPressure" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace pref="242" max="32767" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Component id="lblExposureUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboPressureSelect" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  <Component id="cboRadonUnitSelect" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lblPreviewTemp" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lblPreviewRun" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="lblPreviewRuntime" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                          <Group type="102" alignment="0" attributes="0">
+                                              <Component id="lblPreviewHum" min="-2" max="-2" attributes="0"/>
+                                              <EmptySpace max="-2" attributes="0"/>
+                                              <Component id="lblPreviewPres" min="-2" max="-2" attributes="0"/>
+                                          </Group>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Component id="lblPreviewCh1" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                                      <Component id="lblPreviewCh2" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="53" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Component id="cboDualChamberSelect" min="-2" max="-2" attributes="0"/>
                           <Component id="lblDualChamber" min="-2" max="-2" attributes="0"/>
@@ -43,22 +79,14 @@
                       </Group>
                   </Group>
                   <Group type="102" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cboToggleNoAveraging" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="lblDisplayedReadingInterval" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboToggleNoAveraging" alignment="0" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="0" attributes="0">
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="lblDisplayedReadingInterval" min="-2" max="-2" attributes="0"/>
-              <EmptySpace pref="46" max="32767" attributes="0"/>
-          </Group>
-          <Group type="102" alignment="1" attributes="0">
-              <EmptySpace max="32767" attributes="0"/>
-              <Component id="btnApplySpecial" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="168" max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -70,26 +98,47 @@
                   <Component id="lblPressure" alignment="3" min="-2" max="-2" attributes="0"/>
                   <Component id="lblDualChamber" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cboPressureSelect" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cboDualChamberSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboPressureSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboDualChamberSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblExposureUnits" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblTemperature" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="separate" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboRadonUnitSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboTemperatureSelect" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblPreviewRun" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPreviewRuntime" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblPreviewTemp" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPreviewHum" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPreviewPres" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblPreviewCh1" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblPreviewCh2" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                  </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="lblExposureUnits" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="lblTemperature" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="cboRadonUnitSelect" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="cboTemperatureSelect" alignment="3" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace pref="13" max="32767" attributes="0"/>
               <Component id="lblDisplayedReadingInterval" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="cboToggleNoAveraging" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="18" max="-2" attributes="0"/>
+              <EmptySpace max="32767" attributes="0"/>
               <Component id="btnApplySpecial" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -209,6 +258,48 @@
     <Component class="javax.swing.JLabel" name="lblDisplayedReadingInterval">
       <Properties>
         <Property name="text" type="java.lang.String" value="Displayed Reading Interval (Firmware 1.29 and later.)"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewRun">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Run:"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewRuntime">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="2:25"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewTemp">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="64F"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewHum">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="28%"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewPres">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="1015mB"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewCh1">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="14.6 pCi/L"/>
+      </Properties>
+    </Component>
+    <Component class="javax.swing.JLabel" name="lblPreviewCh2">
+      <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="14.6 pCi/L"/>
       </Properties>
     </Component>
   </SubComponents>

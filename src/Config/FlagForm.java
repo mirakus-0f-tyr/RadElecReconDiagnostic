@@ -53,6 +53,13 @@ public class FlagForm extends javax.swing.JFrame {
         btnApplySpecial = new javax.swing.JButton();
         cboToggleNoAveraging = new javax.swing.JComboBox<>();
         lblDisplayedReadingInterval = new javax.swing.JLabel();
+        lblPreviewRun = new javax.swing.JLabel();
+        lblPreviewRuntime = new javax.swing.JLabel();
+        lblPreviewTemp = new javax.swing.JLabel();
+        lblPreviewHum = new javax.swing.JLabel();
+        lblPreviewPres = new javax.swing.JLabel();
+        lblPreviewCh1 = new javax.swing.JLabel();
+        lblPreviewCh2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -109,38 +116,79 @@ public class FlagForm extends javax.swing.JFrame {
 
         lblDisplayedReadingInterval.setText("Displayed Reading Interval (Firmware 1.29 and later.)");
 
+        lblPreviewRun.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewRun.setText("Run:");
+
+        lblPreviewRuntime.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewRuntime.setText("2:25");
+
+        lblPreviewTemp.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewTemp.setText("64F");
+
+        lblPreviewHum.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewHum.setText("28%");
+
+        lblPreviewPres.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewPres.setText("1015mB");
+
+        lblPreviewCh1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewCh1.setText("14.6 pCi/L");
+
+        lblPreviewCh2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPreviewCh2.setText("14.6 pCi/L");
+	lblPreviewCh2.setVisible(false);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnApplySpecial)
+                .addGap(168, 168, 168))
             .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblPressure)
-                            .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblExposureUnits)
-                            .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblPressure)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblExposureUnits)
+                                    .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblPreviewTemp)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lblPreviewRun)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblPreviewRuntime))
+                                            .addGroup(layout.createSequentialGroup()
+                                                .addComponent(lblPreviewHum)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblPreviewPres))))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblPreviewCh1)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(lblPreviewCh2)))
+                                .addGap(53, 53, 53)))
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblDualChamber)
                             .addComponent(lblTemperature)
                             .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblDisplayedReadingInterval)
+                            .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(lblDisplayedReadingInterval)
-                .addContainerGap(46, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnApplySpecial)
-                .addGap(168, 168, 168))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -149,23 +197,38 @@ public class FlagForm extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblPressure)
                     .addComponent(lblDualChamber))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblExposureUnits)
-                    .addComponent(lblTemperature))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblExposureUnits)
+                            .addComponent(lblTemperature))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPreviewRun)
+                            .addComponent(lblPreviewRuntime))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPreviewTemp)
+                            .addComponent(lblPreviewHum)
+                            .addComponent(lblPreviewPres))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblPreviewCh1)
+                            .addComponent(lblPreviewCh2))))
+                .addGap(18, 18, 18)
                 .addComponent(lblDisplayedReadingInterval)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
+                .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnApplySpecial)
                 .addContainerGap())
         );
@@ -174,17 +237,27 @@ public class FlagForm extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cboDualChamberSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDualChamberSelectActionPerformed
-        if (cboDualChamberSelect.getSelectedItem().equals("Yes"))
+        if (cboDualChamberSelect.getSelectedItem().equals("Yes")) {
 	    displayPreferenceDual = "yes";
-	else
+	    lblPreviewCh2.setVisible(true);
+	}
+	else {
 	    displayPreferenceDual = "no";
+	    lblPreviewCh2.setVisible(false);
+	}
+
+	UpdateRadonLabelText();
     }//GEN-LAST:event_cboDualChamberSelectActionPerformed
 
     private void cboTemperatureSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboTemperatureSelectActionPerformed
-        if (cboTemperatureSelect.getSelectedItem().equals("F"))
+        if (cboTemperatureSelect.getSelectedItem().equals("F")) {
 	    displayPreferenceTemp = "F";
-	else
+	    lblPreviewTemp.setText("64F");
+	}
+	else {
 	    displayPreferenceTemp = "C";
+	    lblPreviewTemp.setText("18C");
+	}
     }//GEN-LAST:event_cboTemperatureSelectActionPerformed
 
     private void cboRadonUnitSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboRadonUnitSelectActionPerformed
@@ -194,13 +267,19 @@ public class FlagForm extends javax.swing.JFrame {
 	    displayPreferenceUnits = "Bq/m3";
 	else if (cboRadonUnitSelect.getSelectedItem().equals("CPH"))
 	    displayPreferenceUnits = "CPH";
+
+	UpdateRadonLabelText();
     }//GEN-LAST:event_cboRadonUnitSelectActionPerformed
 
     private void cboPressureSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboPressureSelectActionPerformed
-        if (cboPressureSelect.getSelectedItem().equals("inHG"))
+        if (cboPressureSelect.getSelectedItem().equals("inHG")) {
 	    displayPreferencePres = "inHG";
-	else
+	    lblPreviewPres.setText("29.97IN");
+	}
+	else {
 	    displayPreferencePres = "mBar";
+	    lblPreviewPres.setText("1015mB");
+	}
     }//GEN-LAST:event_cboPressureSelectActionPerformed
 
     private void btnApplySpecialActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnApplySpecialActionPerformed
@@ -282,6 +361,40 @@ public class FlagForm extends javax.swing.JFrame {
     private javax.swing.JLabel lblDualChamber;
     private javax.swing.JLabel lblExposureUnits;
     private javax.swing.JLabel lblPressure;
+    private javax.swing.JLabel lblPreviewCh1;
+    private javax.swing.JLabel lblPreviewCh2;
+    private javax.swing.JLabel lblPreviewHum;
+    private javax.swing.JLabel lblPreviewPres;
+    private javax.swing.JLabel lblPreviewRun;
+    private javax.swing.JLabel lblPreviewRuntime;
+    private javax.swing.JLabel lblPreviewTemp;
     private javax.swing.JLabel lblTemperature;
     // End of variables declaration//GEN-END:variables
+
+    private void UpdateRadonLabelText() {
+        if (cboRadonUnitSelect.getSelectedItem().equals("pCi/L")) {
+	    if (displayPreferenceDual == "yes") {
+		    lblPreviewCh1.setText("14.6 ");
+		    lblPreviewCh2.setText("14.6 pCi/L");
+	    }
+	    else
+		lblPreviewCh1.setText("14.6 pCi/L");
+	}
+	else if (cboRadonUnitSelect.getSelectedItem().equals("Bq/m3")) {
+	    if (displayPreferenceDual == "yes") {
+		lblPreviewCh1.setText("540 ");
+		lblPreviewCh2.setText("540 Bq/m3");
+	    }
+	    else
+		lblPreviewCh1.setText("540 Bq/m3");
+	}
+	else if (cboRadonUnitSelect.getSelectedItem().equals("CPH")) {
+	    if (displayPreferenceDual == "yes") {
+		lblPreviewCh1.setText("87 ");
+		lblPreviewCh2.setText("87 CPH");
+	    }
+	    else
+		lblPreviewCh1.setText("87 CPH");
+	}
+    }
 }
