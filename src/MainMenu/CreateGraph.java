@@ -113,7 +113,7 @@ public class CreateGraph extends JFrame {
             }
             crosshairOverlay.addRangeCrosshair(yCrosshairs[SERIES_COUNT]);
 
-            System.out.println("RANGE CROSSHAIRS: " + Arrays.toString(crosshairOverlay.getRangeCrosshairs().toArray()));
+            Logging.main("RANGE CROSSHAIRS: " + Arrays.toString(crosshairOverlay.getRangeCrosshairs().toArray()));
             chartPanel.addOverlay(crosshairOverlay);
             add(chartPanel);
         }
@@ -267,8 +267,8 @@ public class CreateGraph extends JFrame {
             int avgCounter = 0; //this will allow us to correctly calculate average temps, humidities, pressures, etc.
             
             //Let's make sure that our troublesome ArrayLists are still valid...
-            System.out.println("Attempting to construct graph from ArrayList of size "+LoadedReconTXTFile.size()+"...");
-            //System.out.println("Query validity of array: "+ Arrays.toString(LoadedReconTXTFile.toArray()));
+            Logging.main("Attempting to construct graph from ArrayList of size "+LoadedReconTXTFile.size()+"...");
+            //Logging.main("Query validity of array: "+ Arrays.toString(LoadedReconTXTFile.toArray()));
             
             //Create RnC series for each chamber...
             XYSeries Ch1_Series = new XYSeries("Ch1_RnC");
@@ -281,11 +281,11 @@ public class CreateGraph extends JFrame {
             
             //Confirm whether we're in SI/US Units
             if(strUnitSystem.equals("SI")) {
-                System.out.println("SI Units detected in Config for graph.");
+                Logging.main("SI Units detected in Config for graph.");
             } else if(strUnitSystem.equals("US")) {
-                System.out.println("US Units detected in Config for graph.");
+                Logging.main("US Units detected in Config for graph.");
             } else {
-                System.out.println("No units detected in Config for graph... defaulting to US.");
+                Logging.main("No units detected in Config for graph... defaulting to US.");
             }
             
             HourlyReconData.clear(); //Let's clear our summary array, which will be used for the detailed summary in the PDF.
@@ -464,11 +464,11 @@ public class CreateGraph extends JFrame {
             JFreeChart chart = event.getChart();
             XYPlot plot = (XYPlot) chart.getPlot();
             ValueAxis xAxis = plot.getDomainAxis();
-            //System.out.println("Crosshair plot domain_axis count = " + plot.getDomainAxisCount());
-            //System.out.println("Crosshair plot range axis count = " + plot.getRangeAxisCount());
-            //System.out.println("Total dataset count = " + plot.getDatasetCount());
-            //System.out.println("Total series count = " + plot.getSeriesCount());
-            //System.out.println("Renderer Count = " + plot.getRendererCount());
+            //Logging.main("Crosshair plot domain_axis count = " + plot.getDomainAxisCount());
+            //Logging.main("Crosshair plot range axis count = " + plot.getRangeAxisCount());
+            //Logging.main("Total dataset count = " + plot.getDatasetCount());
+            //Logging.main("Total series count = " + plot.getSeriesCount());
+            //Logging.main("Renderer Count = " + plot.getRendererCount());
             
             //This nonsense makes sure that we're only displaying to 1 decimal point for the radon concentration
             NumberFormat yCrossHairNumberFormat = NumberFormat.getInstance();
@@ -504,7 +504,7 @@ public class CreateGraph extends JFrame {
             //double y2 = DatasetUtilities.findYValue(plot.getDataset(1), 0, x); //this *SHOULD* work, but it looks like a bug in jFreeChart (see Github)
             //this.yCrosshairs[SERIES_COUNT].setLabelGenerator(humidityCrosshairLabel);
             //this.yCrosshairs[SERIES_COUNT].setValue(y2); //Humidity index should always equate to SERIES_COUNT
-            //System.out.println("Avg. Humidity = " + this.yCrosshairs[SERIES_COUNT].getValue());
+            //Logging.main("Avg. Humidity = " + this.yCrosshairs[SERIES_COUNT].getValue());
 
         }
     }
@@ -536,7 +536,7 @@ public class CreateGraph extends JFrame {
 	    ChartUtilities.saveChartAsPNG(MainMenuUI.boolMacOS==true ? new File(MainMenuUI.baseDir + File.separator + new File("graph.png")) : new File("graph.png"), chart, 500, 300);
         }
         catch (Exception ex) {
-            System.out.println("ERROR: Cannot externalize graph to PNG image.");
+            Logging.main("ERROR: Cannot externalize graph to PNG image.");
         }
     }
 

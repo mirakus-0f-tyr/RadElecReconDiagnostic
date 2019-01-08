@@ -22,6 +22,7 @@ import jxl.read.biff.BiffException;
 import jxl.write.WriteException;
 
 import Config.FlagForm;
+import java.io.StringWriter;
 
 public class ScanComm {
    
@@ -56,7 +57,7 @@ public class ScanComm {
     //8 = write flag to Recon (display options)
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
-        System.out.println("Beginning to scan Comm ports...");
+        Logging.main("Beginning to scan Comm ports...");
 
 	String[] portNames;
 
@@ -69,11 +70,11 @@ public class ScanComm {
 	    portNames = SerialPortList.getPortNames("/dev/", Pattern.compile("tty.usbmode*"));
 	else {
 	    portNames = SerialPortList.getPortNames();	// initialize anyway if no matches
-	    System.out.println("OS not Windows, Linux, or Mac...");
+	    Logging.main("OS not Windows, Linux, or Mac...");
 	}
 
         for(int i = 0; i < portNames.length; i++){
-            System.out.println(portNames[i]);
+            Logging.main(portNames[i]);
             scannedPort = new SerialPort(portNames[i]);
 
             try {
@@ -91,69 +92,72 @@ public class ScanComm {
                 if(StringUtils.equals(DeviceResponse_targeted,"=DV,CRM,")) {
                     foundRecon = true;
                     if(OptArgs == 1){
-                        System.out.println("Rad Elec Recon CRM found!");
+                        Logging.main("Rad Elec Recon CRM found!");
                         MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!");
                         String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                         //A bit of error-handling, just in case the serial number doesn't exist.
                         if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
                         {
-                            System.out.println("Recon CRM Serial #" + DeviceResponse_parsed[3]);
+                            Logging.main("Recon CRM Serial #" + DeviceResponse_parsed[3]);
                             MainMenuUI.displaySerialNumber(DeviceResponse_parsed[3]);
                         } else {
-                            System.out.println("Unable to determine Recon CRM Serial#. Rogue instrument detected.");
+                            Logging.main("Unable to determine Recon CRM Serial#. Rogue instrument detected.");
                         }
                         if(DeviceResponse_parsed.length > 2 && DeviceResponse_parsed[2] != null)
                         {
-                            System.out.println("Firmware v" + DeviceResponse_parsed[2]);
+                            Logging.main("Firmware v" + DeviceResponse_parsed[2]);
                             MainMenuUI.displayFirmwareVersion(DeviceResponse_parsed[2]);
                         } else {
-                            System.out.println("Unknown Firmware Version! Probably not good...");
+                            Logging.main("Unknown Firmware Version! Probably not good...");
                         }
                         //Let's get the number of data sessions while we're connecting.
                         CheckReconProtocol(scannedPort);
                     } else if(OptArgs == 2) {
-                        System.out.println("Checking for records...");
+                        Logging.main("Checking for records...");
                         MainMenuUI.displayProgressLabel("Checking for records...");
                         if(CheckForNewRecords(scannedPort)==true) {
-                            System.out.println("Beginning TXT/XLS file dump...");
+                            Logging.main("Beginning TXT/XLS file dump...");
                             DownloadNewRecord(scannedPort);
                         }
                     } else if(OptArgs == 3) {
-                        System.out.println("Clearing Current Session via :CD command...");
+                        Logging.main("Clearing Current Session via :CD command...");
                         ClearSessionMemory(scannedPort);
                         CheckReconProtocol(scannedPort);
                     } else if(OptArgs == 4) {
                         ClearReconMemory(scannedPort);
                         CheckReconProtocol(scannedPort);
                     } else if(OptArgs == 5) {
-                        System.out.println("Clearing memory and dumping all data...");
+                        Logging.main("Clearing memory and dumping all data...");
                         DumpAllData(scannedPort);
                         CheckReconProtocol(scannedPort);
                     } else if(OptArgs == 6) {
-		        System.out.println("Checking for records...");
+		        Logging.main("Checking for records...");
 			MainMenuUI.displayProgressLabel("Checking for records...");
 			if(CheckForNewRecords(scannedPort)==true) {
-			    System.out.println("Begin downloading session...");
+			    Logging.main("Begin downloading session...");
 			    DownloadNewRecord(scannedPort);
 			}
 		    } else if (OptArgs == 7) {
-		        System.out.println("Setting Recon time...");
+		        Logging.main("Setting Recon time...");
 			ReconCommand.SetReconTimeFromPC();
 			MainMenuUI.displayProgressLabel("Time synchronization complete.");
 		    } else if (OptArgs == 8) {
 			if (ReconCommand.SetOptionFlag()) {
-			    System.out.println("Display options saved to unit.");
+			    Logging.main("Display options saved to unit.");
 			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
 			    FlagForm.displayOptionsWriteSuccess = true;
 			}
 			else
-			    System.out.println("ERROR: Display options flag NOT written successfully.");
+			    Logging.main("ERROR: Display options flag NOT written successfully.");
 		    }
                 }
             scannedPort.closePort();
             }   
             catch (SerialPortException ex) {
-                System.out.println(ex);
+                StringWriter swEx = new StringWriter();
+                ex.printStackTrace(new PrintWriter(swEx));
+                String strEx = swEx.toString();
+                Logging.main(strEx);
             }
         }
         if(foundRecon == true) {
@@ -178,26 +182,29 @@ public class ScanComm {
             String DeviceResponse = ReadComm.main(scannedPort, 19);
             String DeviceResponse_targeted = StringUtils.left(DeviceResponse,4);
             
-            System.out.println(DeviceResponse);
+            Logging.main(DeviceResponse);
             if(StringUtils.equals(DeviceResponse_targeted,"=DB,")) {
-                System.out.println("Recon has a new record waiting to be dumped to a TXT/XLS file.");
+                Logging.main("Recon has a new record waiting to be dumped to a TXT/XLS file.");
                 Thread.sleep(125);
                 return true;
             } else {
-                System.out.println("Recon has no new records.");
+                Logging.main("Recon has no new records.");
                 MainMenuUI.displayProgressLabel("Recon has no new records.");
                 return false;
             }
         }
         catch (InterruptedException ex) {
-                System.out.println(ex);
+                StringWriter swEx = new StringWriter();
+                ex.printStackTrace(new PrintWriter(swEx));
+                String strEx = swEx.toString();
+                Logging.main(strEx);
         }
         return false;
     }
     
     static void CheckReconProtocol(SerialPort scannedPort) throws InterruptedException {
         try {
-            System.out.println("Issuing :RP command to determine data session count...");
+            Logging.main("Issuing :RP command to determine data session count...");
             Thread.sleep(10);
             WriteComm.main(scannedPort, ReconCommand.ReadProtocol);
             Thread.sleep(10);
@@ -205,14 +212,17 @@ public class ScanComm {
             String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
             if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
             {
-                System.out.println("Data sessions in memory: " + DeviceResponse_parsed[3]);
+                Logging.main("Data sessions in memory: " + DeviceResponse_parsed[3]);
                 MainMenuUI.displayDataSessions(DeviceResponse_parsed[3]);
             } else {
-                System.out.println("Unable to read number of data sessions in memory.");
+                Logging.main("Unable to read number of data sessions in memory.");
             }            
         }
         catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -236,7 +246,10 @@ public class ScanComm {
         }
 
         catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
 }
 
@@ -253,7 +266,7 @@ public class ScanComm {
             ConfirmSN = DeviceResponse_parsed[3];
             //This is needed to remove the carriage-return at the end of the serial number, as it's the last element in the array.
             ConfirmSN = ConfirmSN.replaceAll("[\n\r]", "");
-            System.out.println("Confirming Recon S/N #" + ConfirmSN + " for total data dump.");
+            Logging.main("Confirming Recon S/N #" + ConfirmSN + " for total data dump.");
             
             Thread.sleep(10);
             WriteComm.main(scannedPort, ReconCommand.ClearMemoryCommand); //Check the Recon to see if a new record exists.
@@ -284,10 +297,13 @@ public class ScanComm {
             }
             writer.close();
             MainMenuUI.displayProgressLabel("Data dump successful.");
-            System.out.println("Data dump should be successful. If you're reading this, we didn't crash or get locked in a never-ending loop.");
+            Logging.main("Data dump should be successful. If you're reading this, we didn't crash or get locked in a never-ending loop.");
         }
         catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }    
     
@@ -300,31 +316,34 @@ public class ScanComm {
             String DeviceResponse = ReadComm.main(scannedPort, 19);
             String DeviceResponse_targeted = StringUtils.left(DeviceResponse,3);
             if(DeviceResponse_targeted.equals("=BD")) {
-                System.out.println("There were no new records on this CRM; no session to delete.");
+                Logging.main("There were no new records on this CRM; no session to delete.");
                 MainMenuUI.displayProgressLabel("No data sessions found.");
                 return;
             }
             Thread.sleep(50);
             WriteComm.main(scannedPort, ReconCommand.ClearSessionCommand);
-            System.out.println("Clearing Memory via :CD command...");
-            System.out.println(ReconCommand.ClearSessionCommand);
+            Logging.main("Clearing Memory via :CD command...");
+            Logging.main(ReconCommand.ClearSessionCommand);
             Thread.sleep(50);
             WriteComm.main(scannedPort, ReconCommand.CheckNewRecord);
             DeviceResponse = ReadComm.main(scannedPort, 19);
             DeviceResponse_targeted = StringUtils.left(DeviceResponse,3);
             if(DeviceResponse_targeted.equals("=BD")) {
-                System.out.println("Ambiguous =BD response from :CD command. Assume the session has been cleared?");
+                Logging.main("Ambiguous =BD response from :CD command. Assume the session has been cleared?");
                 MainMenuUI.displayProgressLabel("Session probably cleared.");
             } else if(DeviceResponse_targeted.equals("=OK")) {
-                System.out.println("Data session cleared.");
+                Logging.main("Data session cleared.");
                 MainMenuUI.displayProgressLabel("Data session cleared.");
             } else {
-                System.out.println("Unexpected response from CRM.");
+                Logging.main("Unexpected response from CRM.");
                 MainMenuUI.displayProgressLabel("Unable to clear session pointer.");
             }
         }
         catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -332,28 +351,31 @@ public class ScanComm {
     static void ClearReconMemory(SerialPort scannedPort) throws InterruptedException {
         try {
             Thread.sleep(125);
-            System.out.println("Issuing :CM command to clear all pointers...");
+            Logging.main("Issuing :CM command to clear all pointers...");
             WriteComm.main(scannedPort, ReconCommand.ClearMemoryCommand);
-            System.out.println(ReconCommand.ClearMemoryCommand);
+            Logging.main(ReconCommand.ClearMemoryCommand);
             Thread.sleep(125);
             WriteComm.main(scannedPort, ReconCommand.CheckNewRecord);
             Thread.sleep(125);
             String DeviceResponse = ReadComm.main(scannedPort, 19);
             String DeviceResponse_targeted = StringUtils.left(DeviceResponse,3);
             if(DeviceResponse_targeted.equals("=BD")) {
-                System.out.println("Ambiguous =BD response from :CM command. Assume all memory pointers have been cleared?");
-                System.out.println("Why are we getting =BD here? It should be =OK...");
+                Logging.main("Ambiguous =BD response from :CM command. Assume all memory pointers have been cleared?");
+                Logging.main("Why are we getting =BD here? It should be =OK...");
                 MainMenuUI.displayProgressLabel("All pointers probably cleared.");
             } else if(DeviceResponse_targeted.equals("=OK")) {
-                System.out.println("All memory pointers have been cleared!");
+                Logging.main("All memory pointers have been cleared!");
                 MainMenuUI.displayProgressLabel("All pointers cleared!");
             } else {
-                System.out.println("Unexpected response from CRM.");
+                Logging.main("Unexpected response from CRM.");
                 MainMenuUI.displayProgressLabel("Unable to clear memory.");
             }
         }
         catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -361,22 +383,25 @@ public class ScanComm {
     static String[] CheckCalibrationFactors(SerialPort scannedPort) throws InterruptedException {
         try {
             Thread.sleep(125);
-            System.out.println("Issuing :RL command to determine CF1 and CF2.");
+            Logging.main("Issuing :RL command to determine CF1 and CF2.");
             WriteComm.main(scannedPort, ReconCommand.ReadCalibrationFactors);
             Thread.sleep(125);
             String DeviceResponse = ReadComm.main(scannedPort, 19);
             String DeviceResponse_targeted = StringUtils.left(DeviceResponse,3);
             if(DeviceResponse_targeted.equals("=RL")) {
                 String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
-                System.out.println("CF1 = " + DeviceResponse_parsed[1]);
-                System.out.println("CF2 = " + DeviceResponse_parsed[2]);
+                Logging.main("CF1 = " + DeviceResponse_parsed[1]);
+                Logging.main("CF2 = " + DeviceResponse_parsed[2]);
                 return new String[] { DeviceResponse_parsed[1],DeviceResponse_parsed[2] };
             } else {
-                System.out.println("Unexpected response when trying to read calibration factors!");
+                Logging.main("Unexpected response when trying to read calibration factors!");
             }
         }
         catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
         return new String[] {"0","0"};
     }
@@ -384,7 +409,7 @@ public class ScanComm {
     public static String GetCalibrationDate(SerialPort scannedPort) throws InterruptedException {
         try {
             Thread.sleep(125);
-            System.out.println("Issuing :RL command to determine calibration date.");
+            Logging.main("Issuing :RL command to determine calibration date.");
             WriteComm.main(scannedPort, ReconCommand.ReadCalibrationFactors);
             Thread.sleep(125);
             String CalDate;
@@ -394,15 +419,18 @@ public class ScanComm {
             if(DeviceResponse_targeted.equals("=RL")) {
                 String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                 CalDate = DeviceResponse_parsed[4] + "/" + DeviceResponse_parsed[5] + "/20" + DeviceResponse_parsed[3]; //default US format works for now
-                System.out.println("Calibration Date = " + CalDate);
+                Logging.main("Calibration Date = " + CalDate);
                 return CalDate;
             } else {
-                System.out.println("Unexpected response when trying to read calibration date!");
+                Logging.main("Unexpected response when trying to read calibration date!");
             }
         } catch (InterruptedException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
-        System.out.println("Unable to determine calibration date!");
+        Logging.main("Unable to determine calibration date!");
         return "Unknown";
     }
 }

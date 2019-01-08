@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.io.File;
 
 import Config.FlagForm;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 class ReconCommand {
 
@@ -71,7 +73,7 @@ class ReconCommand {
 	strCurrentTime = currentTime.format(formatter);
 
 	// issue :WT
-	System.out.println("Issuing :WT instruction to write time...");
+	Logging.main("Issuing :WT instruction to write time...");
 	WriteComm.main(ScanComm.scannedPort, ":WT," + strCurrentTime + "\r\n");
     }
 
@@ -111,7 +113,7 @@ class ReconCommand {
 		continue;
 
 	    if (recordIterator != Integer.parseInt(DeviceResponse_parsed[1])) {
-	        System.out.println("Re-reading sample #" + Integer.toString(recordIterator));
+	        Logging.main("Re-reading sample #" + Integer.toString(recordIterator));
 		LoadSpecifiedRecord(Integer.toString(recordIterator));
 	    }
 
@@ -206,7 +208,7 @@ class ReconCommand {
 	if (FlagForm.displayPreferenceNoAvg == "Ten Mins.")
 	    flag += 0b10000000;
 
-	System.out.println("Attempting to write flag: " + Integer.toHexString(flag));
+	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
 
 	// do not ask the Recon for a response for two seconds...
@@ -214,7 +216,10 @@ class ReconCommand {
 	    Thread.sleep(2000);
 	}
 	catch (InterruptedException ex) {
-                System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
 
 	WriteComm.main(ScanComm.scannedPort, ":RF\r\n"); // load the written value so we can double-check
@@ -233,7 +238,7 @@ class ReconCommand {
 	if (flagResponse != null)
 	    comp = Short.parseShort(flagResponse, 16);
 	else
-	    System.out.println("flagResponse is null! Cannot compare written value.");
+	    Logging.main("flagResponse is null! Cannot compare written value.");
 
 	return (flag == comp);
     }

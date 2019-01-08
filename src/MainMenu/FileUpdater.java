@@ -96,7 +96,7 @@ public class FileUpdater {
 	    bw.close();
 
 	    temporaryFile.delete();
-	    System.out.println("Updated file has been written.");
+	    Logging.main("Updated file has been written.");
 	}
 
 	catch(IOException ex) {

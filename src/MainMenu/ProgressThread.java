@@ -70,7 +70,7 @@ public class ProgressThread {
       for( int i = 0; i < maxNumber; i++ ){
         Thread.sleep( 2000 );//simulate long running process
         double factor = ((double)(i+1) / maxNumber);
-        System.out.println("Intermediate results ready");
+        Logging.main("Intermediate results ready");
         publish( factor );//publish the progress
       }
       return "Finished";

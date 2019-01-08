@@ -5,6 +5,7 @@
  */
 package Config;
 
+import MainMenu.Logging;
 import MainMenu.MainMenuUI;
 import static MainMenu.MainMenuUI.strComment;
 import static MainMenu.MainMenuUI.strMitigation;
@@ -70,7 +71,7 @@ public class Config extends javax.swing.JFrame {
             sliderTilts.setValue(intTiltSensitivity);
             chkboxAutoLoadFile.setSelected(boolAutoLoadFile);
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
         }
     }
 
@@ -544,7 +545,7 @@ public class Config extends javax.swing.JFrame {
     private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
         String company_info = configDir + File.separator + "company.txt";
         try {
-            System.out.println("Attempting to update config and company files...");
+            Logging.main("Attempting to update config and company files...");
             FileWriter fw = new FileWriter(company_info, false);
             BufferedWriter bw = new BufferedWriter(fw);
             PrintWriter pw = new PrintWriter(bw);
@@ -566,7 +567,7 @@ public class Config extends javax.swing.JFrame {
             //Setting button enabled...
             MainMenuUI.btnConfig.setEnabled(true);
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to write to company.txt (to store updated company information).");
+            Logging.main("ERROR: Unable to write to company.txt (to store updated company information).");
         }
     }//GEN-LAST:event_formWindowClosed
 
@@ -607,7 +608,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
         }
         return "End-User";
     }
@@ -634,7 +635,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find DisplaySig. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find DisplaySig. There was a problem loading the settings.");
         }
         return "Display Line";        
     }
@@ -665,7 +666,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
         }
         return "US";
     }
@@ -692,7 +693,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find OpenPDFWindow. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find OpenPDFWindow. There was a problem loading the settings.");
         }
         return "OpenPDFWindow";
     }
@@ -722,7 +723,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find TestClearMode. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find TestClearMode. There was a problem loading the settings.");
         }
 	return "TestClearMode";
     }
@@ -756,7 +757,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find the Tilt Sensitivity. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find the Tilt Sensitivity. There was a problem loading the settings.");
         }
         return intTiltSensitivity;
     }
@@ -777,7 +778,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse config.txt in order to find the AutoLoadFile option. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find the AutoLoadFile option. There was a problem loading the settings.");
         }
         return AutoLoadFile;        
     }
@@ -826,7 +827,7 @@ public class Config extends javax.swing.JFrame {
                 }
                 br.close();
                 if(rewriteConfigTXT) {
-                    System.out.println("Unhandled format in report.txt. Attempting to recreate...");
+                    Logging.main("Unhandled format in report.txt. Attempting to recreate...");
                     txtReportText.setText("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (US EPA)"
                         + " and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.  "
                         + "The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you"
@@ -836,7 +837,7 @@ public class Config extends javax.swing.JFrame {
                     MainMenu.MainMenuUI.createReportTXT();
                 }
             } catch (IOException e) {
-                System.out.println("ERROR: Unable to parse report.txt in order to retrieve the technician or report text information.");
+                Logging.main("ERROR: Unable to parse report.txt in order to retrieve the technician or report text information.");
             }
         } else {
             //Default text blob to be generated if the file doesn't exist.
@@ -846,7 +847,7 @@ public class Config extends javax.swing.JFrame {
                 + " and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high"
                 + " radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist"
                 + " you in evaluating your test results or deciding if further action is needed.");
-            System.out.println("WARNING: Unable to find report.txt configuration file... will attempt to create it.");
+            Logging.main("WARNING: Unable to find report.txt configuration file... will attempt to create it.");
         }
     }
      
@@ -934,11 +935,11 @@ public class Config extends javax.swing.JFrame {
                 inputBuffer.append('\n');
             }
             strInput = inputBuffer.toString();
-            System.out.println(strInput);
+            Logging.main(strInput);
             br.close();
 
         } catch (Exception e) {
-            System.out.println("ERROR: Unable to update config.txt file.");
+            Logging.main("ERROR: Unable to update config.txt file.");
         }
     }
 
@@ -958,7 +959,7 @@ public class Config extends javax.swing.JFrame {
             pw.close();
         
         } catch (Exception e) {
-            System.out.println("ERROR: Unable to overwrite report.txt file.");
+            Logging.main("ERROR: Unable to overwrite report.txt file.");
         }
     }
     
@@ -979,7 +980,7 @@ public class Config extends javax.swing.JFrame {
             pw.close();
         
         } catch (Exception e) {
-            System.out.println("ERROR: Unable to overwrite deployment.txt file.");
+            Logging.main("ERROR: Unable to overwrite deployment.txt file.");
         }
     }
     

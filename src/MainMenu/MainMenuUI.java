@@ -31,16 +31,20 @@ public class MainMenuUI extends javax.swing.JFrame {
     //Operating System Variables
     public static boolean boolMacOS = false;
     
+    //Logging Variables
+    public static boolean initializedLogging = false;
+    
     //Directory Variables
     public static File baseDir = new File("ReconDownloadTool");
     public static File configDir = new File("config");
     public static File dataDir = new File("data");
     public static File fontsDir = new File("fonts");
+    public static File logsDir = new File("logs");
     public static File reportsDir = new File("reports");
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.9.2";
+    public static String version = "v0.9.3";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -90,6 +94,14 @@ public class MainMenuUI extends javax.swing.JFrame {
      */
     public MainMenuUI() {
         //Auto-generated GUI builder
+
+        //Handle logging first...
+        logsDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"logs") : new File("logs");
+	if (!logsDir.exists()) {
+            System.out.println("Logs directory does not exist. Creating...");
+            logsDir.mkdirs();
+            Logging.createLogFile(); //If no log directory exists, let's create the log file too.
+        }
         
         //Determine OS before checking for config/data/reports folders...
         findOperatingSystem();
@@ -98,23 +110,23 @@ public class MainMenuUI extends javax.swing.JFrame {
         
 	configDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"config") : new File("config");
 	if (!configDir.exists()) {
-            System.out.println(configDir);
-            System.out.println("Config directory does not exist.  Creating...");
+            Logging.main(configDir.toString());
+            Logging.main("Config directory does not exist.  Creating...");
             configDir.mkdirs();
         }
 	dataDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"data") : new File("data");
 	if (!dataDir.exists()) {
-            System.out.println("Data directory does not exist.  Creating...");
+            Logging.main("Data directory does not exist.  Creating...");
             dataDir.mkdirs();
         }
         fontsDir = MainMenuUI.boolMacOS==true ? new File(new File("ReconDownloadTool.app").getAbsolutePath() + File.separator + "Contents" + File.separator + "Java" + File.separator + "fonts") : new File("fonts");
 	if (!fontsDir.exists()) {
-            System.out.println("WARNING: Fonts directory is not found or does not exist.");
-            System.out.println("WARNING: Attempted Fonts directory = " + fontsDir);
+            Logging.main("WARNING: Fonts directory is not found or does not exist.");
+            Logging.main("WARNING: Attempted Fonts directory = " + fontsDir);
         }
 	reportsDir = boolMacOS==true ? new File(System.getProperty("user.home")+File.separator+"Documents"+File.separator+"ReconDownloadTool"+File.separator+"reports") : new File("reports");
 	if (!reportsDir.exists()) {
-            System.out.println("Reports directory does not exist.  Creating...");
+            Logging.main("Reports directory does not exist.  Creating...");
             reportsDir.mkdirs();
         }
         
@@ -124,7 +136,7 @@ public class MainMenuUI extends javax.swing.JFrame {
 	// check existence of ReconTemplate.xls and inform user if it's not there
 	File xlsTemplate = new File("ReconTemplate.xls");
 	if (!xlsTemplate.exists())
-	    System.out.println("XLS template not present. You will not be able to create XLS files.");
+	    Logging.main("XLS template not present. You will not be able to create XLS files.");
 
         parseCompanyTXT();
 	parseConfigTXT();
@@ -607,7 +619,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         SavedReconTXT_Dialog.setCurrentDirectory(workingDirectory); //Sets default directory
         int returnVal = SavedReconTXT_Dialog.showOpenDialog(null); //This instantiates the file dialog window.
         if(returnVal == JFileChooser.APPROVE_OPTION) {
-            System.out.println("File loaded: " + SavedReconTXT_Dialog.getSelectedFile().getName()); //Lets us know if user selected a valid file.
+            Logging.main("File loaded: " + SavedReconTXT_Dialog.getSelectedFile().getName()); //Lets us know if user selected a valid file.
             lblLoadedFileName.setText(SavedReconTXT_Dialog.getSelectedFile().getName());
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
@@ -615,7 +627,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                 LoadSavedFile.main(SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath());
                 strLoadedFilePath = SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath();
             } catch (IOException ex) {
-                System.out.println("ERROR: Unable to determine file path for the loaded file!");
+                Logging.main("ERROR: Unable to determine file path for the loaded file!");
             }
 
 	    // The below should only be done if file was opened successfully - come back to this
@@ -656,7 +668,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                 desktop.open(reportsdir);
             }
             else {
-                System.out.println("ERROR: Opening PDF Folder!");
+                Logging.main("ERROR: Opening PDF Folder!");
             }
         } catch (IOException ex) { }
     }//GEN-LAST:event_btnOpenPDFActionPerformed
@@ -781,7 +793,7 @@ public void parseCompanyTXT() {
         strAddress3 = br.readLine();
         br.close();
     } catch (IOException e) {
-        System.out.println("WARNING: Unable to parse company.txt file... attempting to create file.");
+        Logging.main("WARNING: Unable to parse company.txt file... attempting to create file.");
         createCompanyTXT();
     }
 }
@@ -794,7 +806,7 @@ public void createCompanyTXT() {
 	    pw.println("\n");
             pw.close();
         } catch (FileNotFoundException ex) {
-            System.out.println("ERROR: Unable to create company.txt file!");
+            Logging.main("ERROR: Unable to create company.txt file!");
         }
 }
 
@@ -810,7 +822,7 @@ public static void createConfigTXT() {
             pw.print("AutoLoadFile=1\n");
             pw.close();
         } catch (FileNotFoundException ex) {
-            System.out.println("ERROR: Unable to create config.txt file!");
+            Logging.main("ERROR: Unable to create config.txt file!");
         }
 }
 
@@ -821,7 +833,7 @@ public static void parseConfigTXT() {
     // try to parse the config file
     try {
         
-        System.out.println("Loading current settings from config.txt...");
+        Logging.main("Loading current settings from config.txt...");
         
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
@@ -899,7 +911,7 @@ public static void parseConfigTXT() {
 
     // if error, print error and show stack trace
     catch (IOException e){
-	System.out.println("WARNING: Unable to parse config.txt file... attempting to create file.");
+	Logging.main("WARNING: Unable to parse config.txt file... attempting to create file.");
         createConfigTXT();
     }
     
@@ -917,7 +929,7 @@ public static void createDeploymentTXT() {
 	    pw.print("Room: Basement\n");
             pw.close();
         } catch (FileNotFoundException ex) {
-            System.out.println("ERROR: Unable to create deployment.txt file!");
+            Logging.main("ERROR: Unable to create deployment.txt file!");
         }
 }
 
@@ -927,7 +939,7 @@ public static void parseDeploymentTXT() {
     
     // try to parse the deployment file
     try {  
-        System.out.println("Loading current settings from deployment.txt...");
+        Logging.main("Loading current settings from deployment.txt...");
         
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
@@ -949,7 +961,7 @@ public static void parseDeploymentTXT() {
 	// cleanup buffered reader
 	br.close();
     } catch (IOException e){
-	System.out.println("WARNING: Unable to parse deployment.txt file... attempting to create file.");
+	Logging.main("WARNING: Unable to parse deployment.txt file... attempting to create file.");
         //Assign default values to the variables...
         strProtocol = "Closed Building Conditions Met";
         strTampering = "No Tampering Detected";
@@ -977,7 +989,7 @@ public static void createReportTXT() {
             pw.print(" you in evaluating your test results or deciding if further action is needed.\n");
             pw.close();
         } catch (FileNotFoundException ex) {
-            System.out.println("ERROR: Unable to create report.txt file!");
+            Logging.main("ERROR: Unable to create report.txt file!");
         }
 }
 
@@ -987,7 +999,7 @@ public static void parseReportTXT() {
     
     // try to parse the report.txt, but only for technicians at the moment...
     try {  
-        System.out.println("Loading current settings from report.txt...");
+        Logging.main("Loading current settings from report.txt...");
         
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
@@ -1003,7 +1015,7 @@ public static void parseReportTXT() {
 	// cleanup buffered reader
 	br.close();
     } catch (IOException e){
-	System.out.println("WARNING: Unable to parse report.txt file... attempting to create file.");
+	Logging.main("WARNING: Unable to parse report.txt file... attempting to create file.");
         //Assign default values to the variables...
         strDeployedBy = "Unknown";
         strRetrievedBy = "Unknown";
@@ -1015,10 +1027,10 @@ public static void parseReportTXT() {
 
 public static void findOperatingSystem() {
     String strOperatingSystem = System.getProperty("os.name");
-    System.out.println("Operating System: " + strOperatingSystem);
+    Logging.main("Operating System: " + strOperatingSystem);
     boolMacOS = strOperatingSystem.startsWith("Mac");
     if(boolMacOS) {
-        System.out.println("WARNING: Walled garden detected. Redirecting config/data/reports folders to documents...");
+        Logging.main("WARNING: Walled garden detected. Redirecting config/data/reports folders to documents...");
     }
 }
 
@@ -1033,21 +1045,21 @@ public static void checkFilesWrittenSuccessfully() {
     if (diagnosticMode) {
         if (txt_file.exists() && xls_file.exists()) {
 	    displayProgressLabel("TXT and XLS written successfully.");
-	    System.out.println("TXT and XLS written successfully.");
+	    Logging.main("TXT and XLS written successfully.");
 	}
 	else {
 	    displayProgressLabel("Error: Problem saving TXT and XLS files.");
-	    System.out.println("Error: Problem saving TXT and XLS files.");
+	    Logging.main("Error: Problem saving TXT and XLS files.");
 	}
     }
     else {
         if (txt_file.exists()) {
 	    displayProgressLabel("TXT file written successfully.");
-	    System.out.println("TXT file written successfully.");
+	    Logging.main("TXT file written successfully.");
 	}
 	else {
 	    displayProgressLabel("Error: Problem saving TXT file.");
-	    System.out.println("Error: Problem saving TXT file.");
+	    Logging.main("Error: Problem saving TXT file.");
 	}
     }
 }
@@ -1090,12 +1102,12 @@ public static void checkAutoLoadFile() {
     
     if (txt_file.exists() && autoLoadFile) {
 	try {
-            System.out.println("Attempting to automagically load the downloaded session...");
+            Logging.main("Attempting to automagically load the downloaded session...");
             strSplitFileName = ReconCommand.filenameTXT.split("/");
             strSimpleFileName = strSplitFileName[1];
             lblLoadedFileName.setText(strSimpleFileName);
             LoadSavedFile.main(ReconCommand.filenameTXT);
-            System.out.println("File loaded: " + strSimpleFileName);
+            Logging.main("File loaded: " + strSimpleFileName);
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
             btnGeneratePDF.setVisible(true);
@@ -1103,7 +1115,7 @@ public static void checkAutoLoadFile() {
             btnGeneratePDF.setEnabled(true);
             btnUpdateTXTFile.setEnabled(true);
         } catch (Exception ex) {
-            System.out.println("ERROR when auto-loading the file!");
+            Logging.main("ERROR when auto-loading the file!");
             lblLoadedFile.setVisible(false);
             lblLoadedFileName.setVisible(false);
             btnGeneratePDF.setVisible(false);
@@ -1133,7 +1145,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
         lblLoadedFile.setVisible(false);
         lblLoadedFileName.setVisible(false);
 	btnUpdateTXTFile.setVisible(false);
-        System.out.println("Connect button pressed.");
+        Logging.main("Connect button pressed.");
         CRM_Parameters = ScanComm.run(1);
         if(CRM_Parameters[0].equals("true")) {
             parseConfigTXT(); //Just in case these options have changed, let's recheck the config.txt and company.txt files.
@@ -1183,7 +1195,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("CreateTXT/XLS button pressed.");
+      Logging.main("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
       btnConnect.setEnabled(true);
       btnCreateTXT.setEnabled(true);
@@ -1207,7 +1219,7 @@ private class AllDataDump extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("AllDataDump button pressed.");
+      Logging.main("AllDataDump button pressed.");
       CRM_Parameters = ScanComm.run(5);
       btnConnect.setEnabled(true);
       btnCreateTXT.setEnabled(true);
@@ -1231,7 +1243,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("Clear Current Session button pressed.");
+      Logging.main("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       btnConnect.setEnabled(true);
       btnCreateTXT.setEnabled(true);
@@ -1255,7 +1267,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("Clear Session button pressed.");
+      Logging.main("Clear Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       btnConnect.setEnabled(true);
       btnCreateTXT.setEnabled(true);
@@ -1280,7 +1292,7 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       btnEraseReconData.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("Download Session button pressed.");
+      Logging.main("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
       btnDownloadSession.setEnabled(true);
       btnOpenSavedFile.setEnabled(true);
@@ -1304,7 +1316,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
       btnEraseReconData.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
-      System.out.println("Generate PDF button pressed.");
+      Logging.main("Generate PDF button pressed.");
       CreatePDF generate_pdf = new CreatePDF();
       generate_pdf.main();
       // once CreatePDF.main returns, open an "explorer" window
@@ -1317,7 +1329,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
 	          desktop.open(reportsDir);
 	      }
 	      else
-	          System.out.println("Opening PDF folder window - unsupported desktop.");
+	          Logging.main("Opening PDF folder window - unsupported desktop.");
           }
           catch (IOException ex) { }
       }
@@ -1341,7 +1353,7 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
     btnEraseReconData.setEnabled(false);
     btnSyncTime.setEnabled(false);
     btnOpenPDF.setEnabled(false);
-    System.out.println("Update TXT file button pressed.");
+    Logging.main("Update TXT file button pressed.");
     String oldFileName;
     // the file SHOULD already be loaded before this function is called, but it might
     // be a good idea to add checks
@@ -1367,7 +1379,7 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnEraseReconData.setEnabled(false);
     btnSyncTime.setEnabled(false);
     btnOpenPDF.setEnabled(false);
-    System.out.println("SyncTime button pressed.");
+    Logging.main("SyncTime button pressed.");
     CRM_Parameters = ScanComm.run(7);
     btnDownloadSession.setEnabled(true);
     btnOpenSavedFile.setEnabled(true);

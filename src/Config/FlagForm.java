@@ -5,6 +5,7 @@
  */
 package Config;
 
+import MainMenu.Logging;
 import MainMenu.ScanComm;
 import javax.swing.JOptionPane;
 /**

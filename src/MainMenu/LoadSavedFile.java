@@ -82,26 +82,26 @@ public class LoadSavedFile {
                         }
                         arrLine_temp = (ArrayList<String>) arrLine.clone(); //This seems really stupid, but if you don't clone the ArrayList to a temporary holder, it'll be lost after arrLine.clear() below.
                         LoadedReconTXTFile.add(arrLine_temp); //This will add the temporary arrLine into the primary LoadedReconTXTFile ArrayList.
-                        System.out.println(Arrays.toString(LoadedReconTXTFile.get(i).toArray()));
-                        System.out.println("Adding record #"+LoadedReconTXTFile.get(i).get(1)+" to ArrayList, whose new size is now "+LoadedReconTXTFile.size()+".");
+                        Logging.main(Arrays.toString(LoadedReconTXTFile.get(i).toArray()));
+                        Logging.main("Adding record #"+LoadedReconTXTFile.get(i).get(1)+" to ArrayList, whose new size is now "+LoadedReconTXTFile.size()+".");
                         arrLine.clear(); //If we don't clear arrLine, it will turn into one massive, single-dimensional string array...
-                        System.out.println("Checking Status: "+ Arrays.toString(LoadedReconTXTFile.get(i).toArray()));
+                        Logging.main("Checking Status: "+ Arrays.toString(LoadedReconTXTFile.get(i).toArray()));
                         i++;
                     }
                     if(strLine.contains("Instrument Serial: ")) {
                         strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
                         strInstrumentSerial = strLine_parsed[2];
-                        System.out.println("Serial# found and parsed: " + strInstrumentSerial);
+                        Logging.main("Serial# found and parsed: " + strInstrumentSerial);
                     }
                     if(strLine.contains("Chamber 1 CF: ")) {
                         strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
                         LoadedReconCF1 = Double.parseDouble(strLine_parsed[3]);
-                        System.out.println("CF1 found and parsed: " + LoadedReconCF1);
+                        Logging.main("CF1 found and parsed: " + LoadedReconCF1);
                     }
                     if(strLine.contains("Chamber 2 CF: ")) {
                         strLine_parsed = StringUtils.split(strLine, " "); //Need to parse again to segregate spaces, not commas.
                         LoadedReconCF2 = Double.parseDouble(strLine_parsed[3]);
-                        System.out.println("CF2 found and parsed: " + LoadedReconCF2);
+                        Logging.main("CF2 found and parsed: " + LoadedReconCF2);
                     }
                     if(strLine.contains("Start Date/Time:")) {
                         strLine_parsed = StringUtils.split(strLine, " ");
@@ -143,9 +143,9 @@ public class LoadSavedFile {
                             testSiteFlag = false;
                             if (strTestSiteInfo.length() > 1) {
                                 strTestSiteInfo = strTestSiteInfo.trim(); //trim any anteceding or succeeding line-feeds...
-                                System.out.println("Test Site Info: " + strTestSiteInfo);
+                                Logging.main("Test Site Info: " + strTestSiteInfo);
                             } else {
-                                System.out.println("Unable to find any Test Site Info in " + MainMenu.MainMenuUI.lblLoadedFileName.getText() + "!");
+                                Logging.main("Unable to find any Test Site Info in " + MainMenu.MainMenuUI.lblLoadedFileName.getText() + "!");
                             }
                         } else {
                             strTestSiteInfo = strTestSiteInfo + "\n" + strLine;
@@ -162,9 +162,9 @@ public class LoadSavedFile {
                             customerInfoFlag = false;
                             if (strCustomerInfo.length() > 1) {
                                 strCustomerInfo = strCustomerInfo.trim(); //trim any anteceding or succeeding line-feeds...
-                                System.out.println("Customer Info: " + strCustomerInfo);
+                                Logging.main("Customer Info: " + strCustomerInfo);
                             } else {
-                                System.out.println("Unable to find any Customer Info in " + MainMenu.MainMenuUI.lblLoadedFileName.getText() + "!");
+                                Logging.main("Unable to find any Customer Info in " + MainMenu.MainMenuUI.lblLoadedFileName.getText() + "!");
                             }
                         } else {
                             strCustomerInfo = strCustomerInfo + "\n" + strLine;
@@ -191,10 +191,10 @@ public class LoadSavedFile {
             CreateGraph.main(test_args);
             
         } catch (FileNotFoundException ex) {
-            System.out.println("ERROR: Unable to find the requested Recon TXT file in LoadSavedFile.java!");
+            Logging.main("ERROR: Unable to find the requested Recon TXT file in LoadSavedFile.java!");
             Logger.getLogger(LoadSavedFile.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
-            System.out.println("ERROR: Fundamental IO Error encountered when parsing Recon TXT file.");
+            Logging.main("ERROR: Fundamental IO Error encountered when parsing Recon TXT file.");
             Logger.getLogger(LoadSavedFile.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

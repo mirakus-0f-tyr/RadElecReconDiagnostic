@@ -43,6 +43,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.ParseException;
@@ -101,17 +103,17 @@ public class CreatePDF {
             
             File fontCalibri = new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf");
             if (fontCalibri.exists()) {
-                System.out.println("Calibri font found!");
+                Logging.main("Calibri font found!");
             } else {
-                System.out.println("ERROR: Calibri font NOT found... switching to embedded Helvetica.");
-                System.out.println("ERROR: Calibri font attempted path = " + fontCalibri);
+                Logging.main("ERROR: Calibri font NOT found... switching to embedded Helvetica.");
+                Logging.main("ERROR: Calibri font attempted path = " + fontCalibri);
             }
             File fontCalibriBold = new File(MainMenuUI.fontsDir + File.separator + "calibri_bold.ttf");
             if (fontCalibri.exists()) {
-                System.out.println("Calibri Bold font found!");
+                Logging.main("Calibri Bold font found!");
             } else {
-                System.out.println("ERROR: Calibri Bold font NOT found... switching to embedded Helvetica.");
-                System.out.println("ERROR: Calibri Bold font attempted path = " + fontCalibriBold);
+                Logging.main("ERROR: Calibri Bold font NOT found... switching to embedded Helvetica.");
+                Logging.main("ERROR: Calibri Bold font attempted path = " + fontCalibriBold);
             }
             
             //Declare the TTF path and filename
@@ -121,7 +123,7 @@ public class CreatePDF {
             
             PDPageContentStream contents = new PDPageContentStream(doc, page);
             
-            System.out.println("Beginning PDF creation...");
+            Logging.main("Beginning PDF creation...");
              
             //********************
             //Begin PDF Generation
@@ -162,7 +164,7 @@ public class CreatePDF {
                     dateInstance.add(Calendar.YEAR,1);
                     strDateCalibrationDue = dateFormatCalibration.format(dateInstance.getTime());
                 } catch (ParseException ex) {
-                    System.out.println("Unable to parse calibration date... this shouldn't have happened!");
+                    Logging.main("Unable to parse calibration date... this shouldn't have happened!");
                     strDateCalibrationDue = "Unknown";
                 }
             } else {
@@ -535,12 +537,12 @@ public class CreatePDF {
             
             contents.close();
             
-            System.out.println("End PDF generation stage. Writing to file...");
+            Logging.main("End PDF generation stage. Writing to file...");
             
 	    if (MainMenuUI.reportsDir.exists() && MainMenuUI.reportsDir.isDirectory())
 		doc.save(MainMenuUI.reportsDir + File.separator+ PDF_Name);
 	    else {
-		System.out.println("Reports directory does not exist.  Creating...");
+		Logging.main("Reports directory does not exist.  Creating...");
 		MainMenuUI.reportsDir.mkdirs();
 		doc.save(MainMenuUI.reportsDir + File.separator + PDF_Name);
 	    }
@@ -552,17 +554,20 @@ public class CreatePDF {
             drawFooterInfo(ReconPDF, MainMenuUI.reportsDir + File.separator + PDF_Name);
             
 	    if (ReconPDF.exists()) {
-		System.out.println(PDF_Name + " has been created.");
+		Logging.main(PDF_Name + " has been created.");
 		MainMenu.MainMenuUI.lblSystemConsole.setText("PDF has been created.");
 	    }
 	    else {
-		System.out.println("Problem creating PDF.");
+		Logging.main("Problem creating PDF.");
 		MainMenu.MainMenuUI.lblSystemConsole.setText("Problem creating PDF.");
 	    }
 
 	}
         catch (IOException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
         finally {
             doc.close();
@@ -605,14 +610,17 @@ public class CreatePDF {
             }
             contents.endText();
             } catch (IOException ex) {
-                System.out.println(ex);
+                StringWriter swEx = new StringWriter();
+                ex.printStackTrace(new PrintWriter(swEx));
+                String strEx = swEx.toString();
+                Logging.main(strEx);
         }
     }
     
     public static void GetCompanyInfo() {
-        System.out.println("Called CreatePDF::GetCompanyInfo() for PDF generation...");
+        Logging.main("Called CreatePDF::GetCompanyInfo() for PDF generation...");
         String company_info = MainMenuUI.configDir + File.separator + "company.txt";
-        System.out.println("CreatePDF::GetCompanyInfo() File Source = " + company_info);
+        Logging.main("CreatePDF::GetCompanyInfo() File Source = " + company_info);
         try {
             //The user may not have opened the Config menu, so we'll need to pull information from the company.txt file explicitly.
             BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(company_info)));
@@ -621,15 +629,15 @@ public class CreatePDF {
             strCompany_Address2 = br.readLine();
             strCompany_Address3 = br.readLine();
             br.close();
-            System.out.println("CreatePDF::GetCompanyInfo(): Successfully parsed company information for PDF!");
+            Logging.main("CreatePDF::GetCompanyInfo(): Successfully parsed company information for PDF!");
         } catch (IOException e) {
-            System.out.println("ERROR: Unable to parse company.txt. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse company.txt. There was a problem loading the settings.");
         }
     }
     
     public void DrawCompanyHeader(PDPageContentStream contents, PDPage page, PDFont fontDefault, int marginTop) {
         //Note: getCompanyInfo() needs to be called beforehand
-        System.out.println("CreatePDF::DrawCompanyHeader has been called...");
+        Logging.main("CreatePDF::DrawCompanyHeader has been called...");
         int fontSize = 14;
         float textHeight = fontDefault.getFontDescriptor().getFontBoundingBox().getHeight() / 1000 * fontSize;
         //float PDF_Y = page.getMediaBox().getHeight() - marginTop - textHeight;
@@ -653,10 +661,13 @@ public class CreatePDF {
             contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
             contents.endText();
-            System.out.println("Successfully navigated through DrawCompanyHeader()!");
+            Logging.main("Successfully navigated through DrawCompanyHeader()!");
         } catch (IOException ex) {
-            System.out.println(ex);
-            System.out.println("ERROR: Unhandled error in CreatePDF::DrawCompanyHeader()!");
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
+            Logging.main("ERROR: Unhandled error in CreatePDF::DrawCompanyHeader()!");
         }
     }
     
@@ -689,7 +700,10 @@ public class CreatePDF {
             contents.showText(textLine);
             contents.endText(); //end date text block    
         } catch (IOException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -779,7 +793,10 @@ public class CreatePDF {
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
             
         } catch (IOException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -831,7 +848,10 @@ public class CreatePDF {
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
             
         } catch (IOException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -931,7 +951,10 @@ public class CreatePDF {
             contents.endText();
             
         } catch (IOException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -1015,7 +1038,10 @@ public class CreatePDF {
             }
             contents.endText();            
         } catch (IOException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         }
     }
     
@@ -1049,7 +1075,7 @@ public class CreatePDF {
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo  
         } catch (IOException ex) {
-            System.out.println("ERROR: Unable to draw signature line!");
+            Logging.main("ERROR: Unable to draw signature line!");
         }
     }
     
@@ -1076,7 +1102,7 @@ public class CreatePDF {
                 doc.save(FileName); //Only save if we've actually made changes
             }
         } catch (IOException ex) {
-            System.out.println("Could not write page footer lines!");
+            Logging.main("Could not write page footer lines!");
         }
     }
     

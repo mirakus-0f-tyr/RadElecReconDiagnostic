@@ -5,6 +5,8 @@
  */
 package MainMenu;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.SerialPort;
@@ -20,7 +22,10 @@ public class WriteComm {
             MainMenuUI.lastReconCommand = ReconCommand; //Store the last written command (for non-responsive instrument)
         }
         catch (SerialPortException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         } catch (InterruptedException ex) {
             Logger.getLogger(WriteComm.class.getName()).log(Level.SEVERE, null, ex);
         }

@@ -5,6 +5,8 @@
  */
 package MainMenu;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import jssc.SerialPort;
@@ -25,14 +27,17 @@ public class ReadComm {
         try {
             Thread.sleep(10);
             String buffer = serialPort.readString();
-            System.out.println(buffer);
+            Logging.main(buffer);
             if(buffer == null) {
                 buffer = NoResponseHandler(serialPort, byteLength);
             }
             return buffer;
         }
         catch (SerialPortException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         } catch (InterruptedException ex) {
             Logger.getLogger(ReadComm.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -42,30 +47,33 @@ public class ReadComm {
     public static String NoResponseHandler(SerialPort commPort, int byteLength) {
         SerialPort serialPort = commPort;
         try {
-            System.out.println("No response from instrument... let's attempt write last command to instrument one more time.");
-            System.out.println("Confirm CommPort @ " + commPort + " / Confirm Byte Length = " + byteLength);
+            Logging.main("No response from instrument... let's attempt write last command to instrument one more time.");
+            Logging.main("Confirm CommPort @ " + commPort + " / Confirm Byte Length = " + byteLength);
             serialPort.purgePort(PURGE_RXCLEAR);
             serialPort.purgePort(PURGE_TXCLEAR);
             serialPort.purgePort(PURGE_RXABORT);
             serialPort.purgePort(PURGE_TXABORT);
             Thread.sleep(100);
-            System.out.println("Attempting to issue the last written command: " + MainMenuUI.lastReconCommand);
+            Logging.main("Attempting to issue the last written command: " + MainMenuUI.lastReconCommand);
             serialPort.writeString(MainMenuUI.lastReconCommand); //Write command to Recon
             Thread.sleep(100);
             String buffer = serialPort.readString();
-            System.out.println("Retry response = " + buffer);
+            Logging.main("Retry response = " + buffer);
             
             if(buffer == null) {
-                System.out.println("Continued null response!");
-                System.out.println("Is port still opened? = " + serialPort.isOpened());
+                Logging.main("Continued null response!");
+                Logging.main("Is port still opened? = " + serialPort.isOpened());
             } else {
-                System.out.println("Successful response on retry!");
+                Logging.main("Successful response on retry!");
             }
             
             return buffer;
         }
         catch (SerialPortException ex) {
-            System.out.println(ex);
+            StringWriter swEx = new StringWriter();
+            ex.printStackTrace(new PrintWriter(swEx));
+            String strEx = swEx.toString();
+            Logging.main(strEx);
         } catch (InterruptedException ex) {
             Logger.getLogger(ReadComm.class.getName()).log(Level.SEVERE, null, ex);
         }
