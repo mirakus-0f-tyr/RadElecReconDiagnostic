@@ -209,7 +209,7 @@ public class Config extends javax.swing.JFrame {
 
         cboUnitSystem.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "US", "SI" }));
 
-        cboDisplaySig.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Display Line", "No Signature" }));
+        cboDisplaySig.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Display Line", "Digitally Signed", "No Signature" }));
 
         lblDisplaySignature.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblDisplaySignature.setText("Signature Options");
@@ -627,6 +627,9 @@ public class Config extends javax.swing.JFrame {
                     if(strLine.endsWith("1")) {
                         br.close();
                         return "Display Line";
+                    } else if(strLine.endsWith("2")) {
+                        br.close();
+                        return "Digitally Signed";
                     } else {
                         br.close();
                         return "No Signature";
@@ -678,7 +681,7 @@ public class Config extends javax.swing.JFrame {
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
             //Although this means that the order of the configuration parameters is unimportant, a single blank
             //line will terminate the for loop (and halt the parsing process).
-            //For unexpected values in DisplaySig value (or if it's missing), we default to an DisplaySig=1.
+            //For unexpected values in OpenPDFWindow value (or if it's missing), we default to an OpenPDFWindow=1.
             for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
                 if(strLine.contains("OpenPDFWindow=")) {
                     //Cool, we've found what we're looking for...
@@ -705,7 +708,7 @@ public class Config extends javax.swing.JFrame {
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
             //Although this means that the order of the configuration parameters is unimportant, a single blank
             //line will terminate the for loop (and halt the parsing process).
-            //For unexpected values in DisplaySig value (or if it's missing), we default to an DisplaySig=1.
+            //For unexpected values in TestClearMode value (or if it's missing), we default to an TestClearMode=1.
             for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
                 if(strLine.contains("TestClearMode=")) {
                     //Cool, we've found what we're looking for...
@@ -879,10 +882,11 @@ public class Config extends javax.swing.JFrame {
             
             //Handle Signature Display
             if (cboDisplaySig.getSelectedItem().equals("Display Line")) {
-                strInput = strInput.replace("DisplaySig=0", "DisplaySig=1"); 
-            }
-            else {
-                strInput = strInput.replace("DisplaySig=1", "DisplaySig=0");
+                strInput = strInput.replaceAll("DisplaySig=\\d", "DisplaySig=1"); 
+            } else if (cboDisplaySig.getSelectedItem().equals("Digitally Signed")) {
+                strInput = strInput.replaceAll("DisplaySig=\\d", "DisplaySig=2"); 
+            } else {
+                strInput = strInput.replaceAll("DisplaySig=\\d", "DisplaySig=0");
             }
 
 	    //Handle PDF explorer window preference

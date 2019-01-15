@@ -284,9 +284,10 @@
             <Component class="javax.swing.JComboBox" name="cboDisplaySig">
               <Properties>
                 <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                  <StringArray count="2">
+                  <StringArray count="3">
                     <StringItem index="0" value="Display Line"/>
-                    <StringItem index="1" value="No Signature"/>
+                    <StringItem index="1" value="Digitally Signed"/>
+                    <StringItem index="2" value="No Signature"/>
                   </StringArray>
                 </Property>
               </Properties>

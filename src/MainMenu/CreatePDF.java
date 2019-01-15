@@ -38,6 +38,7 @@ import static MainMenu.CreateGraph.OverallAvgRnC;
 import static MainMenu.CreateGraph.HourlyReconData;
 import static MainMenu.MainMenuUI.excludeFirst4Hours;
 import java.awt.Color;
+import java.awt.Dimension;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -71,13 +72,17 @@ public class CreatePDF {
     public static String strCompany_Address3;
     public static String strInstrumentType = "Recon CRM";
     public static String strCustomReportText;
+    private static PDImageXObject imageSignature = null;
     
     float PDF_Y = 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
     static String validDate = "MM/dd/yyyy";
     SimpleDateFormat dateFormatCalibration = new SimpleDateFormat("MM/dd/yyyy");
     Date currentDate = new Date();
-
+    
+    //Analyst Signature
+    public static boolean boolFoundSignature = false;
+    
     //Margin Stuff
     static int marginTop = 10;
     static int marginBottom = 30;
@@ -90,6 +95,14 @@ public class CreatePDF {
         String PDF_Name = StringUtils.left(MainMenu.MainMenuUI.lblLoadedFileName.getText(),MainMenu.MainMenuUI.lblLoadedFileName.getText().length()-4) + ".pdf";
         
         PDDocument doc = new PDDocument();
+        
+        File fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
+        if (fileSignatureAnalyst.exists()) {
+            boolFoundSignature = true;
+            Logging.main("Analyst signature found as BMP!");
+        } else {
+            Logging.main("No BMP signature found for PDF... ignoring.");
+        }
         
         String textLine;
         float textWidth;
@@ -341,8 +354,12 @@ public class CreatePDF {
             
             WrapMultiLineText (contents,page,marginSide,PDF_Y,textLine,fontDefault,fontSize,marginSide);
             
-            if(displaySig==1) {
-                drawSignatureLine(contents, page, fontDefault); //Draw Signature Line; for now, only if DisplaySig = 1 in options.
+            Logging.main("CreatePDF:: Signature Option = " + String.valueOf(displaySig));
+            if(displaySig==1) { //Draw Signature Line
+                drawSignatureLine(contents, page, fontDefault); //Draw Signature Line; for now, only if DisplaySig = 1 or 2 in options.
+            } else if(displaySig==2) { //Display Digital Signature
+                drawSignatureLine(contents, page, fontDefault); //Draw Signature Line; for now, only if DisplaySig = 1 or 2 in options.
+                drawDigitalSignature(doc, contents, page, fontDefault);
             }
             
             contents.close();
@@ -1078,7 +1095,41 @@ public class CreatePDF {
             Logging.main("ERROR: Unable to draw signature line!");
         }
     }
-    
+
+        private void drawDigitalSignature(PDDocument doc, PDPageContentStream contents, PDPage page, PDFont font) {
+        try {
+            if (boolFoundSignature == true) {
+                Logging.main("CreatePDF::DrawDigitalSignature called.");
+                
+                //This is only for determining the width offset of "Signature" to properly place the digital signatur image.
+                String textLine = "Signature: ";
+                fontSize = 12;
+                float textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                
+                //Prepare and scale the digital signature image, then draw it.
+                File fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
+                Logging.main("Digital Signature Path = " + fileSignatureAnalyst.getAbsolutePath());
+                imageSignature = PDImageXObject.createFromFile(fileSignatureAnalyst.getAbsolutePath(), doc);
+                Dimension scaledSig = getScaledDimension(new Dimension(imageSignature.getWidth(), imageSignature.getHeight()), new Dimension((int) page.getMediaBox().getWidth()/2,40));
+                contents.drawImage(imageSignature, marginSide+textWidth+2,marginBottom+2,scaledSig.width,scaledSig.height);
+                
+                //Prepare and draw the date.
+                textLine = "Date: ";
+                float textDateWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
+                textLine = DateFormat.getDateInstance().format(new Date());
+                textWidth = (font.getStringWidth(textLine) / 1000 * (fontSize+4));
+                contents.beginText();
+                contents.setFont(font,fontSize+4);
+                contents.newLineAtOffset(((page.getMediaBox().getWidth()+page.getMediaBox().getWidth())/2 - marginSide)/2 + textDateWidth + 30 + textWidth/2, marginBottom+5);
+                contents.showText(textLine);
+                contents.endText();   
+            }    
+        } catch (Exception ex) {
+            Logging.main("CreatePDF::DrawDigitalSignature ERROR! Unable to draw digital signature!");
+            Logging.main("CreatePDF::DrawDigitalSignature // " + ex);
+        }
+    }
+        
     //Write page numbers and version numbers in lower right margin
     private void drawFooterInfo(File ReconPDF, String FileName) {
         try {
@@ -1115,6 +1166,33 @@ public class CreatePDF {
         } catch (ParseException ex) {
             return false;
         }
+    }
+    
+    public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
+        int original_width = imgSize.width;
+        int original_height = imgSize.height;
+        int bound_width = boundary.width;
+        int bound_height = boundary.height;
+        int new_width = original_width;
+        int new_height = original_height;
+        
+        // first check if we need to scale width
+        if (original_width > bound_width) {
+            //scale width to fit
+            new_width = bound_width;
+            //scale height to maintain aspect ratio
+            new_height = (new_width * original_height) / original_width;
+        }
+
+        // then check if we need to scale even with the new height
+        if (new_height > bound_height) {
+            //scale height to fit instead
+            new_height = bound_height;
+            //scale width to maintain aspect ratio
+            new_width = (new_height * original_width) / original_height;
+        }
+
+        return new Dimension(new_width, new_height);
     }
     
     
