@@ -7,7 +7,6 @@ package MainMenu;
 
 import Config.Config;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -82,6 +81,10 @@ public class CreatePDF {
     
     //Analyst Signature
     public static boolean boolFoundSignature = false;
+    public static boolean boolFoundSignatureBMP = false;
+    public static boolean boolFoundSignaturePNG = false;
+    public static boolean boolFoundSignatureJPG = false;
+    public static boolean boolFoundSignatureJPEG = false;
     
     //Margin Stuff
     static int marginTop = 10;
@@ -96,12 +99,30 @@ public class CreatePDF {
         
         PDDocument doc = new PDDocument();
         
-        File fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
-        if (fileSignatureAnalyst.exists()) {
-            boolFoundSignature = true;
+        File fileSignatureAnalystBMP = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
+        if (fileSignatureAnalystBMP.exists()) {
+            boolFoundSignatureBMP = true;
             Logging.main("Analyst signature found as BMP!");
-        } else {
-            Logging.main("No BMP signature found for PDF... ignoring.");
+        }
+        File fileSignatureAnalystPNG = new File(MainMenuUI.configDir + File.separator + "signature.png");
+        if (fileSignatureAnalystPNG.exists()) {
+            boolFoundSignaturePNG = true;
+            Logging.main("Analyst signature found as PNG!");
+        }
+        File fileSignatureAnalystJPG = new File(MainMenuUI.configDir + File.separator + "signature.jpg");
+        if (fileSignatureAnalystJPG.exists()) {
+            boolFoundSignatureJPG = true;
+            Logging.main("Analyst signature found as JPG!");
+        }
+        File fileSignatureAnalystJPEG = new File(MainMenuUI.configDir + File.separator + "signature.jpeg");
+        if (fileSignatureAnalystJPEG.exists()) {
+            boolFoundSignatureJPEG = true;
+            Logging.main("Analyst signature found as JPEG!");
+        }
+        
+        if (boolFoundSignatureBMP == false || boolFoundSignaturePNG == false || boolFoundSignatureJPG == false || boolFoundSignatureJPEG == false) {
+            boolFoundSignature = true;
+            Logging.main("No digital signature (as BMP/PNG/JPG/JPEG) found for PDF... ignoring.");
         }
         
         String textLine;
@@ -1106,9 +1127,23 @@ public class CreatePDF {
                 fontSize = 12;
                 float textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 
-                //Prepare and scale the digital signature image, then draw it.
+                //Prepare and scale the digital signature image, then draw it. Prioritize BMP > PNG > JPG/JPEG?
                 File fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
-                Logging.main("Digital Signature Path = " + fileSignatureAnalyst.getAbsolutePath());
+                if (!fileSignatureAnalyst.exists()) {
+                    fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.png");
+                    if (!fileSignatureAnalyst.exists()) {
+                        fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.jpg");
+                        if (!fileSignatureAnalyst.exists()) {
+                            fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.jpg");
+                        } else {
+                            Logging.main("CreatePDF::DrawDigitalSignature ERROR: Signature file not found!");
+                        }
+                    }
+                }
+
+                Logging.main("Digital Signature Path = " + fileSignatureAnalyst.getAbsolutePath());                
+                
+                //Prepare and scale the digital signature image, then draw it.
                 imageSignature = PDImageXObject.createFromFile(fileSignatureAnalyst.getAbsolutePath(), doc);
                 Dimension scaledSig = getScaledDimension(new Dimension(imageSignature.getWidth(), imageSignature.getHeight()), new Dimension((int) page.getMediaBox().getWidth()/2,40));
                 contents.drawImage(imageSignature, marginSide+textWidth+2,marginBottom+2,scaledSig.width,scaledSig.height);
