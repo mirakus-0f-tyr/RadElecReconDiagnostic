@@ -23,3 +23,8 @@ v0.8.6 - Fix DrawCustomerTestSiteBlock() in CreatePDF class to properly sanitize
 v0.8.7 - Create class for TiltSensitivity, to make it easier to find and tweak. Commented out original tilt sensitivity code block in CreateGraph class.
 v0.8.8 - Change ReadFirstRecord declaration in ReconCommand class from :RN1 to :RN0, so that we don't skip over the very first record in memory.
 v0.8.9 - macOS compatibility (explicitly searches for tty.usbmodem). Skip over D (debug) records when downloading a session (via "Download Session" or "Create TXT/XLS" buttons). Added ability to disable count limiter via config file option (COUNT_LIMITER=OFF).
+v0.9.0 - Basic commenting feature to config.txt. Other miscellaneous tweaks.
+v0.9.1 - Updated FileUpdater.java to stop removing instrument serial.
+v0.9.2 - Detect operating system on software boot, and create a special Recon folder in macOS documents folder. Robust font fallbacks, for users that don't have Calibri font. Added "no averaging / every ten minutes" display setting.
+v0.9.3 - Preliminary logging system. Multiple iterative fixes and cleanup. Added message box which reports success or failure when writing display/option flag. Added "preview" to Display Options form.
+v0.9.4 - Initial implementation of digital signature, which should be located in config folder. The file should be a BMP/PNG/JPG/JPEG and located in config directory.
