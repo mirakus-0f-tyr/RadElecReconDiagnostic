@@ -1103,7 +1103,7 @@ public static void checkAutoLoadFile() {
     if (txt_file.exists() && autoLoadFile) {
 	try {
             Logging.main("Attempting to automagically load the downloaded session...");
-            strSplitFileName = ReconCommand.filenameTXT.split("/");
+            strSplitFileName = ReconCommand.filenameTXT.split(File.separator);
             strSimpleFileName = strSplitFileName[1];
             lblLoadedFileName.setText(strSimpleFileName);
             LoadSavedFile.main(ReconCommand.filenameTXT);
