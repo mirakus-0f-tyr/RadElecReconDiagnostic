@@ -12,3 +12,4 @@ build.xml
 *.png
 *.pdf
 *.sh
+logs

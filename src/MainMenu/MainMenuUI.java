@@ -44,7 +44,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.9.4";
+    public static String version = "v0.9.5";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -1100,11 +1100,19 @@ public static void checkAutoLoadFile() {
     String[] strSplitFileName;
     String strSimpleFileName = "unknown";
     
+    int splitIterator;
+
     if (txt_file.exists() && autoLoadFile) {
 	try {
             Logging.main("Attempting to automagically load the downloaded session...");
             strSplitFileName = ReconCommand.filenameTXT.split(File.separator);
-            strSimpleFileName = strSplitFileName[1];
+
+	     for (splitIterator = 0; splitIterator < strSplitFileName.length; splitIterator++) {
+		 if (strSplitFileName[splitIterator].startsWith("Recon_"))
+		     break;
+	     }
+	     strSimpleFileName = strSplitFileName[splitIterator];
+
             lblLoadedFileName.setText(strSimpleFileName);
             LoadSavedFile.main(ReconCommand.filenameTXT);
             Logging.main("File loaded: " + strSimpleFileName);
