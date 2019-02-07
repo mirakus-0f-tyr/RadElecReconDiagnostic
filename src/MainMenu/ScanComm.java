@@ -269,18 +269,15 @@ public class ScanComm {
             Logging.main("Confirming Recon S/N #" + ConfirmSN + " for total data dump.");
             
             Thread.sleep(10);
-            WriteComm.main(scannedPort, ReconCommand.ClearMemoryCommand); //Check the Recon to see if a new record exists.
-            Thread.sleep(10);
             DeviceResponse = ReadComm.main(scannedPort, 19);
             DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
             String DeviceResponse_targeted = "Let's begin!";
             PrintWriter writer = new PrintWriter("data/Recon_" + ConfirmSN + "_AllData.txt", "UTF-8");
-            //writer.println(DeviceResponse);
 
             //Initialize i.
             int i = 0;
             DeviceResponse_targeted = "=DB";
-            while((DeviceResponse_targeted.equals("=DB"))){
+            while (i < 6144) {
                 if(i==0){
                     WriteComm.main(scannedPort, ReconCommand.ReadFirstRecord);
                 } else {
@@ -292,7 +289,7 @@ public class ScanComm {
                     DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                 }
                 writer.println(DeviceResponse);
-                MainMenuUI.displayProgressLabel("Reading Record #" + DeviceResponse_parsed[1] + "...");
+                MainMenuUI.displayProgressLabel("Reading Record #" + Integer.toString(i) + "...");
                 i++;
             }
             writer.close();
