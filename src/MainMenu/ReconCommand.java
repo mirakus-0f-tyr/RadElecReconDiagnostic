@@ -78,7 +78,7 @@ class ReconCommand {
     }
 
     // download Recon session into memory, making data available for multitude of data exporters
-    public static void DownloadReconSessionToRAM() throws InterruptedException {
+    public static boolean DownloadReconSessionToRAM() throws InterruptedException {
         // initialize linked list
 	if (reconSession != null)
 	    reconSession.clear();
@@ -87,6 +87,11 @@ class ReconCommand {
 
 	// run :RB and check ST/LT mode
 	LoadNewRecord();
+
+	if (DeviceResponse_parsed.length == 1) {
+	    Logging.main("Session pointer pointing to null record. Aborting download.");
+	    return false;
+	}
 
 	longTermMode = false;
 	if (DeviceResponse_parsed[14].equals("6"))
@@ -106,6 +111,13 @@ class ReconCommand {
 	while (!(DeviceResponse_parsed[2].equals("Z"))) {
 	    ++recordIterator; // what the current sample number SHOULD be
 	    LoadNextRecord();
+
+	    // check here for a null record before doing ANYTHING
+	    if (DeviceResponse_parsed.length == 1) {
+		Logging.main("Null record found in session. Skipping.");
+		continue;
+	    }
+
 	    MainMenuUI.displayProgressLabel("Reading Record #" + DeviceResponse_parsed[1] + "...");
 
 	    // if it's a D record, skip
@@ -126,6 +138,7 @@ class ReconCommand {
 	    if (Integer.parseInt(DeviceResponse_parsed[1]) == 6143)
 	        recordIterator = -1;
 	}
+	return true;
     }
 
     // Loads filenames into strings here so that it does not need to be done

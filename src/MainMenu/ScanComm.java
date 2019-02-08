@@ -229,21 +229,25 @@ public class ScanComm {
     static void DownloadNewRecord(SerialPort scannedPort) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         try {
 	    ReconCommand.DetermineFileName();
-	    ReconCommand.DownloadReconSessionToRAM();
 
-	    // create the files
-	    if (MainMenuUI.diagnosticMode) {
-	        CreateTXT.main();
-		CreateXLS.main();
+	    if (ReconCommand.DownloadReconSessionToRAM()) {
+		// create the files
+		if (MainMenuUI.diagnosticMode) {
+		    CreateTXT.main();
+		    CreateXLS.main();
+		}
+		else
+		    CreateTXT.main();
+
+		MainMenuUI.checkFilesWrittenSuccessfully();
+		MainMenuUI.HandleSessionClear();
+		MainMenuUI.checkAutoLoadFile();
 	    }
 	    else {
-	        CreateTXT.main();
+		Logging.main("Error downloading Recon data. Data not saved.");
+		return;
 	    }
-
-	    MainMenuUI.checkFilesWrittenSuccessfully();
-	    MainMenuUI.HandleSessionClear();
-            MainMenuUI.checkAutoLoadFile();
-        }
+	}
 
         catch (InterruptedException ex) {
             StringWriter swEx = new StringWriter();
