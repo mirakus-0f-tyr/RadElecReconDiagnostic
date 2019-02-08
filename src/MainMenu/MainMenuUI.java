@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.time.*;
 import java.time.format.DateTimeFormatter;
+import java.util.regex.Pattern;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -44,7 +45,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.9.5b";
+    public static String version = "v0.9.6";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -1105,7 +1106,7 @@ public static void checkAutoLoadFile() {
     if (txt_file.exists() && autoLoadFile) {
 	try {
             Logging.main("Attempting to automagically load the downloaded session...");
-            strSplitFileName = ReconCommand.filenameTXT.split(File.separator);
+            strSplitFileName = ReconCommand.filenameTXT.split(Pattern.quote(File.separator));
 
 	     for (splitIterator = 0; splitIterator < strSplitFileName.length; splitIterator++) {
 		 if (strSplitFileName[splitIterator].startsWith("Recon_"))
