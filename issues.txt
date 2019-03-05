@@ -2,23 +2,6 @@
 
 - CreatePDF - "WARNING: Warning: You did not close a PDF Document" appears regularly but the final document seems okay
 
-- connection errors during comm port scanning - usually solved with another connect attempt, but why is this happening?
-
-- App worked on Mac, but performed VERY slowly (it COULD be all the tty devices it's checking - ask for the output)
-
-- graph not shown during Mac test (commas as separators in decimal numbers - need to force locale?)  See exception:
-	Exception in thread "AWT-EventQueue-0" java.lang.NumberFormatException: For input string: "5,945"
-
-- Mac port listed correctly when double-clicking on jar to run, but running from command line did not show the correct value
-
-- Windows: It was observed in one case that repeatedly clicking Connect button did not result in the unit being recognized, although the unit
-  was recognized by Windows in Device Manager.  It is unclear what caused this...a reboot fixed the problem, but something happened.
-
-SETTING THE DISPLAY FLAG VALUE
-The method now appears to be writing the flag correctly. What is returned by :RF after setting is always what should have been
-written, but there have been some occasions where issuing :RF in a console after power cycle will reveal that the flag was not successfully
-"saved" when the unit is turned off. I believe this is an unknown firmware problem and not a problem with this app, but keep eyes out for this.
-
 OTHER THINGS WE NEED TO DO
 
 - have a convenient way for users to update

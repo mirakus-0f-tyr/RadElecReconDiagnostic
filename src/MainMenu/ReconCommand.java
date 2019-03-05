@@ -21,6 +21,8 @@ class ReconCommand {
     public static String CheckNewRecord = ":RB\r\n";
     public static String ReadNextRecord = ":RN\r\n";
     public static String ReadFirstRecord = ":RN0\r\n";
+    public static String ReadNextDiagnosticRecord = ":DN\r\n";
+    public static String ReadFirstDiagnosticRecord = ":DN0\r\n";
     public static String ClearMemoryCommand = ":CM\r\n";
     public static String ClearSessionCommand = ":CD\r\n";
     public static String ReadCalibrationFactors = ":RL\r\n";
@@ -79,6 +81,8 @@ class ReconCommand {
 
     // download Recon session into memory, making data available for multitude of data exporters
     public static boolean DownloadReconSessionToRAM() throws InterruptedException {
+	int numDataRecords = (Float.parseFloat(ScanComm.ReconFirmwareVersion) >= 1.34) ? 6043 : 6143;
+
         // initialize linked list
 	if (reconSession != null)
 	    reconSession.clear();
@@ -135,7 +139,7 @@ class ReconCommand {
 	    reconSession.add(DeviceResponse_parsed);
 
 	    // check for rollover of memory
-	    if (Integer.parseInt(DeviceResponse_parsed[1]) == 6143)
+	    if (Integer.parseInt(DeviceResponse_parsed[1]) == numDataRecords)
 	        recordIterator = -1;
 	}
 	return true;

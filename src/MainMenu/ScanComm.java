@@ -26,9 +26,12 @@ import java.io.StringWriter;
 
 public class ScanComm {
    
+    // Are these used?
     public static String ReconWaitTime = "Unknown";
     public static String ReconDurationSetting = "Unknown";
     public static String ReconCalDate = "Unknown";
+
+    public static String ReconFirmwareVersion;
 
     // connected port
     public static SerialPort scannedPort;
@@ -99,14 +102,15 @@ public class ScanComm {
                         if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
                         {
                             Logging.main("Recon CRM Serial #" + DeviceResponse_parsed[3]);
-                            MainMenuUI.displaySerialNumber(DeviceResponse_parsed[3]);
+			     MainMenuUI.displaySerialNumber(DeviceResponse_parsed[3]);
                         } else {
                             Logging.main("Unable to determine Recon CRM Serial#. Rogue instrument detected.");
                         }
                         if(DeviceResponse_parsed.length > 2 && DeviceResponse_parsed[2] != null)
                         {
                             Logging.main("Firmware v" + DeviceResponse_parsed[2]);
-                            MainMenuUI.displayFirmwareVersion(DeviceResponse_parsed[2]);
+                            ReconFirmwareVersion = DeviceResponse_parsed[2];
+			     MainMenuUI.displayFirmwareVersion(ReconFirmwareVersion);
                         } else {
                             Logging.main("Unknown Firmware Version! Probably not good...");
                         }
@@ -261,6 +265,9 @@ public class ScanComm {
         try {
 
             String ConfirmSN = "Unknown";
+	    int numDataRecords;
+	    int diagBufferLength = 100;
+	    boolean diagCircularBuffer = (Float.parseFloat(ReconFirmwareVersion) >= 1.34);
             
             Thread.sleep(10);
             WriteComm.main(scannedPort, ReconCommand.ReconConfirm); //Check the Recon to see if a new record exists.
@@ -278,10 +285,14 @@ public class ScanComm {
             String DeviceResponse_targeted = "Let's begin!";
             PrintWriter writer = new PrintWriter("data/Recon_" + ConfirmSN + "_AllData.txt", "UTF-8");
 
+	    numDataRecords = diagCircularBuffer ? 6044 : 6144;
+
             //Initialize i.
             int i = 0;
             DeviceResponse_targeted = "=DB";
-            while (i < 6144) {
+
+	     // Dump data buffer
+	    while (i < numDataRecords) {
                 if(i==0){
                     WriteComm.main(scannedPort, ReconCommand.ReadFirstRecord);
                 } else {
@@ -296,6 +307,35 @@ public class ScanComm {
                 MainMenuUI.displayProgressLabel("Reading Record #" + Integer.toString(i) + "...");
                 i++;
             }
+
+	    if (diagCircularBuffer) {
+		Logging.main("Finished primary data dump. Dumping diagnostic records buffer...");
+		writer.println("-------------------------------------------------------------------------------------------");
+		writer.println("DIAGNOSTIC BUFFER");
+		writer.println("-------------------------------------------------------------------------------------------");
+
+		i = 0;
+
+		// Dump diagnostic buffer
+		while (i < diagBufferLength) {
+		    if (i==0)
+			WriteComm.main(scannedPort, ReconCommand.ReadFirstDiagnosticRecord);
+		    else
+			WriteComm.main(scannedPort, ReconCommand.ReadNextDiagnosticRecord);
+
+		    DeviceResponse = ReadComm.main(scannedPort, 19);
+                    DeviceResponse_targeted = StringUtils.left(DeviceResponse,3);
+
+		    if(DeviceResponse_targeted.equals("=DB")) {
+			DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
+                    }
+
+		    writer.println(DeviceResponse);
+                   MainMenuUI.displayProgressLabel("Reading Diagnostic Record #" + Integer.toString(i) + "...");
+                   i++;
+		}
+	    }
+
             writer.close();
             MainMenuUI.displayProgressLabel("Data dump successful.");
             Logging.main("Data dump should be successful. If you're reading this, we didn't crash or get locked in a never-ending loop.");
