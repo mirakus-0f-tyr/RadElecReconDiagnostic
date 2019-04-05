@@ -70,7 +70,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean displayStatus = false;
     public static int displaySig = 1;
     public static int openPDFWind = 1;
-    public static int testClearMode = 1; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
+    public static int testClearMode = 2; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     public static boolean autoLoadFile = true;
     
@@ -818,7 +818,7 @@ public static void createConfigTXT() {
             pw.print("UnitType=US\n");
             pw.print("DisplaySig=1\n");
 	    pw.print("OpenPDFWindow=1\n");
-	    pw.print("TestClearMode=1\n");
+	    pw.print("TestClearMode=2\n");
             pw.print("TiltSensitivity=5\n");
             pw.print("AutoLoadFile=1\n");
             pw.close();

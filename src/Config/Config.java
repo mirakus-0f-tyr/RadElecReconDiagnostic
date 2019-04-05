@@ -708,7 +708,7 @@ public class Config extends javax.swing.JFrame {
             //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
             //Although this means that the order of the configuration parameters is unimportant, a single blank
             //line will terminate the for loop (and halt the parsing process).
-            //For unexpected values in TestClearMode value (or if it's missing), we default to an TestClearMode=1.
+            //For unexpected values in TestClearMode value (or if it's missing), we default to an TestClearMode=2.
             for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
                 if(strLine.contains("TestClearMode=")) {
                     //Cool, we've found what we're looking for...
