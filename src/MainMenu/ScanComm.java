@@ -58,6 +58,7 @@ public class ScanComm {
     //6 = Download end-user text file - do not generate spreadsheet
     //7 = synchronize Recon time to PC
     //8 = write flag to Recon (display options)
+    //9 = clear tamper flag
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
         Logging.main("Beginning to scan Comm ports...");
@@ -153,6 +154,10 @@ public class ScanComm {
 			}
 			else
 			    Logging.main("ERROR: Display options flag NOT written successfully.");
+		    } else if (OptArgs == 9) {
+		    	Logging.main("Clearing tamper flag.");
+			ReconCommand.ClearTamperFlag();
+			MainMenuUI.displayProgressLabel("Tamper flag cleared.");
 		    }
                 }
             scannedPort.closePort();

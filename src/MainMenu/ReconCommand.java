@@ -27,6 +27,7 @@ class ReconCommand {
     public static String ClearSessionCommand = ":CD\r\n";
     public static String ReadCalibrationFactors = ":RL\r\n";
     public static String ReadTime = ":RT\r\n";
+    public static String ResetTamperFlag = ":WX\r\n";
 
     public static String DeviceResponse;
     public static String[] DeviceResponse_parsed;
@@ -258,5 +259,10 @@ class ReconCommand {
 	    Logging.main("flagResponse is null! Cannot compare written value.");
 
 	return (flag == comp);
+    }
+
+    public static void ClearTamperFlag() {
+	WriteComm.main(ScanComm.scannedPort, ResetTamperFlag);
+	return;
     }
 }
