@@ -9,6 +9,7 @@ import Config.Config;
 import java.io.BufferedReader;
 import java.io.File;
 import java.awt.Desktop;
+import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
@@ -45,7 +46,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.9.7";
+    public static String version = "v0.9.8";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -641,6 +642,14 @@ public class MainMenuUI extends javax.swing.JFrame {
             lblLoadedFileName.setText(SavedReconTXT_Dialog.getSelectedFile().getName());
             lblLoadedFile.setVisible(true);
             lblLoadedFileName.setVisible(true);
+
+	    // go through windows and close previous graph(s) that were open
+	    Window[] progWindows = Window.getWindows();
+	    for (Window window : progWindows) {
+		if (window.getClass().toString().contains("MainMenu.CreateGraph"))
+		window.dispose();
+	    }
+
             try {
                 LoadSavedFile.main(SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath());
                 strLoadedFilePath = SavedReconTXT_Dialog.getSelectedFile().getCanonicalPath();
@@ -668,8 +677,36 @@ public class MainMenuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEraseReconDataActionPerformed
 
     private void btnUpdateTXTFileActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateTXTFileActionPerformed
+	// Write the new file.
 	UpdateTXTFile worker = new UpdateTXTFile();
 	worker.execute();
+
+	// Determine new filename and reopen
+	String newFileName = lblLoadedFileName.getText().substring(0, lblLoadedFileName.getText().lastIndexOf('.')) + "_updated.txt";
+	File myFile;
+
+	// Clean up the name if we're updating an already updated file.
+	if (newFileName.contains("_updated_updated")) {
+	    String updNewFileName = newFileName.replace("_updated_updated", "_updated");
+	    myFile = new File(dataDir + File.separator + updNewFileName);
+	}
+	else
+	    myFile = new File(dataDir + File.separator + newFileName);
+
+	// go through windows and close previous graph(s) that were open
+	Window[] progWindows = Window.getWindows();
+	for (Window window : progWindows) {
+	    if (window.getClass().toString().contains("MainMenu.CreateGraph"))
+		window.dispose();
+	}
+
+	try {
+	    LoadSavedFile.main(myFile.getCanonicalPath());
+	} catch (IOException ex) {
+	    Logging.main("ERROR: Unable to open updated text file!");
+	    Logging.main(ex.toString());
+	}
+	lblLoadedFileName.setText(myFile.getName());
     }//GEN-LAST:event_btnUpdateTXTFileActionPerformed
 
     private void btnSyncTimeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSyncTimeActionPerformed
