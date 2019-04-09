@@ -1363,7 +1363,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
       Logging.main("Clear Session button pressed.");
-      CRM_Parameters = ScanComm.run(3);
+      CRM_Parameters = ScanComm.run(4);
       btnConnect.setEnabled(true);
       btnCreateTXT.setEnabled(true);
       btnClearMemory.setEnabled(true);
