@@ -60,6 +60,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String strAddress2 = "Address Line #2";
     public static String strAddress3 = "Address Line #3";
     public static double targetRnCAvg;
+    public static double numFirmwareRevision = 0;
 
     // variables for config.txt file values
     public static boolean diagnosticMode = false;
@@ -281,8 +282,8 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
-        btnAllDataDump.setFont(new java.awt.Font("Dialog", 1, 11)); // NOI18N
-        btnAllDataDump.setText("All Data Dump (debug)");
+        btnAllDataDump.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
+        btnAllDataDump.setLabel("All Data Dump");
         btnAllDataDump.setMaximumSize(new java.awt.Dimension(125, 25));
         btnAllDataDump.setMinimumSize(new java.awt.Dimension(125, 25));
         btnAllDataDump.setPreferredSize(new java.awt.Dimension(125, 25));
@@ -427,7 +428,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         limiterLabel.setForeground(new java.awt.Color(204, 0, 0));
         limiterLabel.setText("COUNT LIMITER = OFF");
 
-        btnClearTamperFlag.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        btnClearTamperFlag.setFont(new java.awt.Font("Calibri", 1, 12)); // NOI18N
         btnClearTamperFlag.setText("Clear Tamper Flag");
         btnClearTamperFlag.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -443,7 +444,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblRadonScoutQuickCal, javax.swing.GroupLayout.DEFAULT_SIZE, 654, Short.MAX_VALUE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblVersion)
@@ -489,13 +490,13 @@ public class MainMenuUI extends javax.swing.JFrame {
                                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                         .addGap(1, 1, 1)
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(btnClearTamperFlag, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                                .addComponent(btnEraseReconData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addComponent(btnSyncTime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                            .addComponent(btnEraseReconData, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(btnSyncTime, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE))))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnAllDataDump, javax.swing.GroupLayout.DEFAULT_SIZE, 178, Short.MAX_VALUE)
+                                    .addComponent(btnClearTamperFlag, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addGroup(layout.createSequentialGroup()
                                     .addComponent(btnOpenSavedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 136, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -533,7 +534,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addComponent(lblDataSessions, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 26, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
                         .addComponent(lblTestSiteInfo1, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -566,19 +567,20 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnClearMemory, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnOpenPDF, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(6, 6, 6)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnGeneratePDF, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnEraseReconData, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnAllDataDump, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnClearTamperFlag, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdateTXTFile)
+                        .addComponent(btnUpdateTXTFile, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnSyncTime)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnClearTamperFlag, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSyncTime, javax.swing.GroupLayout.PREFERRED_SIZE, 26, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
 
@@ -842,6 +844,21 @@ public static void displayFirmwareVersion(String FirmwareVersion) {
 public static void displayDataSessions(String NumSessions) {
     lblDataSessions.setVisible(true);
     lblDataSessions.setText("Data Sessions: " + NumSessions);
+}
+
+public static double convertFirmwareVersionToNumber() {
+    try {
+        String strFirmwareRevision = lblFirmwareVersion.getText();
+        if(strFirmwareRevision.length() > 10) {
+            numFirmwareRevision = Double.parseDouble(strFirmwareRevision.substring(11));
+            Logging.main("MainMenuUI.convertFirmwareVersionToNumber() = " + numFirmwareRevision);
+            return numFirmwareRevision;
+        }
+        return 0;
+    } catch (Exception e) {
+        //If we can't correctly parse the firmware revision, then let's default to zero.
+        return 0;
+    }
 }
 
 public void parseCompanyTXT() {
@@ -1207,6 +1224,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
         btnClearSession.setVisible(false);
         btnAllDataDump.setVisible(false);
         btnDownloadSession.setVisible(false);
+        btnClearTamperFlag.setVisible(false);
         btnOpenSavedFile.setVisible(true);
         btnOpenPDF.setVisible(true);
         btnGeneratePDF.setVisible(false);
@@ -1243,6 +1261,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
                 btnGeneratePDF.setVisible(false);
                 btnEraseReconData.setVisible(true);
                 btnOpenPDF.setVisible(true);
+                btnClearTamperFlag.setVisible(false);
             }
 
 	    btnSyncTime.setVisible(true);
@@ -1265,6 +1284,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
+      btnClearTamperFlag.setEnabled(false);
       Logging.main("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
       btnConnect.setEnabled(true);
@@ -1274,6 +1294,7 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(true);
       btnSyncTime.setEnabled(true);
       btnOpenPDF.setEnabled(true);
+      btnClearTamperFlag.setEnabled(true);
       
       return null;
     }
@@ -1282,24 +1303,26 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
 private class AllDataDump extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-      btnConnect.setEnabled(false);
-      btnCreateTXT.setEnabled(false);
-      btnClearMemory.setEnabled(false);
-      btnClearSession.setEnabled(false);
-      btnAllDataDump.setEnabled(false);
-      btnSyncTime.setEnabled(false);
-      btnOpenPDF.setEnabled(false);
-      Logging.main("AllDataDump button pressed.");
-      CRM_Parameters = ScanComm.run(5);
-      btnConnect.setEnabled(true);
-      btnCreateTXT.setEnabled(true);
-      btnClearMemory.setEnabled(true);
-      btnClearSession.setEnabled(true);
-      btnAllDataDump.setEnabled(true);
-      btnSyncTime.setEnabled(true);
-      btnOpenPDF.setEnabled(true);
-      
-      return null;
+        btnConnect.setEnabled(false);
+        btnCreateTXT.setEnabled(false);
+        btnClearMemory.setEnabled(false);
+        btnClearSession.setEnabled(false);
+        btnAllDataDump.setEnabled(false);
+        btnSyncTime.setEnabled(false);
+        btnOpenPDF.setEnabled(false);
+        btnClearTamperFlag.setEnabled(false);
+        Logging.main("AllDataDump button pressed.");
+        CRM_Parameters = ScanComm.run(5);
+        btnConnect.setEnabled(true);
+        btnCreateTXT.setEnabled(true);
+        btnClearMemory.setEnabled(true);
+        btnClearSession.setEnabled(true);
+        btnAllDataDump.setEnabled(true);
+        btnSyncTime.setEnabled(true);
+        btnOpenPDF.setEnabled(true);
+        btnClearTamperFlag.setEnabled(true);
+        
+        return null;
     }
 }
 
@@ -1313,6 +1336,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(false);
       btnSyncTime.setEnabled(false);
       btnOpenPDF.setEnabled(false);
+      btnClearTamperFlag.setEnabled(false);
       Logging.main("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       btnConnect.setEnabled(true);
@@ -1322,6 +1346,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       btnAllDataDump.setEnabled(true);
       btnSyncTime.setEnabled(true);
       btnOpenPDF.setEnabled(true);
+      btnClearTamperFlag.setEnabled(true);
       
       return null;
     }
@@ -1449,6 +1474,11 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnEraseReconData.setEnabled(false);
     btnSyncTime.setEnabled(false);
     btnOpenPDF.setEnabled(false);
+    btnClearTamperFlag.setEnabled(false);
+    btnClearMemory.setEnabled(false);
+    btnClearSession.setEnabled(false);
+    btnAllDataDump.setEnabled(false);
+    btnCreateTXT.setEnabled(false);
     Logging.main("SyncTime button pressed.");
     CRM_Parameters = ScanComm.run(7);
     btnDownloadSession.setEnabled(true);
@@ -1457,7 +1487,12 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
     btnEraseReconData.setEnabled(true);
     btnSyncTime.setEnabled(true);
     btnOpenPDF.setEnabled(true);
-
+    btnClearTamperFlag.setEnabled(true);
+    btnClearMemory.setEnabled(true);
+    btnClearSession.setEnabled(true);
+    btnAllDataDump.setEnabled(true);
+    btnCreateTXT.setEnabled(true);
+    
     return null;
     }
 }
@@ -1465,8 +1500,33 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
 private class ClearTamperStatus extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-    CRM_Parameters = ScanComm.run(9);
-    return null;
+        btnConnect.setEnabled(false);
+        btnCreateTXT.setEnabled(false);
+        btnClearMemory.setEnabled(false);
+        btnClearSession.setEnabled(false);
+        btnAllDataDump.setEnabled(false);
+        btnSyncTime.setEnabled(false);
+        btnOpenPDF.setEnabled(false);
+        btnAllDataDump.setEnabled(false);
+        btnOpenSavedFile.setEnabled(false);
+        Logging.main("ClearTamperFlag button pressed.");
+        //We need to check firmware revision. The :WX command was not available on pre-1.16 firmware revisions.
+        CRM_Parameters = ScanComm.run(1);
+            if(CRM_Parameters[0].equals("true")) {
+                if (MainMenuUI.convertFirmwareVersionToNumber() >= 1.16)
+                CRM_Parameters = ScanComm.run(9);
+            }
+        btnConnect.setEnabled(true);
+        btnCreateTXT.setEnabled(true);
+        btnClearMemory.setEnabled(true);
+        btnClearSession.setEnabled(true);
+        btnAllDataDump.setEnabled(true);
+        btnSyncTime.setEnabled(true);
+        btnOpenPDF.setEnabled(true);
+        btnAllDataDump.setEnabled(true);
+        btnOpenSavedFile.setEnabled(true);
+        
+        return null;
     }
 }
 
