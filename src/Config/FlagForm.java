@@ -47,12 +47,12 @@ public class FlagForm extends javax.swing.JFrame {
         lblTemperature = new javax.swing.JLabel();
         lblDualChamber = new javax.swing.JLabel();
         lblExposureUnits = new javax.swing.JLabel();
-        cboPressureSelect = new javax.swing.JComboBox<>();
-        cboTemperatureSelect = new javax.swing.JComboBox<>();
-        cboDualChamberSelect = new javax.swing.JComboBox<>();
-        cboRadonUnitSelect = new javax.swing.JComboBox<>();
+        cboPressureSelect = new javax.swing.JComboBox<String>();
+        cboTemperatureSelect = new javax.swing.JComboBox<String>();
+        cboDualChamberSelect = new javax.swing.JComboBox<String>();
+        cboRadonUnitSelect = new javax.swing.JComboBox<String>();
         btnApplySpecial = new javax.swing.JButton();
-        cboToggleNoAveraging = new javax.swing.JComboBox<>();
+        cboToggleNoAveraging = new javax.swing.JComboBox<String>();
         lblDisplayedReadingInterval = new javax.swing.JLabel();
         lblPreviewRun = new javax.swing.JLabel();
         lblPreviewRuntime = new javax.swing.JLabel();
@@ -73,28 +73,28 @@ public class FlagForm extends javax.swing.JFrame {
 
         lblExposureUnits.setText("Radon Unit");
 
-        cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mBar", "inHG" }));
+        cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mBar", "inHG" }));
         cboPressureSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboPressureSelectActionPerformed(evt);
             }
         });
 
-        cboTemperatureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "F", "C" }));
+        cboTemperatureSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "F", "C" }));
         cboTemperatureSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTemperatureSelectActionPerformed(evt);
             }
         });
 
-        cboDualChamberSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No", "Yes" }));
+        cboDualChamberSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No", "Yes" }));
         cboDualChamberSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboDualChamberSelectActionPerformed(evt);
             }
         });
 
-        cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pCi/L", "Bq/m3", "CPH" }));
+        cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pCi/L", "Bq/m3", "CPH" }));
         cboRadonUnitSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboRadonUnitSelectActionPerformed(evt);
@@ -108,7 +108,7 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
-        cboToggleNoAveraging.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hourly", "Ten Mins." }));
+        cboToggleNoAveraging.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Ten Mins." }));
         cboToggleNoAveraging.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboToggleNoAveragingActionPerformed(evt);
@@ -137,7 +137,6 @@ public class FlagForm extends javax.swing.JFrame {
 
         lblPreviewCh2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPreviewCh2.setText("14.6 pCi/L");
-	lblPreviewCh2.setVisible(false);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -352,7 +351,7 @@ public class FlagForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnApplySpecial;
+    public static javax.swing.JButton btnApplySpecial;
     private javax.swing.JComboBox<String> cboDualChamberSelect;
     private javax.swing.JComboBox<String> cboPressureSelect;
     private javax.swing.JComboBox<String> cboRadonUnitSelect;

@@ -6,6 +6,8 @@
 package MainMenu;
 
 import Config.Config;
+import Config.FlagForm;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.awt.Desktop;
@@ -1215,7 +1217,7 @@ public static void checkAutoLoadFile() {
 private class MySwingWorker extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-        btnConnect.setEnabled(false);
+        EnableAllButtons(false);
         lblReconSN.setVisible(false);
         lblFirmwareVersion.setVisible(false);
         lblDataSessions.setVisible(false);
@@ -1269,7 +1271,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
 	else
 	    btnSyncTime.setVisible(false); // disable the sync time button if no Recon is connected
 
-        btnConnect.setEnabled(true);
+        EnableAllButtons(true);
         return null;
     }
 }
@@ -1277,24 +1279,10 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
 private class GenerateTXTDump extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-      btnConnect.setEnabled(false);
-      btnCreateTXT.setEnabled(false);
-      btnClearMemory.setEnabled(false);
-      btnClearSession.setEnabled(false);
-      btnAllDataDump.setEnabled(false);
-      btnSyncTime.setEnabled(false);
-      btnOpenPDF.setEnabled(false);
-      btnClearTamperFlag.setEnabled(false);
+      EnableAllButtons(false);
       Logging.main("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
-      btnConnect.setEnabled(true);
-      btnCreateTXT.setEnabled(true);
-      btnClearMemory.setEnabled(true);
-      btnClearSession.setEnabled(true);
-      btnAllDataDump.setEnabled(true);
-      btnSyncTime.setEnabled(true);
-      btnOpenPDF.setEnabled(true);
-      btnClearTamperFlag.setEnabled(true);
+      EnableAllButtons(true);
       
       return null;
     }
@@ -1303,24 +1291,10 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
 private class AllDataDump extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-        btnConnect.setEnabled(false);
-        btnCreateTXT.setEnabled(false);
-        btnClearMemory.setEnabled(false);
-        btnClearSession.setEnabled(false);
-        btnAllDataDump.setEnabled(false);
-        btnSyncTime.setEnabled(false);
-        btnOpenPDF.setEnabled(false);
-        btnClearTamperFlag.setEnabled(false);
+        EnableAllButtons(false);
         Logging.main("AllDataDump button pressed.");
         CRM_Parameters = ScanComm.run(5);
-        btnConnect.setEnabled(true);
-        btnCreateTXT.setEnabled(true);
-        btnClearMemory.setEnabled(true);
-        btnClearSession.setEnabled(true);
-        btnAllDataDump.setEnabled(true);
-        btnSyncTime.setEnabled(true);
-        btnOpenPDF.setEnabled(true);
-        btnClearTamperFlag.setEnabled(true);
+        EnableAllButtons(true);
         
         return null;
     }
@@ -1329,24 +1303,10 @@ private class AllDataDump extends SwingWorker<Void, Void>{
 private class ClearCurrentSession extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-      btnConnect.setEnabled(false);
-      btnCreateTXT.setEnabled(false);
-      btnClearMemory.setEnabled(false);
-      btnClearSession.setEnabled(false);
-      btnAllDataDump.setEnabled(false);
-      btnSyncTime.setEnabled(false);
-      btnOpenPDF.setEnabled(false);
-      btnClearTamperFlag.setEnabled(false);
+      EnableAllButtons(false);
       Logging.main("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
-      btnConnect.setEnabled(true);
-      btnCreateTXT.setEnabled(true);
-      btnClearMemory.setEnabled(true);
-      btnClearSession.setEnabled(true);
-      btnAllDataDump.setEnabled(true);
-      btnSyncTime.setEnabled(true);
-      btnOpenPDF.setEnabled(true);
-      btnClearTamperFlag.setEnabled(true);
+      EnableAllButtons(true);
       
       return null;
     }
@@ -1355,22 +1315,10 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
 private class ClearReconMemory extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-      btnConnect.setEnabled(false);
-      btnCreateTXT.setEnabled(false);
-      btnClearMemory.setEnabled(false);
-      btnClearSession.setEnabled(false);
-      btnAllDataDump.setEnabled(false);
-      btnSyncTime.setEnabled(false);
-      btnOpenPDF.setEnabled(false);
+      EnableAllButtons(false);
       Logging.main("Clear Session button pressed.");
       CRM_Parameters = ScanComm.run(4);
-      btnConnect.setEnabled(true);
-      btnCreateTXT.setEnabled(true);
-      btnClearMemory.setEnabled(true);
-      btnClearSession.setEnabled(true);
-      btnAllDataDump.setEnabled(true);
-      btnSyncTime.setEnabled(true);
-      btnOpenPDF.setEnabled(true);
+      EnableAllButtons(true);
       
       return null;
     }
@@ -1379,22 +1327,10 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
 private class DownloadSession extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-      // some buttons may be missed - check later
-
-      btnDownloadSession.setEnabled(false);
-      btnOpenSavedFile.setEnabled(false);
-      btnGeneratePDF.setEnabled(false);
-      btnEraseReconData.setEnabled(false);
-      btnSyncTime.setEnabled(false);
-      btnOpenPDF.setEnabled(false);
+      EnableAllButtons(false);
       Logging.main("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
-      btnDownloadSession.setEnabled(true);
-      btnOpenSavedFile.setEnabled(true);
-      btnGeneratePDF.setEnabled(true);
-      btnEraseReconData.setEnabled(true);
-      btnSyncTime.setEnabled(true);
-      btnOpenPDF.setEnabled(true);
+      EnableAllButtons(true);
 
       return null;
     }
@@ -1405,12 +1341,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
     protected Void doInBackground() throws Exception {
       // some buttons may be missed - check later
 
-      btnDownloadSession.setEnabled(false);
-      btnOpenSavedFile.setEnabled(false);
-      btnGeneratePDF.setEnabled(false);
-      btnEraseReconData.setEnabled(false);
-      btnSyncTime.setEnabled(false);
-      btnOpenPDF.setEnabled(false);
+      EnableAllButtons(false);
       Logging.main("Generate PDF button pressed.");
       CreatePDF generate_pdf = new CreatePDF();
       generate_pdf.main();
@@ -1428,12 +1359,7 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
           }
           catch (IOException ex) { }
       }
-      btnDownloadSession.setEnabled(true);
-      btnOpenSavedFile.setEnabled(true);
-      btnGeneratePDF.setEnabled(true);
-      btnEraseReconData.setEnabled(true);
-      btnSyncTime.setEnabled(true);
-      btnOpenPDF.setEnabled(true);
+      EnableAllButtons(true);
       
       return null;
     }
@@ -1442,24 +1368,14 @@ private class GeneratePDF extends SwingWorker<Void, Void>{
 private class UpdateTXTFile extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-    btnDownloadSession.setEnabled(false);
-    btnOpenSavedFile.setEnabled(false);
-    btnGeneratePDF.setEnabled(false);
-    btnEraseReconData.setEnabled(false);
-    btnSyncTime.setEnabled(false);
-    btnOpenPDF.setEnabled(false);
+    EnableAllButtons(false);
     Logging.main("Update TXT file button pressed.");
     String oldFileName;
     // the file SHOULD already be loaded before this function is called, but it might
     // be a good idea to add checks
     oldFileName = strLoadedFilePath;
     MainMenu.FileUpdater.UpdateTXTFile(new File(oldFileName));
-    btnDownloadSession.setEnabled(true);
-    btnOpenSavedFile.setEnabled(true);
-    btnGeneratePDF.setEnabled(true);
-    btnEraseReconData.setEnabled(true);
-    btnSyncTime.setEnabled(true);
-    btnOpenPDF.setEnabled(true);
+    EnableAllButtons(true);
     
     return null;
     }
@@ -1468,30 +1384,10 @@ private class UpdateTXTFile extends SwingWorker<Void, Void>{
 private class SyncReconTime extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-    btnDownloadSession.setEnabled(false);
-    btnOpenSavedFile.setEnabled(false);
-    btnGeneratePDF.setEnabled(false);
-    btnEraseReconData.setEnabled(false);
-    btnSyncTime.setEnabled(false);
-    btnOpenPDF.setEnabled(false);
-    btnClearTamperFlag.setEnabled(false);
-    btnClearMemory.setEnabled(false);
-    btnClearSession.setEnabled(false);
-    btnAllDataDump.setEnabled(false);
-    btnCreateTXT.setEnabled(false);
+    EnableAllButtons(false);
     Logging.main("SyncTime button pressed.");
     CRM_Parameters = ScanComm.run(7);
-    btnDownloadSession.setEnabled(true);
-    btnOpenSavedFile.setEnabled(true);
-    btnGeneratePDF.setEnabled(true);
-    btnEraseReconData.setEnabled(true);
-    btnSyncTime.setEnabled(true);
-    btnOpenPDF.setEnabled(true);
-    btnClearTamperFlag.setEnabled(true);
-    btnClearMemory.setEnabled(true);
-    btnClearSession.setEnabled(true);
-    btnAllDataDump.setEnabled(true);
-    btnCreateTXT.setEnabled(true);
+    EnableAllButtons(true);
     
     return null;
     }
@@ -1500,15 +1396,7 @@ private class SyncReconTime extends SwingWorker<Void, Void>{
 private class ClearTamperStatus extends SwingWorker<Void, Void>{
     @Override
     protected Void doInBackground() throws Exception {
-        btnConnect.setEnabled(false);
-        btnCreateTXT.setEnabled(false);
-        btnClearMemory.setEnabled(false);
-        btnClearSession.setEnabled(false);
-        btnAllDataDump.setEnabled(false);
-        btnSyncTime.setEnabled(false);
-        btnOpenPDF.setEnabled(false);
-        btnAllDataDump.setEnabled(false);
-        btnOpenSavedFile.setEnabled(false);
+        EnableAllButtons(false);
         Logging.main("ClearTamperFlag button pressed.");
         //We need to check firmware revision. The :WX command was not available on pre-1.16 firmware revisions.
         CRM_Parameters = ScanComm.run(1);
@@ -1516,17 +1404,33 @@ private class ClearTamperStatus extends SwingWorker<Void, Void>{
                 if (MainMenuUI.convertFirmwareVersionToNumber() >= 1.16)
                 CRM_Parameters = ScanComm.run(9);
             }
-        btnConnect.setEnabled(true);
-        btnCreateTXT.setEnabled(true);
-        btnClearMemory.setEnabled(true);
-        btnClearSession.setEnabled(true);
-        btnAllDataDump.setEnabled(true);
-        btnSyncTime.setEnabled(true);
-        btnOpenPDF.setEnabled(true);
-        btnAllDataDump.setEnabled(true);
-        btnOpenSavedFile.setEnabled(true);
+        EnableAllButtons(true);
         
         return null;
+    }
+}
+
+public void EnableAllButtons(boolean boolEnableButtons) {
+    btnAllDataDump.setEnabled(boolEnableButtons);
+    btnClearMemory.setEnabled(boolEnableButtons);
+    btnClearSession.setEnabled(boolEnableButtons);
+    btnClearTamperFlag.setEnabled(boolEnableButtons);
+    btnConfig.setEnabled(boolEnableButtons);
+    btnConnect.setEnabled(boolEnableButtons);
+    btnCreateTXT.setEnabled(boolEnableButtons);
+    btnDownloadSession.setEnabled(boolEnableButtons);
+    btnEraseReconData.setEnabled(boolEnableButtons);
+    btnGeneratePDF.setEnabled(boolEnableButtons);
+    btnOpenPDF.setEnabled(boolEnableButtons);
+    btnOpenSavedFile.setEnabled(boolEnableButtons);
+    btnSyncTime.setEnabled(boolEnableButtons);
+    btnUpdateTXTFile.setEnabled(boolEnableButtons);
+    //Check if Config.FlagForm window is open, to disable the Apply button.
+    Window[] progWindows = Window.getWindows();
+    for (Window window : progWindows) {
+	if (window.getClass().toString().contains("Config.FlagForm")) {
+            FlagForm.btnApplySpecial.setEnabled(boolEnableButtons);
+        }
     }
 }
 
