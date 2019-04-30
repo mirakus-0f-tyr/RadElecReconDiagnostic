@@ -676,7 +676,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnGeneratePDFActionPerformed
 
     private void btnEraseReconDataActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEraseReconDataActionPerformed
-        ClearReconMemory worker = new ClearReconMemory();
+        ClearCurrentSession worker = new ClearCurrentSession();
 	worker.execute();
     }//GEN-LAST:event_btnEraseReconDataActionPerformed
 
