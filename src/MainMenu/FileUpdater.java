@@ -8,106 +8,104 @@ import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 
 public class FileUpdater {
-// This method works by writing a temporary file with the original customer and test site info cleared,
-// then writing a final "updated" file with the new information.  This gets the feature in place, but
-// there is likely a much better way to do this.  This method is a minefield.  There is a fair amount of
-// work to be done here, making sure files exist, that everything was done successfully, etc.
+
     public static void UpdateTXTFile(File oldFile) throws IOException {
 	BufferedReader br = null;
 	String currentLine = null;
 	BufferedWriter bw = null;
+	boolean custInfoFound = false, testSiteInfoFound = false;
+	boolean custLinesCounted = false, testSiteLinesCounted = false;
 	int customerLineCounter = 0;
 	int testSiteLineCounter = 0;
+	int intTrimSuffix;
 	String oldFileName = oldFile.getCanonicalPath();
 	String updatedFileName = oldFile.getName();
-
-	int intTrimSuffix;
-	if (updatedFileName.contains("_updated"))
-	    intTrimSuffix = updatedFileName.lastIndexOf("_updated");
-	else
-            intTrimSuffix = updatedFileName.lastIndexOf(".");
-
-        if (intTrimSuffix > 0) {
-            updatedFileName = updatedFileName.substring(0, intTrimSuffix);
-        }
-
-        updatedFileName = MainMenuUI.dataDir + File.separator + updatedFileName + "_updated.txt";
-	String tempFileName = MainMenuUI.dataDir + File.separator + "temp.txt";
-	File temporaryFile = new File(tempFileName);
+	String newline = System.getProperty("line.separator");
+	ArrayList<String> workingFile = new ArrayList<String>();
 
 	try {
-	    // first pass - count how many lines we need to clean
-            br = new BufferedReader(new InputStreamReader(new FileInputStream(oldFileName)));
+	    // DETERMINE FILE NAME
+	    // Trim off extension part of the filename so we can append _updated.txt
+	    if (updatedFileName.contains("_updated"))
+		intTrimSuffix = updatedFileName.lastIndexOf("_updated");
+	    else
+		intTrimSuffix = updatedFileName.lastIndexOf(".");
 
-	    for (currentLine = br.readLine(); currentLine != null; currentLine = br.readLine()) {
-		if (currentLine.contains("Customer information:")) {
-		    while (!(currentLine.contains("Test site information:"))) {
-			currentLine = br.readLine();
-			customerLineCounter += 1;
-		    }
-		}
-		if (currentLine.contains("Test site information:")) {
-		    while (!(currentLine.contains("Instrument Serial") || currentLine.contains("SUMMARY"))) {
-		        currentLine = br.readLine();
-			testSiteLineCounter += 1;
-		    }
-		}
-	    }
-	    br.close();
+            if (intTrimSuffix > 0) {
+		updatedFileName = updatedFileName.substring(0, intTrimSuffix);
+            }
 
-	    // second pass - write temporary file with select lines now blank
-	    bw = new BufferedWriter(new FileWriter(temporaryFile));
+            updatedFileName = MainMenuUI.dataDir + File.separator + updatedFileName + "_updated.txt";
+
+	    // LOAD ORIGINAL INTO RAM FOR EVALUATION
 	    br = new BufferedReader(new InputStreamReader(new FileInputStream(oldFileName)));
 
-	    for (currentLine = br.readLine(); currentLine != null; currentLine = br.readLine()) {
-	        bw.write(currentLine);
-		bw.write("\r\n");
+	    while ((currentLine = br.readLine()) != null)
+		workingFile.add(currentLine);
 
-	        if (currentLine.contains("Customer information:")) {
-		    for (int i = 0; i < customerLineCounter - 1; i++) {
-		        currentLine = br.readLine();
-		        bw.write("\r\n");
+	    br.close();
+
+	    // TRIM OUT ALL EXISTING DATA UNDER CUSTOMER AND TEST SITE INFO!
+	    // Count how many lines to remove...
+	    for (int i = 0; i < workingFile.size(); i++) {
+		if (custInfoFound && !custLinesCounted) {
+		    if (workingFile.get(i).contains("Test site"))
+			custLinesCounted = true;
+		    else
+			customerLineCounter++;
 		    }
+
+		if (testSiteInfoFound && !testSiteLinesCounted) {
+		    if (workingFile.get(i).contains("SUMMARY") || workingFile.get(i).contains("Instrument"))
+			testSiteLinesCounted = true;
+		    else
+			testSiteLineCounter++;
 		}
-		if (currentLine.contains("Test site information:")) {
-		    for (int i = 0; i < testSiteLineCounter - 1; i++) {
-		        currentLine = br.readLine();
-		        bw.write("\r\n");
+
+		if (workingFile.get(i).contains("Customer info"))
+		    custInfoFound = true;
+
+		if (workingFile.get(i).contains("Test site info"))
+		    testSiteInfoFound = true;
+	    }
+
+	    // Let's go through one final time to trim the lines...
+	    for (int i = 0; i < workingFile.size(); i++) {
+		if (i > 0) {
+		    if (workingFile.get(i - 1).contains("Customer info")) {
+			for (int j = 0; j < customerLineCounter; j++)
+			    workingFile.remove(i);
+		    }
+
+		    if (workingFile.get(i - 1).contains("Test site")) {
+			for (int k = 0; k < testSiteLineCounter; k++)
+			    workingFile.remove(i);
 		    }
 		}
 	    }
-	    br.close();
-	    bw.close();
 
-	    // third pass - write the file again, updating with the new information
 	    bw = new BufferedWriter(new FileWriter(new File(updatedFileName)));
-	    br = new BufferedReader(new InputStreamReader(new FileInputStream(temporaryFile)));
 
-	    for (currentLine = br.readLine(); currentLine != null; currentLine = br.readLine()) {
-	        bw.write(currentLine);
-		bw.write("\r\n");
+	    for (int i = 0; i < workingFile.size(); i++) {
+		currentLine = workingFile.get(i);
+		bw.write(currentLine + newline);
 
-		if (currentLine.contains("Customer information:")) {
-		    currentLine = br.readLine();
-		    bw.write(MainMenuUI.txtCustomerInfo.getText());
-		}
+		if (currentLine.contains("Customer information:"))
+		    bw.write(MainMenuUI.txtCustomerInfo.getText() + newline + newline);
 
-		if (currentLine.contains("Test site information:")) {
-		    currentLine = br.readLine();
-		    bw.write(MainMenuUI.txtTestSiteInfo.getText());
-		}
+		if (currentLine.contains("Test site information:"))
+		    bw.write(MainMenuUI.txtTestSiteInfo.getText() + newline + newline);
 	    }
-	    br.close();
+
 	    bw.close();
-
-	    temporaryFile.delete();
 	    Logging.main("Updated file has been written.");
-	}
+        }
 
-	catch(IOException ex) {
-	    ex.printStackTrace();
+	catch (Exception anyEx) {
+	    Logging.main(anyEx.toString());
 	}
     }
 }
