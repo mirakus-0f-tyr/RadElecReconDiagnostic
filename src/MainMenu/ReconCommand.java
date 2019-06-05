@@ -167,8 +167,8 @@ class ReconCommand {
 	//This while loop will determine the file iteration in the naming process, so that we're not overwriting previously
         //created files. This will basically append -x to the end of a file name, where x is the long file iteration counter.
         while(DoesReconFileExist==true) {
-            TXT_name = MainMenuUI.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
-            XLS_name = MainMenuUI.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
+            TXT_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
+            XLS_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
             TXT_file = new File(TXT_name);
             XLS_file = new File(XLS_name);
             TXT_exists = TXT_file.exists();

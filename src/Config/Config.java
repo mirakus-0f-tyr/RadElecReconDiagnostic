@@ -13,7 +13,7 @@ import static MainMenu.MainMenuUI.strProtocol;
 import static MainMenu.MainMenuUI.strTampering;
 import static MainMenu.MainMenuUI.strWeather;
 import static MainMenu.MainMenuUI.strRoomDeployed;
-import static MainMenu.MainMenuUI.configDir;
+import static MainMenu.InitDirs.configDir;
 import java.io.*;
 
 /**

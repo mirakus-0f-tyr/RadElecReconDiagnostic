@@ -99,22 +99,22 @@ public class CreatePDF {
         
         PDDocument doc = new PDDocument();
         
-        File fileSignatureAnalystBMP = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
+        File fileSignatureAnalystBMP = new File(InitDirs.configDir + File.separator + "signature.bmp");
         if (fileSignatureAnalystBMP.exists()) {
             boolFoundSignatureBMP = true;
             Logging.main("Analyst signature found as BMP!");
         }
-        File fileSignatureAnalystPNG = new File(MainMenuUI.configDir + File.separator + "signature.png");
+        File fileSignatureAnalystPNG = new File(InitDirs.configDir + File.separator + "signature.png");
         if (fileSignatureAnalystPNG.exists()) {
             boolFoundSignaturePNG = true;
             Logging.main("Analyst signature found as PNG!");
         }
-        File fileSignatureAnalystJPG = new File(MainMenuUI.configDir + File.separator + "signature.jpg");
+        File fileSignatureAnalystJPG = new File(InitDirs.configDir + File.separator + "signature.jpg");
         if (fileSignatureAnalystJPG.exists()) {
             boolFoundSignatureJPG = true;
             Logging.main("Analyst signature found as JPG!");
         }
-        File fileSignatureAnalystJPEG = new File(MainMenuUI.configDir + File.separator + "signature.jpeg");
+        File fileSignatureAnalystJPEG = new File(InitDirs.configDir + File.separator + "signature.jpeg");
         if (fileSignatureAnalystJPEG.exists()) {
             boolFoundSignatureJPEG = true;
             Logging.main("Analyst signature found as JPEG!");
@@ -135,14 +135,14 @@ public class CreatePDF {
             
             //Check to see if the proper fonts exist.
             
-            File fontCalibri = new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf");
+            File fontCalibri = new File(InitDirs.fontsDir + File.separator + "calibri.ttf");
             if (fontCalibri.exists()) {
                 Logging.main("Calibri font found!");
             } else {
                 Logging.main("ERROR: Calibri font NOT found... switching to embedded Helvetica.");
                 Logging.main("ERROR: Calibri font attempted path = " + fontCalibri);
             }
-            File fontCalibriBold = new File(MainMenuUI.fontsDir + File.separator + "calibri_bold.ttf");
+            File fontCalibriBold = new File(InitDirs.fontsDir + File.separator + "calibri_bold.ttf");
             if (fontCalibri.exists()) {
                 Logging.main("Calibri Bold font found!");
             } else {
@@ -152,8 +152,8 @@ public class CreatePDF {
             
             //Declare the TTF path and filename
             
-            PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
-            PDFont fontBold = fontCalibri.exists() ? PDType0Font.load(doc, new File(MainMenuUI.fontsDir + File.separator + "calibri_bold.ttf")) : PDType1Font.HELVETICA_BOLD; //Truetype fonts are easier to utilize when it comes to margins, etc.
+            PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(InitDirs.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
+            PDFont fontBold = fontCalibri.exists() ? PDType0Font.load(doc, new File(InitDirs.fontsDir + File.separator + "calibri_bold.ttf")) : PDType1Font.HELVETICA_BOLD; //Truetype fonts are easier to utilize when it comes to margins, etc.
             
             PDPageContentStream contents = new PDPageContentStream(doc, page);
             
@@ -408,7 +408,7 @@ public class CreatePDF {
             DrawAverageRadonBanner(contents, page_chart, fontBold, true);
             
 	    //This draws the graph image (graph.png), which was externalized to the file in the CreateGraph class.
-	    PDImageXObject graphPNG = PDImageXObject.createFromFile(MainMenuUI.boolMacOS==true ? MainMenuUI.baseDir + File.separator + "graph.png" : "graph.png", doc);
+	    PDImageXObject graphPNG = PDImageXObject.createFromFile(InitDirs.boolMacOS==true ? InitDirs.baseDir + File.separator + "graph.png" : "graph.png", doc);
 
 	    PDF_Y -= 400;
 	    contents.drawImage(graphPNG, marginSide*2, PDF_Y);
@@ -577,19 +577,19 @@ public class CreatePDF {
             
             Logging.main("End PDF generation stage. Writing to file...");
             
-	    if (MainMenuUI.reportsDir.exists() && MainMenuUI.reportsDir.isDirectory())
-		doc.save(MainMenuUI.reportsDir + File.separator+ PDF_Name);
+	    if (InitDirs.reportsDir.exists() && InitDirs.reportsDir.isDirectory())
+		doc.save(InitDirs.reportsDir + File.separator+ PDF_Name);
 	    else {
 		Logging.main("Reports directory does not exist.  Creating...");
-		MainMenuUI.reportsDir.mkdirs();
-		doc.save(MainMenuUI.reportsDir + File.separator + PDF_Name);
+		InitDirs.reportsDir.mkdirs();
+		doc.save(InitDirs.reportsDir + File.separator + PDF_Name);
 	    }
             
             //Draw the footer info (page #, version, etc.)
             //It's a bit shoddy, but because we're appending, we need to have already saved it
             //and then re-open the file.
-            File ReconPDF = new File(MainMenuUI.reportsDir + File.separator + PDF_Name);
-            drawFooterInfo(ReconPDF, MainMenuUI.reportsDir + File.separator + PDF_Name);
+            File ReconPDF = new File(InitDirs.reportsDir + File.separator + PDF_Name);
+            drawFooterInfo(ReconPDF, InitDirs.reportsDir + File.separator + PDF_Name);
             
 	    if (ReconPDF.exists()) {
 		Logging.main(PDF_Name + " has been created.");
@@ -657,7 +657,7 @@ public class CreatePDF {
     
     public static void GetCompanyInfo() {
         Logging.main("Called CreatePDF::GetCompanyInfo() for PDF generation...");
-        String company_info = MainMenuUI.configDir + File.separator + "company.txt";
+        String company_info = InitDirs.configDir + File.separator + "company.txt";
         Logging.main("CreatePDF::GetCompanyInfo() File Source = " + company_info);
         try {
             //The user may not have opened the Config menu, so we'll need to pull information from the company.txt file explicitly.
@@ -1128,13 +1128,13 @@ public class CreatePDF {
                 float textWidth = (font.getStringWidth(textLine) / 1000 * fontSize);
                 
                 //Prepare and scale the digital signature image, then draw it. Prioritize BMP > PNG > JPG/JPEG?
-                File fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.bmp");
+                File fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.bmp");
                 if (!fileSignatureAnalyst.exists()) {
-                    fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.png");
+                    fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.png");
                     if (!fileSignatureAnalyst.exists()) {
-                        fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.jpg");
+                        fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.jpg");
                         if (!fileSignatureAnalyst.exists()) {
-                            fileSignatureAnalyst = new File(MainMenuUI.configDir + File.separator + "signature.jpg");
+                            fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.jpg");
                         } else {
                             Logging.main("CreatePDF::DrawDigitalSignature ERROR: Signature file not found!");
                         }
@@ -1169,8 +1169,8 @@ public class CreatePDF {
     private void drawFooterInfo(File ReconPDF, String FileName) {
         try {
             PDDocument doc = PDDocument.load(ReconPDF);
-            File fontCalibri = new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf");
-            PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(MainMenuUI.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
+            File fontCalibri = new File(InitDirs.fontsDir + File.separator + "calibri.ttf");
+            PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(InitDirs.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
             if(doc.getNumberOfPages() >= 1) {
                 fontSize = 8;
                 for (int numPages = 0; numPages < doc.getNumberOfPages(); numPages++) {

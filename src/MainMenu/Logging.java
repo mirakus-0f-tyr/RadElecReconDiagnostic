@@ -1,6 +1,6 @@
 package MainMenu;
 
-import static MainMenu.MainMenuUI.logsDir;
+import static MainMenu.InitDirs.logsDir;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -48,7 +48,7 @@ public class Logging {
         try {
             System.out.println("Initiating logging system...");
             createLogFile();
-            logHandler = new FileHandler(MainMenuUI.logsDir + File.separator + "RDT.log");
+            logHandler = new FileHandler(InitDirs.logsDir + File.separator + "RDT.log");
             logger.addHandler(logHandler);
             SimpleFormatter formatter = new SimpleFormatter();
             logHandler.setFormatter(formatter);

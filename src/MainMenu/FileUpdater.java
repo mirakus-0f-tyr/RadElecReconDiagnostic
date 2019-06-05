@@ -38,7 +38,7 @@ public class FileUpdater {
 		updatedFileName = updatedFileName.substring(0, intTrimSuffix);
             }
 
-            updatedFileName = MainMenuUI.dataDir + File.separator + updatedFileName + "_updated.txt";
+            updatedFileName = InitDirs.dataDir + File.separator + updatedFileName + "_updated.txt";
 
 	    // LOAD ORIGINAL INTO RAM FOR EVALUATION
 	    br = new BufferedReader(new InputStreamReader(new FileInputStream(oldFileName)));
