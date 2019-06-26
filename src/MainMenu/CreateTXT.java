@@ -39,6 +39,8 @@ class CountContainer {
 
 public class CreateTXT {
 
+    // OS specific newline string
+    public static String newline = System.getProperty("line.separator");
     public static PrintWriter writer; // declaration - is defined later
 
     public static void main() throws FileNotFoundException, UnsupportedEncodingException, InterruptedException {
@@ -166,15 +168,15 @@ public class CreateTXT {
             // do this if we're in diagnostic mode
             if (BeginAveraging == true && MainMenuUI.diagnosticMode) {
                 // write customer info to file
-                writer.println("\r\n");
+                writer.println(newline);
                 writer.println("Customer information:");
                 writer.println(MainMenuUI.txtCustomerInfo.getText());
-                writer.println("\r\n");
+                writer.println(newline);
 
                 // write test site info to file
                 writer.println("Test site information:");
                 writer.println(MainMenuUI.txtTestSiteInfo.getText());
-                writer.println("\r\n");
+                writer.println(newline);
 
                 writer.println("SUMMARY:");
                 writer.println("Instrument Serial: " + strInstrumentSerial);
@@ -203,23 +205,23 @@ public class CreateTXT {
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
 		writer.println("Room: " + MainMenu.MainMenuUI.strRoomDeployed);
-                writer.println("\n");
+                writer.println(newline);
                 writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
                 writer.println("Retrieved By: " + MainMenu.MainMenuUI.strRetrievedBy);
-                writer.println("\n");
+                writer.println(newline);
             } // or this if we're in regular user mode
             else if (BeginAveraging == true) {
                 // write customer info to file
-                writer.println("\r\n");
+                writer.println(newline);
                 writer.println("Customer information:");
                 writer.println(MainMenuUI.txtCustomerInfo.getText());
-                writer.println("\r\n");
+                writer.println(newline);
 
                 // write test site info to file
                 writer.println("Test site information:");
                 writer.println(MainMenuUI.txtTestSiteInfo.getText());
-                writer.println("\r\n");
+                writer.println(newline);
                 
                 writer.println("Instrument Serial: " + strInstrumentSerial);
                 writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));
@@ -246,11 +248,11 @@ public class CreateTXT {
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
 		writer.println("Room: " + MainMenu.MainMenuUI.strRoomDeployed);
-                writer.println("\n");
+                writer.println(newline);
                 writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
                 writer.println("Retrieved By: " + MainMenu.MainMenuUI.strRetrievedBy);
-                writer.println("\n");
+                writer.println(newline);
             }
             // do following regardless of mode
             writer.println("Radon Concentration");
@@ -293,7 +295,7 @@ public class CreateTXT {
 		avgResult2 = avgResult2 / (double)AllHourlyCounts.size();
 	    }
 
-            writer.println("\n");
+            writer.println(newline);
 
             if (MainMenuUI.unitType == "US") {
                 writer.println("Chamber 1 Avg pCi/L = " + df.format((double) avgResult1));

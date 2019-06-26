@@ -38,6 +38,9 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Operating System Variables
     //public static boolean boolMacOS = false;
+
+    // OS specific newline string
+    public static String newline = System.getProperty("line.separator");
     
     //Logging Variables
     public static boolean initializedLogging = false;
@@ -858,8 +861,8 @@ public void createCompanyTXT() {
     String companyTXT = configDir + File.separator + "company.txt";
         try {
             PrintWriter pw = new PrintWriter(companyTXT);
-	    pw.println("\n");
-	    pw.println("\n");
+	    pw.println(newline);
+	    pw.println(newline);
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create company.txt file!");
@@ -870,12 +873,12 @@ public static void createConfigTXT() {
     String configTXT = configDir + File.separator + "config.txt";
         try {
             PrintWriter pw = new PrintWriter(configTXT);
-            pw.print("UnitType=US\n");
-            pw.print("DisplaySig=1\n");
-	    pw.print("OpenPDFWindow=1\n");
-	    pw.print("TestClearMode=2\n");
-            pw.print("TiltSensitivity=5\n");
-            pw.print("AutoLoadFile=1\n");
+            pw.print("UnitType=US" + newline);
+            pw.print("DisplaySig=1" + newline);
+	    pw.print("OpenPDFWindow=1" + newline);
+	    pw.print("TestClearMode=2" + newline);
+            pw.print("TiltSensitivity=5" + newline);
+            pw.print("AutoLoadFile=1" + newline);
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create config.txt file!");
@@ -982,12 +985,12 @@ public static void createDeploymentTXT() {
     String configTXT = configDir + File.separator + "deployment.txt";
         try {
             PrintWriter pw = new PrintWriter(configTXT);
-            pw.print("Protocol: Closed Building Conditions Met\n");
-            pw.print("Tampering: No Tampering Detected\n");
-            pw.print("Weather: No Abnormal Weather Conditions\n");
-            pw.print("Mitigation: No Mitigation System Installed\n");
-            pw.print("Comment: Thanks for the business!\n");
-	    pw.print("Room: Basement\n");
+            pw.print("Protocol: Closed Building Conditions Met" + newline);
+            pw.print("Tampering: No Tampering Detected" + newline);
+            pw.print("Weather: No Abnormal Weather Conditions" + newline);
+            pw.print("Mitigation: No Mitigation System Installed" + newline);
+            pw.print("Comment: Thanks for the business!" + newline);
+	    pw.print("Room: Basement" + newline);
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create deployment.txt file!");
@@ -1039,15 +1042,15 @@ public static void createReportTXT() {
     String companyTXT = configDir + File.separator + "report.txt";
         try {
             PrintWriter pw = new PrintWriter(companyTXT);
-            pw.print("DeployedBy=\n");
-            pw.print("RetrievedBy=\n");
-            pw.print("AnalyzedBy=\n");
+            pw.print("DeployedBy=" + newline);
+            pw.print("RetrievedBy=" + newline);
+            pw.print("AnalyzedBy=" + newline);
             pw.print("Radon is the second leading cause of lung cancer after smoking. The U.S. Environmental Protection Agency (US EPA)");
             pw.print(" and the Surgeon General strongly recommend that further action be taken when a home’s radon test results are 4.0 pCi/L or greater.");
             pw.print(" The national average indoor radon level is about 1.3 pCi/L. The higher the home’s radon level, the greater the health risk to you");
             pw.print(" and your family. Reducing your radon levels can be done easily, effectively and fairly inexpensively. Even homes with very high");
             pw.print(" radon levels can be reduced below 4.0 pCi/L. Please refer to the EPA website at www.epa.gov/radon for further information to assist");
-            pw.print(" you in evaluating your test results or deciding if further action is needed.\n");
+            pw.print(" you in evaluating your test results or deciding if further action is needed." + newline);
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create report.txt file!");
