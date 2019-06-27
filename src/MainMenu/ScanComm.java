@@ -8,6 +8,7 @@ package MainMenu;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.text.ParseException;
 import java.util.regex.Pattern;
@@ -23,6 +24,8 @@ import jxl.write.WriteException;
 
 import Config.FlagForm;
 import java.io.StringWriter;
+
+import static MainMenu.InitDirs.*;
 
 public class ScanComm {
    
@@ -278,6 +281,7 @@ public class ScanComm {
             WriteComm.main(scannedPort, ReconCommand.ReconConfirm); //Check the Recon to see if a new record exists.
             Thread.sleep(10);
             String DeviceResponse = ReadComm.main(scannedPort, 19);
+	    String dataLine; // This is the final, modified line that will be written to the file.
             String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
             ConfirmSN = DeviceResponse_parsed[3];
             //This is needed to remove the carriage-return at the end of the serial number, as it's the last element in the array.
@@ -288,7 +292,7 @@ public class ScanComm {
             DeviceResponse = ReadComm.main(scannedPort, 19);
             DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
             String DeviceResponse_targeted = "Let's begin!";
-            PrintWriter writer = new PrintWriter("data/Recon_" + ConfirmSN + "_AllData.txt", "UTF-8");
+            PrintWriter writer = new PrintWriter(dataDir + File.separator + "Recon_" + ConfirmSN + "_AllData.txt", "UTF-8");
 
 	    numDataRecords = diagCircularBuffer ? 6044 : 6144;
 
@@ -308,7 +312,8 @@ public class ScanComm {
                 if(DeviceResponse_targeted.equals("=DB")) { 
                     DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                 }
-                writer.println(DeviceResponse);
+		dataLine = DeviceResponse.replaceAll("[\n\r]", "");
+                writer.println(dataLine);
                 MainMenuUI.displayProgressLabel("Reading Record #" + Integer.toString(i) + "...");
                 i++;
             }
@@ -334,8 +339,8 @@ public class ScanComm {
 		    if(DeviceResponse_targeted.equals("=DB")) {
 			DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
                     }
-
-		    writer.println(DeviceResponse);
+		    dataLine = DeviceResponse.replaceAll("[\n\r]", "");
+		    writer.println(dataLine);
                    MainMenuUI.displayProgressLabel("Reading Diagnostic Record #" + Integer.toString(i) + "...");
                    i++;
 		}
