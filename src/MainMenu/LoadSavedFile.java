@@ -17,7 +17,6 @@ import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.apache.commons.lang3.StringUtils;
-
 /**
  *
  * @author Rad Elec Inc.
@@ -46,6 +45,7 @@ public class LoadSavedFile {
     public static String strReportMitigation = "Unknown";
     public static String strReportComment = "Unknown";
     public static String strRoomDeployed = "Unknown";
+    public static String finalRnCAvg = "";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -179,6 +179,12 @@ public class LoadSavedFile {
 		    MainMenu.MainMenuUI.txtCustomerInfo.setText(strCustomerInfo);
 		    MainMenu.MainMenuUI.txtTestSiteInfo.setText(strTestSiteInfo);
 
+		    // Read the final radon concentration average from the text file and display on main window
+		    if(strLine.contains("Average ")) {
+			finalRnCAvg = strLine.substring(8);
+			MainMenuUI.lblFinalAvg.setText(finalRnCAvg);
+		    }
+
                     //Display Main Menu Console label
                     MainMenu.MainMenuUI.lblSystemConsole.setText("File successfully loaded.");
                 }
@@ -213,5 +219,5 @@ public class LoadSavedFile {
         }
         return "Unknown Serial";
     }
-    
+
 }
