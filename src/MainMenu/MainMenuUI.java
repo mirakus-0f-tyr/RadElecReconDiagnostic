@@ -81,6 +81,8 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int testClearMode = 2; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     public static boolean autoLoadFile = true;
+    public static boolean dataPathOverride = false;
+    public static String specifiedDataDir;
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -119,6 +121,10 @@ public class MainMenuUI extends javax.swing.JFrame {
         parseDeploymentTXT();
         parseReportTXT();
         initComponents();
+
+	// only call this again if overriding dataDir
+	if (dataPathOverride)
+	    InitDirs.main();
         
         //Invis certain labels on load
         lblReconSN.setVisible(false);
@@ -953,6 +959,11 @@ public static void parseConfigTXT() {
             } else if(strLine.contains("AutoLoadFile=")) {
                 autoLoadFile = !strLine.contains("0");
             }
+	      else if(strLine.contains("DataDir=")) {
+		dataPathOverride = true;
+		specifiedDataDir = strLine.substring(8);
+		Logging.main("Data directory overridden. New location is " + specifiedDataDir);
+	    }
         }
 
 	// cleanup buffered reader

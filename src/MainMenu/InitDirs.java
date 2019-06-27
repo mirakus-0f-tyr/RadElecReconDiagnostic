@@ -118,7 +118,12 @@ public class InitDirs {
             }else {
                 baseDir = new File("ReconDownloadTool");
                 configDir = new File("config");
-                dataDir = new File("data");
+
+		if (MainMenuUI.dataPathOverride)
+		    dataDir = new File(MainMenuUI.specifiedDataDir);
+		else
+		    dataDir = new File("data");
+
                 fontsDir = new File("fonts");
                 logsDir = new File("logs");
                 reportsDir = new File("reports");
