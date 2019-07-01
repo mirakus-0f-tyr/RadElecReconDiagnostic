@@ -1269,6 +1269,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
 	    btnSyncTime.setVisible(false); // disable the sync time button if no Recon is connected
 
         EnableAllButtons(true);
+	lblFinalAvg.setText("");
         return null;
     }
 }
