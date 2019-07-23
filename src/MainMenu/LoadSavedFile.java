@@ -45,7 +45,6 @@ public class LoadSavedFile {
     public static String strReportMitigation = "Unknown";
     public static String strReportComment = "Unknown";
     public static String strRoomDeployed = "Unknown";
-    public static String finalRnCAvg = "";
     
     public static void main(String ReconTXTFile) {
         //Variable declarations
@@ -178,12 +177,6 @@ public class LoadSavedFile {
 		    // reload customer and test site info in MainMenuUI in case user wants to re-edit
 		    MainMenu.MainMenuUI.txtCustomerInfo.setText(strCustomerInfo);
 		    MainMenu.MainMenuUI.txtTestSiteInfo.setText(strTestSiteInfo);
-
-		    // Read the final radon concentration average from the text file and display on main window
-		    if(strLine.contains("Average ")) {
-			finalRnCAvg = strLine.substring(8);
-			MainMenuUI.lblFinalAvg.setText(finalRnCAvg);
-		    }
 
                     //Display Main Menu Console label
                     MainMenu.MainMenuUI.lblSystemConsole.setText("File successfully loaded.");

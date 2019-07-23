@@ -475,6 +475,9 @@ public class CreateGraph extends JFrame {
                 OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0)); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
             }
             
+            //Display the Avg Radon Concentration Label
+            MainMenuUI.DisplayAvgRadonLabel(OverallAvgRnC);
+            
             //We need to add each completed series to the dataset, or we won't have any data to display.
             //Only display AvRnC series for End-User Mode, whereas display both chambers for diagnostic mode.
             if(MainMenu.MainMenuUI.diagnosticMode) {

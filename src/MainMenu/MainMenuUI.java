@@ -29,6 +29,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.JOptionPane;
 
 import static MainMenu.InitDirs.*;
+import java.text.DecimalFormat;
 
 /**
  *
@@ -1114,6 +1115,16 @@ public static void findOperatingSystem() {
     if(boolMacOS) {
         Logging.main("WARNING: Walled garden detected. Redirecting config/data/reports folders to documents...");
     }
+}
+
+public static void DisplayAvgRadonLabel(double AvgRnC) {
+    String strAvgRnC;
+    if(unitType.equals("SI")) {
+        strAvgRnC = new DecimalFormat("0").format(AvgRnC); //No decimal places for Bq/m^3...
+    } else {
+        strAvgRnC = new DecimalFormat("0.0").format(AvgRnC);
+    }
+    lblFinalAvg.setText("Average Radon: " + strAvgRnC + (unitType.equals("SI") ? " Bq/m³" : " pCi/L"));
 }
 
 public static void checkFilesWrittenSuccessfully() {
