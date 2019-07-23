@@ -194,6 +194,9 @@ public class LoadSavedFile {
             
             //Creates graph
             String test_args[] = {"Radon Concentration", MainMenu.MainMenuUI.lblLoadedFileName.getText()};
+            //Reset photodiode failure booleans...
+            CreateGraph.photodiodeFailure_Ch1 = false;
+            CreateGraph.photodiodeFailure_Ch2 = false;
             CreateGraph.main(test_args);
             
         } catch (FileNotFoundException ex) {

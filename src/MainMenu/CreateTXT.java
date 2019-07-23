@@ -11,7 +11,6 @@ import java.text.DecimalFormat;
 import java.util.LinkedList;
 import java.time.Duration;
 import java.util.Arrays;
-
 import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 
@@ -81,6 +80,12 @@ public class CreateTXT {
 	// used when traversing session list
 	int sessionCounter = 0;
 
+        //Used to determine if a photodiode failure has occurred
+        int consecutiveZeroTally_Ch1 = 0; //This will tally the consecutive number of hourly zero counts on chamber 1
+        int consecutiveZeroTally_Ch2 = 0; //This will tally the consecutive number of hourly zero counts on chamber 2
+        boolean photodiodeFailure_Ch1 = false; //If consecutiveZeroTally_Ch1 >= MainMenuUI.ConsecutiveZeroLimit (default=5), this becomes true.
+        boolean photodiodeFailure_Ch2 = false; //If consecutiveZeroTally_Ch2 >= MainMenuUI.ConsecutiveZeroLimit (default=5), this becomes true.
+                    
         // these are used for numerical formats at the final stage of writing to text
         // the DecimalFormat object has the ability to set properties such as rounding up or down
         // investigate later if we need more precision or if something is wrong
@@ -138,7 +143,28 @@ public class CreateTXT {
                     // if (!LTMode) - do not forget this won't work for LT mode!
                     ch1Counter += Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[10]);
                     ch2Counter += Integer.parseInt(ReconCommand.reconSession.get(sessionCounter)[11]);
-
+                    
+                    //Consecutive Zero Tally, for determining possible photodiode failure...
+                    if(ch1Counter==0) {
+                        consecutiveZeroTally_Ch1++;
+                        if(consecutiveZeroTally_Ch1>=MainMenuUI.ConsecutiveZeroLimit) {
+                            Logging.main("WARNING: " + Integer.toString(MainMenuUI.ConsecutiveZeroLimit) + " consecutive zero counts read on Chamber 1!");
+                            photodiodeFailure_Ch1 = true;
+                        }
+                    } else {
+                        consecutiveZeroTally_Ch1=0;
+                    }
+                    if(ch2Counter==0) {
+                        consecutiveZeroTally_Ch2++;
+                        if(consecutiveZeroTally_Ch2>=MainMenuUI.ConsecutiveZeroLimit) {
+                            Logging.main("WARNING: " + Integer.toString(MainMenuUI.ConsecutiveZeroLimit) + " consecutive zero counts read on Chamber 2!");
+                            photodiodeFailure_Ch2 = true;
+                        }
+                    } else {
+                        consecutiveZeroTally_Ch2=0;
+                    }
+                    
+                    
 		    if (ReconCommand.longTermMode) {
 		        if (tenMinuteCounter == 2) {
 		            AllHourlyCounts.addLast(new CountContainer(ch1Counter, ch2Counter));
@@ -177,7 +203,17 @@ public class CreateTXT {
                 writer.println("Test site information:");
                 writer.println(MainMenuUI.txtTestSiteInfo.getText());
                 writer.println(newline);
-
+                
+                if(photodiodeFailure_Ch1==true || photodiodeFailure_Ch2==true) {
+                    if(photodiodeFailure_Ch1==true) {
+                        writer.println("POSSIBLE DETECTOR FAILURE IN CHAMBER 1!");
+                    }
+                    if(photodiodeFailure_Ch2==true) {
+                        writer.println("POSSIBLE DETECTOR FAILURE IN CHAMBER 2!");
+                    }
+                    writer.println(newline);
+                }
+                
                 writer.println("SUMMARY:");
                 writer.println("Instrument Serial: " + strInstrumentSerial);
                 writer.println("Start Date/Time: " + StartDate.format(DateTimeDisplay));

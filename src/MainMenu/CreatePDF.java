@@ -464,7 +464,13 @@ public class CreatePDF {
                     contents.showText(textLine);
                     //Radon
                     contents.moveTextPositionByAmount(115, 0);
-                    textLine = HourlyReconData.get(arrayCounter).get(2);
+                    if(MainMenuUI.photodiodeFailureRecovery==true && CreateGraph.photodiodeFailure_Ch1==true && CreateGraph.photodiodeFailure_Ch2==false) {
+                        textLine = HourlyReconData.get(arrayCounter).get(8);
+                    } else if (MainMenuUI.photodiodeFailureRecovery==true && CreateGraph.photodiodeFailure_Ch2==true && CreateGraph.photodiodeFailure_Ch1==false) {
+                        textLine = HourlyReconData.get(arrayCounter).get(7);
+                    } else {
+                        textLine = HourlyReconData.get(arrayCounter).get(2);
+                    }
                     contents.showText(textLine);
                     //Temperature
                     contents.moveTextPositionByAmount(90, 0);
@@ -699,7 +705,7 @@ public class CreatePDF {
             contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
             contents.endText();
-            Logging.main("Successfully navigated through DrawCompanyHeader()!");
+            Logging.main("Successfully navigated through CreatePDF::DrawCompanyHeader()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -736,7 +742,8 @@ public class CreatePDF {
             contents.newLine(); //We should put an extra newLine here, to give us a bit more distance from the title block.
             contents.setFont(fontDate, fontSize);
             contents.showText(textLine);
-            contents.endText(); //end date text block    
+            contents.endText(); //end date text block
+            Logging.main("Successfully navigated through CreatePDF::DrawTitleHeader()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -884,7 +891,7 @@ public class CreatePDF {
             contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            
+            Logging.main("Successfully navigated through CreatePDF::DrawAverageRadonBanner()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -1074,7 +1081,8 @@ public class CreatePDF {
                 }
                 contents.showText(combinedDataArray[i]);
             }
-            contents.endText();            
+            contents.endText();  
+            Logging.main("Successfully navigated through CreatePDF::DrawTestSummaryBlock()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));

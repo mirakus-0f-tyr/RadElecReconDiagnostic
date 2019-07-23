@@ -26,6 +26,7 @@ import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import javax.swing.JOptionPane;
 import org.jfree.chart.ChartMouseEvent;
 import org.jfree.chart.ChartMouseListener;
 import org.jfree.chart.ChartPanel;
@@ -59,6 +60,8 @@ import org.jfree.ui.RectangleEdge;
 public class CreateGraph extends JFrame {
     
     public static double OverallAvgRnC = 0;
+    public static boolean photodiodeFailure_Ch1 = false; //If CreateGraph.consecutiveZeroTally_Ch1 >= MainMenuUI.ConsecutiveZeroLimit (default=5), this becomes true.
+    public static boolean photodiodeFailure_Ch2 = false; //If CreateGraph.consecutiveZeroTally_Ch2 >= MainMenuUI.ConsecutiveZeroLimit (default=5), this becomes true.
     
     public static ArrayList<ArrayList<String>> HourlyReconData = new ArrayList<>();
     
@@ -257,6 +260,8 @@ public class CreateGraph extends JFrame {
             double hourlyAvgTemp = 0;
             double hourlyAvgPress = 0;
             double TotalAvgRnC = 0;
+            double TotalAvgRnC_Ch1 =0;
+            double TotalAvgRnC_Ch2 = 0;
             long TotalHourCounter = 0;
             long hourlyMovement = 0;
             int TempYear = 0;
@@ -266,6 +271,10 @@ public class CreateGraph extends JFrame {
             long hourCounter = 0;
             int avgCounter = 0; //this will allow us to correctly calculate average temps, humidities, pressures, etc.
             
+            //Used to determine if a photodiode failure has occurred!
+            int consecutiveZeroTally_Ch1 = 0; //This will tally the consecutive number of hourly zero counts on chamber 1
+            int consecutiveZeroTally_Ch2 = 0; //This will tally the consecutive number of hourly zero counts on chamber 2
+        
             //Let's make sure that our troublesome ArrayLists are still valid...
             Logging.main("Attempting to construct graph from ArrayList of size "+LoadedReconTXTFile.size()+"...");
             //Logging.main("Query validity of array: "+ Arrays.toString(LoadedReconTXTFile.toArray()));
@@ -320,6 +329,36 @@ public class CreateGraph extends JFrame {
                     tempCounts_Ch1 = tempCounts_Ch1 + Ch1Counts;
                     tempCounts_Ch2 = tempCounts_Ch2 + Ch2Counts;
                     
+                    //Keep an eye out for potential photodiode failure...
+                    if(Ch1Counts==0) {
+                        consecutiveZeroTally_Ch1++;
+                        if(consecutiveZeroTally_Ch1>=MainMenuUI.ConsecutiveZeroLimit && photodiodeFailure_Ch1==false) {
+                            if(MainMenuUI.photodiodeFailureRecovery==true) {
+                                JOptionPane.showMessageDialog(null, "Potential photodiode failure has been detected in chamber 1. The software will attempt to construct the graph and report using chamber 2.", "Potential Failure in Chamber #1", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Potential photodiode failure has been detected in chamber 1.", "Potential Failure in Chamber #1", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            Logging.main("WARNING: Possible photodiode failure detected in chamber 1 when creating graph.");
+                            photodiodeFailure_Ch1 = true;
+                        }
+                    } else {
+                        consecutiveZeroTally_Ch1 = 0;
+                    }
+                    if(Ch2Counts==0) {
+                        consecutiveZeroTally_Ch2++;
+                        if(consecutiveZeroTally_Ch2>=MainMenuUI.ConsecutiveZeroLimit && photodiodeFailure_Ch2==false) {
+                            if(MainMenuUI.photodiodeFailureRecovery==true) {
+                                JOptionPane.showMessageDialog(null, "Potential photodiode failure has been detected in chamber 2. The software will attempt to construct the graph and report using chamber 1.", "Potential Failure in Chamber #2", JOptionPane.INFORMATION_MESSAGE);
+                            } else {
+                                JOptionPane.showMessageDialog(null, "Potential photodiode failure has been detected in chamber 2.", "Potential Failure in Chamber #2", JOptionPane.INFORMATION_MESSAGE);
+                            }
+                            Logging.main("WARNING: Possible photodiode failure detected in chamber 2 when creating graph.");
+                            photodiodeFailure_Ch2 = true;
+                        }
+                    } else {
+                        consecutiveZeroTally_Ch2 = 0;
+                    }
+                    
                     TempYear = 2000 + Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(3));
                     ReconDate = LocalDateTime.of(TempYear,
                         Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(4)),
@@ -359,9 +398,12 @@ public class CreateGraph extends JFrame {
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter)); //This will calculate hourly average temperature (in Celsius)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
                                 
+
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC
                                 if(((TotalHourCounter>3) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
+                                    TotalAvgRnC_Ch1 = TotalAvgRnC_Ch1 + ((tempCounts_Ch1/LoadedReconCF1)*37); //Overall AvgRnC for Chamber 1 (in Bq/m3)
+                                    TotalAvgRnC_Ch2 = TotalAvgRnC_Ch2 + ((tempCounts_Ch2/LoadedReconCF2)*37); //Overall AvgRnC for Chamber 2 (in Bq/m3)
                                 }
                                 
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
@@ -387,6 +429,8 @@ public class CreateGraph extends JFrame {
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC and TotalHourCounter
                                 if(((TotalHourCounter>3) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
+                                    TotalAvgRnC_Ch1 = TotalAvgRnC_Ch1 + ((tempCounts_Ch1/LoadedReconCF1)); //Overall AvgRnC for Chamber 1 (in pCi/L)
+                                    TotalAvgRnC_Ch2 = TotalAvgRnC_Ch2 + ((tempCounts_Ch2/LoadedReconCF2)); //Overall AvgRnC for Chamber 2 (in pCi/L)
                                 }
                                 
                                 TotalHourCounter += 1; //Overall Hour Counter
@@ -423,11 +467,13 @@ public class CreateGraph extends JFrame {
             }
             
             //Assign Overall Average Radon Concentration
-            if(excludeFirst4Hours) {
-                OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-4); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
+            if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
+                OverallAvgRnC = TotalAvgRnC_Ch2 / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0));
+            } else if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
+                OverallAvgRnC = TotalAvgRnC_Ch1 / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0));
             } else {
-                OverallAvgRnC = TotalAvgRnC / TotalHourCounter;
-            } 
+                OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0)); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
+            }
             
             //We need to add each completed series to the dataset, or we won't have any data to display.
             //Only display AvRnC series for End-User Mode, whereas display both chambers for diagnostic mode.
@@ -436,7 +482,13 @@ public class CreateGraph extends JFrame {
                 datasetRadon.addSeries(Ch2_Series);
                 datasetRadon.addSeries(AvgRnC_Series);
             } else {
-                datasetRadon.addSeries(AvgRnC_Series);
+                if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
+                    datasetRadon.addSeries(Ch2_Series);
+                } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
+                    datasetRadon.addSeries(Ch1_Series);
+                } else {
+                    datasetRadon.addSeries(AvgRnC_Series);
+                }
             }
             datasetHumidity.addSeries(AvgHumidity_Series); //always add humidity
             datasetTemp.addSeries(AvgTemp_Series); //always add temperature

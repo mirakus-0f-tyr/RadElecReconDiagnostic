@@ -86,6 +86,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean autoLoadFile = true;
     public static boolean dataPathOverride = false;
     public static String specifiedDataDir;
+    public static boolean photodiodeFailureRecovery=true; //Attempts to reconstruct graph/PDF using the other chamber when photodiode failure is detected.
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -103,6 +104,8 @@ public class MainMenuUI extends javax.swing.JFrame {
     //Loaded File Variables
     public static String strLoadedFilePath = "Unknown";
     
+    //Troubleshooting Variables
+    public static int ConsecutiveZeroLimit = 5; //If this number of consecutive zeros is met (or exceeded) by a chamber when creating a TXT or loading a file, we will alert the user to a potential photodiode failure.
     /**
      * Creates new form MainMenuUI
      */
@@ -919,6 +922,8 @@ public static void parseConfigTXT() {
                 diagnosticMode = true; //Defaults to End-User mode, only switching to Diagnostic mode if properly applied in config.          
             } else if (strLine.contains("COUNT_LIMITER=OFF")) {
 		countLimiter = false;
+            } else if (strLine.contains("PhotodiodeFailureRecovery=")) {
+                photodiodeFailureRecovery = strLine.endsWith("1");
 	    } else if(strLine.contains("UnitType=")) { //Defaults to US units if anything unexpected appears.
                 if(strLine.contains("SI")) {
                     unitType = "SI";
