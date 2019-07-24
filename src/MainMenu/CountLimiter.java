@@ -26,13 +26,7 @@ public class CountLimiter {
         long lastCount_1 = MainMenuUI.LastCount_Ch1; //Assign current last counts (Ch1) to local variable
         long lastCount_2 = MainMenuUI.LastCount_Ch2; //Assign current last counts (Ch2) to local variable
         
-        int length_DeviceResponse = 26;
-        
-        //We will only write the count limiter values if diagnostic mode is enabled. To do so, we'll need to increase the proposed
-        //length of the array by 2.
-        if(MainMenuUI.diagnosticMode) {
-            length_DeviceResponse += 2;
-        }
+        int length_DeviceResponse = 30;
         
         String[] DeviceResponse = new String[length_DeviceResponse];
         System.arraycopy(DeviceResponse_parsed, 0, DeviceResponse, 0, 26);
@@ -82,12 +76,12 @@ public class CountLimiter {
         DeviceResponse[10] = Long.toString(counts_Ch1);
         DeviceResponse[11] = Long.toString(counts_Ch2);
         
-        //Let's only write these to the array if we're in diagnostic mode.
+        //The following is for debugging (determining whether count limiter was enacted, and the "unlimited" counts.
         //This paves the way to (eventually) allow XLS creation in the end-user mode, now that it's the only mode available to users.
-        if(MainMenuUI.diagnosticMode) {
-            DeviceResponse[26] = override_Ch1;
-            DeviceResponse[27] = override_Ch2;
-        }
+        DeviceResponse[26] = override_Ch1;
+        DeviceResponse[27] = override_Ch2;
+        DeviceResponse[28] = DeviceResponse[10];
+        DeviceResponse[29] = DeviceResponse[11];
         
         return DeviceResponse;
     }

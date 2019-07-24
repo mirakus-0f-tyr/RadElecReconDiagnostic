@@ -262,6 +262,8 @@ public class CreateGraph extends JFrame {
             double TotalAvgRnC = 0;
             double TotalAvgRnC_Ch1 =0;
             double TotalAvgRnC_Ch2 = 0;
+            double TotalAvgRnC_Ch1_Raw = 0;
+            double TotalAvgRnC_Ch2_Raw = 0;
             long TotalHourCounter = 0;
             long hourlyMovement = 0;
             int TempYear = 0;
@@ -274,7 +276,12 @@ public class CreateGraph extends JFrame {
             //Used to determine if a photodiode failure has occurred!
             int consecutiveZeroTally_Ch1 = 0; //This will tally the consecutive number of hourly zero counts on chamber 1
             int consecutiveZeroTally_Ch2 = 0; //This will tally the consecutive number of hourly zero counts on chamber 2
-        
+            long rawCh1Counts = 0; //Raw, unlimited chamber 1 counts. Introduced in v1.0.0.
+            long rawCh2Counts = 0; //Raw, unlimited chamber 2 counts. Introduced in v1.0.0.
+            long rawTempCounts_Ch1 = 0;
+            long rawTempCounts_Ch2 = 0;
+            boolean rawCountsExist = false;
+            
             //Let's make sure that our troublesome ArrayLists are still valid...
             Logging.main("Attempting to construct graph from ArrayList of size "+LoadedReconTXTFile.size()+"...");
             //Logging.main("Query validity of array: "+ Arrays.toString(LoadedReconTXTFile.toArray()));
@@ -287,6 +294,10 @@ public class CreateGraph extends JFrame {
             XYSeries AvgTemp_Series = new XYSeries("Temperature");
             XYSeries AvgPress_Series = new XYSeries("Pressure");
             XYSeries Movement_Series = new XYSeries("Tilt");
+            
+            //Create RnC series for raw/unlimited counts
+            XYSeries Ch1_Raw = new XYSeries("Ch1_RnC_Raw");
+            XYSeries Ch2_Raw = new XYSeries("Ch2_RnC_Raw");
             
             //Confirm whether we're in SI/US Units
             if(strUnitSystem.equals("SI")) {
@@ -318,6 +329,7 @@ public class CreateGraph extends JFrame {
                     
                     Ch1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10)); //pull Chamber #1 counts from LoadedReconTXTFile ArrayList
                     Ch2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(11)); //pull Chamber #2 counts from LoadedReconTXTFile ArrayList
+                    
                     hourlyAvgHumidity = hourlyAvgHumidity + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(15)); //pull average humidity...
                     hourlyAvgTemp = hourlyAvgTemp + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(21)); //pull average temperature (Celsius units)...
                     hourlyAvgPress = hourlyAvgPress + Double.parseDouble(LoadedReconTXTFile.get(arrayCounter).get(18)); //pull average barometric pressure (mbar units)...
@@ -328,6 +340,15 @@ public class CreateGraph extends JFrame {
                     //Add to our temporary chamber counters, which will be reset hourly.
                     tempCounts_Ch1 = tempCounts_Ch1 + Ch1Counts;
                     tempCounts_Ch2 = tempCounts_Ch2 + Ch2Counts;
+                    
+                    //Let's handle the raw counts here... and maintain backwards compatibility with TXT files created before v1.0.0.
+                    if(LoadedReconTXTFile.get(arrayCounter).size()>=30) {
+                        if(rawCountsExist==false) rawCountsExist=true;
+                        rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(28)); //pull raw Chamber #1 counts from LoadedReconTXTFile ArrayList
+                        rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(29)); //pull raw Chamber #1 counts from LoadedReconTXTFile ArrayList
+                        rawTempCounts_Ch1 += rawCh1Counts;
+                        rawTempCounts_Ch2 += rawCh2Counts;
+                    }
                     
                     //Keep an eye out for potential photodiode failure...
                     if(Ch1Counts==0) {
@@ -361,11 +382,11 @@ public class CreateGraph extends JFrame {
                     
                     TempYear = 2000 + Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(3));
                     ReconDate = LocalDateTime.of(TempYear,
-                        Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(4)),
-                        Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(5)),
-                        Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(6)),
-                        Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(7)),
-                        Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(8)));
+                    Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(4)),
+                    Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(5)),
+                    Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(6)),
+                    Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(7)),
+                    Integer.parseInt(LoadedReconTXTFile.get(arrayCounter).get(8)));
                     
                     //logic to be implemented at later time...
                     if(HourCounter != null && ReconDate != null) {
@@ -397,13 +418,16 @@ public class CreateGraph extends JFrame {
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //This will calculate hourly average of both chambers (in Bq/m3)
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp / avgCounter)); //This will calculate hourly average temperature (in Celsius)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)); //This will calculate hourly average temperature (in mbar)
-                                
+                                Ch1_Raw.add(hourCounter, rawTempCounts_Ch1/LoadedReconCF1*37);
+                                Ch2_Raw.add(hourCounter, rawTempCounts_Ch2/LoadedReconCF2*37);
 
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC
                                 if(((TotalHourCounter>3) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)*37); //Overall AvgRnC (in Bq/m3)
                                     TotalAvgRnC_Ch1 = TotalAvgRnC_Ch1 + ((tempCounts_Ch1/LoadedReconCF1)*37); //Overall AvgRnC for Chamber 1 (in Bq/m3)
                                     TotalAvgRnC_Ch2 = TotalAvgRnC_Ch2 + ((tempCounts_Ch2/LoadedReconCF2)*37); //Overall AvgRnC for Chamber 2 (in Bq/m3)
+                                    TotalAvgRnC_Ch1_Raw += ((rawTempCounts_Ch1/LoadedReconCF1)*37);
+                                    TotalAvgRnC_Ch2_Raw += ((rawTempCounts_Ch2/LoadedReconCF2)*37);
                                 }
                                 
                                 TotalHourCounter = TotalHourCounter + 1; //Overall Hour Counter
@@ -420,17 +444,21 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(8, formatSI_RnC.format(((tempCounts_Ch2/LoadedReconCF2)*37))); //Hourly Chamber 2 radon concentration Index = 8
                                 
                             } else {
-                                Ch1_Series.add(hourCounter, tempCounts_Ch1/(LoadedReconCF1));
-                                Ch2_Series.add(hourCounter, tempCounts_Ch2/(LoadedReconCF2));
+                                Ch1_Series.add(hourCounter, tempCounts_Ch1/LoadedReconCF1);
+                                Ch2_Series.add(hourCounter, tempCounts_Ch2/LoadedReconCF2);
                                 AvgRnC_Series.add(hourCounter, ((tempCounts_Ch1/LoadedReconCF1+tempCounts_Ch2/LoadedReconCF2)/2)); //This will calculate hourly average of both chambers
                                 AvgTemp_Series.add(hourCounter, (hourlyAvgTemp/avgCounter)*9/5+32); //This will calculate hourly average temperature (in Fahrenheit)
                                 AvgPress_Series.add(hourCounter, (hourlyAvgPress / avgCounter)*0.02952998751); //This will calculate hourly average temperature (in inHg)
+                                Ch1_Raw.add(hourCounter, rawTempCounts_Ch1/LoadedReconCF1);
+                                Ch2_Raw.add(hourCounter, rawTempCounts_Ch2/LoadedReconCF2);
                                 
                                 //If we are excluding first four hours, let's not add them to TotalAvgRnC and TotalHourCounter
                                 if(((TotalHourCounter>3) && excludeFirst4Hours) || (!excludeFirst4Hours)) {
                                     TotalAvgRnC = TotalAvgRnC + (((tempCounts_Ch1/LoadedReconCF1)+(tempCounts_Ch2/LoadedReconCF2))/2); //Overall AvgRnC (in pCi/L)
                                     TotalAvgRnC_Ch1 = TotalAvgRnC_Ch1 + ((tempCounts_Ch1/LoadedReconCF1)); //Overall AvgRnC for Chamber 1 (in pCi/L)
                                     TotalAvgRnC_Ch2 = TotalAvgRnC_Ch2 + ((tempCounts_Ch2/LoadedReconCF2)); //Overall AvgRnC for Chamber 2 (in pCi/L)
+                                    TotalAvgRnC_Ch1_Raw += ((rawTempCounts_Ch1/LoadedReconCF1));
+                                    TotalAvgRnC_Ch2_Raw += ((rawTempCounts_Ch2/LoadedReconCF2));
                                 }
                                 
                                 TotalHourCounter += 1; //Overall Hour Counter
@@ -455,6 +483,8 @@ public class CreateGraph extends JFrame {
                             //Reset the temporary chamber counts
                             tempCounts_Ch1 = 0;
                             tempCounts_Ch2 = 0;
+                            rawTempCounts_Ch1 = 0;
+                            rawTempCounts_Ch2 = 0;
                             hourlyAvgHumidity = 0;
                             hourlyAvgTemp = 0;
                             hourlyAvgPress = 0;
@@ -468,9 +498,9 @@ public class CreateGraph extends JFrame {
             
             //Assign Overall Average Radon Concentration
             if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
-                OverallAvgRnC = TotalAvgRnC_Ch2 / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0));
+                OverallAvgRnC = (rawCountsExist ? TotalAvgRnC_Ch2_Raw : TotalAvgRnC_Ch2) / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0));
             } else if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
-                OverallAvgRnC = TotalAvgRnC_Ch1 / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0));
+                OverallAvgRnC = (rawCountsExist ? TotalAvgRnC_Ch1_Raw : TotalAvgRnC_Ch1) / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0));
             } else {
                 OverallAvgRnC = TotalAvgRnC / (TotalHourCounter-(excludeFirst4Hours ? 4 : 0)); //You know what's funny? If the dividend is zero, we'll show infinity pCi/L on the PDF... :)
             }
@@ -486,9 +516,9 @@ public class CreateGraph extends JFrame {
                 datasetRadon.addSeries(AvgRnC_Series);
             } else {
                 if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
-                    datasetRadon.addSeries(Ch2_Series);
+                    datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
                 } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
-                    datasetRadon.addSeries(Ch1_Series);
+                    datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
                 } else {
                     datasetRadon.addSeries(AvgRnC_Series);
                 }
