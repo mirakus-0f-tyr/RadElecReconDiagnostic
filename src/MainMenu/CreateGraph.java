@@ -511,9 +511,23 @@ public class CreateGraph extends JFrame {
             //We need to add each completed series to the dataset, or we won't have any data to display.
             //Only display AvRnC series for End-User Mode, whereas display both chambers for diagnostic mode.
             if(MainMenu.MainMenuUI.diagnosticMode) {
-                datasetRadon.addSeries(Ch1_Series);
-                datasetRadon.addSeries(Ch2_Series);
-                datasetRadon.addSeries(AvgRnC_Series);
+                if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
+                    datasetRadon.addSeries(Ch1_Series);
+                    datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
+                    datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series)); //We replace the "average" with chamber 2 results
+                } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
+                    datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
+                    datasetRadon.addSeries(Ch2_Series);
+                    datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series)); //We replace the "average" with chamber 1 results
+                } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==true) {
+                    datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
+                    datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
+                    datasetRadon.addSeries(AvgRnC_Series); //On the presumably super-rare occasion when both photodiodes fail, display the original average?
+                } else {
+                    datasetRadon.addSeries(Ch1_Series);
+                    datasetRadon.addSeries(Ch2_Series);
+                    datasetRadon.addSeries(AvgRnC_Series);
+                }
             } else {
                 if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
                     datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
