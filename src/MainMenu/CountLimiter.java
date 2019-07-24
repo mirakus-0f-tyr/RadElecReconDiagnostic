@@ -80,8 +80,6 @@ public class CountLimiter {
         //This paves the way to (eventually) allow XLS creation in the end-user mode, now that it's the only mode available to users.
         DeviceResponse[26] = override_Ch1;
         DeviceResponse[27] = override_Ch2;
-        DeviceResponse[28] = DeviceResponse[10];
-        DeviceResponse[29] = DeviceResponse[11];
         
         return DeviceResponse;
     }

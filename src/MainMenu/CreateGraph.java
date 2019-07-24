@@ -342,10 +342,22 @@ public class CreateGraph extends JFrame {
                     tempCounts_Ch2 = tempCounts_Ch2 + Ch2Counts;
                     
                     //Let's handle the raw counts here... and maintain backwards compatibility with TXT files created before v1.0.0.
-                    if(LoadedReconTXTFile.get(arrayCounter).size()>=30) {
+                    if(LoadedReconTXTFile.get(arrayCounter).size()>=28) {
                         if(rawCountsExist==false) rawCountsExist=true;
-                        rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(28)); //pull raw Chamber #1 counts from LoadedReconTXTFile ArrayList
-                        rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(29)); //pull raw Chamber #1 counts from LoadedReconTXTFile ArrayList
+                        if((LoadedReconTXTFile.get(arrayCounter).get(26)).contains("false")) { //Check to see if count limiter proc'ed for Ch1...
+                            rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10)); //If it didn't, then we pull the Ch1 counts from their normal place.
+                        } else {
+                            if((LoadedReconTXTFile.get(arrayCounter).get(26)).contains("true(") && (LoadedReconTXTFile.get(arrayCounter).get(26)).contains(")")) { //If it did, then we need to pull the raw value...
+                                rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(26).replaceAll("[^0-9]", ""));
+                            }
+                        }
+                        if((LoadedReconTXTFile.get(arrayCounter).get(27)).contains("false")) { //Check to see if count limiter proc'ed for Ch2...
+                            rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(11)); //If it didn't, then we pull the Ch2 counts from their normal place.
+                        } else {
+                            if((LoadedReconTXTFile.get(arrayCounter).get(27)).contains("true(") && (LoadedReconTXTFile.get(arrayCounter).get(27)).contains(")")) { //If it did, then we need to pull the raw value...
+                                rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(27).replaceAll("[^0-9]", ""));
+                            }
+                        }
                         rawTempCounts_Ch1 += rawCh1Counts;
                         rawTempCounts_Ch2 += rawCh2Counts;
                     }
@@ -514,11 +526,9 @@ public class CreateGraph extends JFrame {
                 if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
                     datasetRadon.addSeries(Ch1_Series);
                     datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
-                    datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series)); //We replace the "average" with chamber 2 results
                 } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
                     datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
                     datasetRadon.addSeries(Ch2_Series);
-                    datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series)); //We replace the "average" with chamber 1 results
                 } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==true) {
                     datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
                     datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
