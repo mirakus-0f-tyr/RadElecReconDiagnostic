@@ -75,9 +75,13 @@ public class CreatePDF {
     
     float PDF_Y = 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
+    SimpleDateFormat dateDetailedReport = new SimpleDateFormat("MMM-dd-yyyy HH:mm");
+    SimpleDateFormat dateArrayCounter = new SimpleDateFormat("yyyy-mm-dd HH:mm");
     static String validDate = "MM/dd/yyyy";
+    static String validDateTimeForPDF = "yyyy-mm-dd HH:mm";
     SimpleDateFormat dateFormatCalibration = new SimpleDateFormat("MM/dd/yyyy");
     Date currentDate = new Date();
+    Date arrayDate = new Date();
     
     //Analyst Signature
     public static boolean boolFoundSignature = false;
@@ -92,7 +96,7 @@ public class CreatePDF {
     static int marginSide = 30;
     static int fontSize = 14;
         
-    public void main() throws IOException {
+    public void main() throws IOException, ParseException {
         
         //strips .txt from the filename and replaces it with .pdf
         String PDF_Name = StringUtils.left(MainMenu.MainMenuUI.lblLoadedFileName.getText(),MainMenu.MainMenuUI.lblLoadedFileName.getText().length()-4) + ".pdf";
@@ -461,6 +465,13 @@ public class CreatePDF {
                     //Date-Time
                     contents.moveTextPositionByAmount(45, 0);
                     textLine = HourlyReconData.get(arrayCounter).get(1);
+                    textLine = textLine.replace("T", " ");
+                    if(isValidDateTimeForPDF(textLine)) {
+                        arrayDate = dateArrayCounter.parse(textLine);
+                        textLine = dateDetailedReport.format(arrayDate);
+                    } else {
+                        System.out.println("WARNING! Invalid date detected in CreatePDF::main() [" + textLine + "]");
+                    }
                     contents.showText(textLine);
                     //Radon
                     contents.moveTextPositionByAmount(115, 0);
@@ -705,7 +716,7 @@ public class CreatePDF {
             contents.newLineAtOffset(0, -1.0f*fontSize);
             contents.showText(textLine);
             contents.endText();
-            Logging.main("Successfully navigated through CreatePDF::DrawCompanyHeader()!");
+            Logging.main("Successful CreatePDF::DrawCompanyHeader()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -743,7 +754,7 @@ public class CreatePDF {
             contents.setFont(fontDate, fontSize);
             contents.showText(textLine);
             contents.endText(); //end date text block
-            Logging.main("Successfully navigated through CreatePDF::DrawTitleHeader()!");
+            Logging.main("Successful CreatePDF::DrawTitleHeader()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -891,7 +902,7 @@ public class CreatePDF {
             contents.moveTo(marginSide, PDF_Y); //getting ready to draw a line (starting coordinates)
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, PDF_Y); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo
-            Logging.main("Successfully navigated through CreatePDF::DrawAverageRadonBanner()!");
+            Logging.main("Successful CreatePDF::DrawAverageRadonBanner()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -1006,7 +1017,7 @@ public class CreatePDF {
     public void drawTestSummaryBlock(PDPageContentStream contents, PDPage page, PDFont fontDefault, PDFont fontBold) {
         try {
             fontSize = 12;
-            String textLine = "A Rad Elec Recon® CRM (NRPP Device Code #8304) was used for radon screening measurements that were conducted at the above referenced test site by: " + strCompany_Name;
+            String textLine = "A Rad Elec Recon® CRM (NRPP Device Code #8304 / NRSB Device Code #31823) was used for radon screening measurements that were conducted at the above referenced test site by: " + strCompany_Name;
             
             //WrapMultiLineText is jumbled as all hell, but at least it's continued to a single method.
             PDF_Y -= 20;
@@ -1082,7 +1093,7 @@ public class CreatePDF {
                 contents.showText(combinedDataArray[i]);
             }
             contents.endText();  
-            Logging.main("Successfully navigated through CreatePDF::DrawTestSummaryBlock()!");
+            Logging.main("Successful CreatePDF::DrawTestSummaryBlock()!");
         } catch (IOException ex) {
             StringWriter swEx = new StringWriter();
             ex.printStackTrace(new PrintWriter(swEx));
@@ -1120,6 +1131,7 @@ public class CreatePDF {
             contents.moveTo(page.getMediaBox().getWidth()/2 + 30 + textWidth, marginBottom); //getting ready to draw a line (starting coordinates)
             contents.lineTo(page.getMediaBox().getWidth() - marginSide, marginBottom); //getting ready to draw a line (ending coordinates)
             contents.stroke(); //draw the line, starting at moveTo and ending at lineTo  
+            Logging.main("Successful CreatePDF::drawSignatureLine()!");
         } catch (IOException ex) {
             Logging.main("ERROR: Unable to draw signature line!");
         }
@@ -1211,6 +1223,16 @@ public class CreatePDF {
         }
     }
     
+    public static boolean isValidDateTimeForPDF(String datetime) {
+        try {
+            DateFormat df = new SimpleDateFormat(validDateTimeForPDF);
+            df.setLenient(false);
+            df.parse(datetime);
+            return true;
+        } catch (ParseException ex) {
+            return false;
+        }
+    }
     public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
         int original_width = imgSize.width;
         int original_height = imgSize.height;
