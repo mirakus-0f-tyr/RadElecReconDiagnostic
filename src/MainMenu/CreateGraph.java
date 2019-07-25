@@ -81,7 +81,7 @@ public class CreateGraph extends JFrame {
             super(new BorderLayout());
             SERIES_COUNT = 1; //always assign static value here, or else it'll get screwy when we switch between Diagnostic and End-User mode
             if(MainMenu.MainMenuUI.diagnosticMode) {
-                SERIES_COUNT = SERIES_COUNT + 2; //if we're in diagnostic mode, then let's make sure to increase our SERIES_COUNT to account for both chambers.
+                SERIES_COUNT = SERIES_COUNT + 2; //if we're in diagnostic mode, then let's make sure to increase our SERIES_COUNT to account for both chambers and average, barring photodiode failure.
             }
             JFreeChart chart = createChart(createDataset());
             SaveGraph(chart); //saves the graph to a JPEG image, for use in the Create PDF class.
@@ -160,7 +160,9 @@ public class CreateGraph extends JFrame {
             if(MainMenu.MainMenuUI.diagnosticMode) {
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.GREEN); //Ch. 1 Concenration Dataset = green
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(1, Color.MAGENTA); //Ch. 2 Concenration Dataset = magenta
-                plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(2, Color.DARK_GRAY); //Avg. Radon Concenration Dataset = dark grey
+                if(photodiodeFailure_Ch1==false && photodiodeFailure_Ch2==false) { //We currently do not display average in diagnostic mode if photodiode failure is detected...
+                    plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(2, Color.DARK_GRAY); //Avg. Radon Concenration Dataset = dark grey
+                }
             } else {
                 plot.getRendererForDataset(plot.getDataset(0)).setSeriesPaint(0, Color.DARK_GRAY); //Avg. Radon Concenration Dataset = dark grey
             }
@@ -340,7 +342,7 @@ public class CreateGraph extends JFrame {
                     //Add to our temporary chamber counters, which will be reset hourly.
                     tempCounts_Ch1 = tempCounts_Ch1 + Ch1Counts;
                     tempCounts_Ch2 = tempCounts_Ch2 + Ch2Counts;
-                    
+
                     //Let's handle the raw counts here... and maintain backwards compatibility with TXT files created before v1.0.0.
                     if(LoadedReconTXTFile.get(arrayCounter).size()>=28) {
                         if(rawCountsExist==false) rawCountsExist=true;
@@ -358,9 +360,12 @@ public class CreateGraph extends JFrame {
                                 rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(27).replaceAll("[^0-9]", ""));
                             }
                         }
-                        rawTempCounts_Ch1 += rawCh1Counts;
-                        rawTempCounts_Ch2 += rawCh2Counts;
+                    } else {
+                        rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10));
+                        rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(11));
                     }
+                    rawTempCounts_Ch1 += rawCh1Counts;
+                    rawTempCounts_Ch2 += rawCh2Counts;
                     
                     //Keep an eye out for potential photodiode failure...
                     if(Ch1Counts==0) {
@@ -526,9 +531,11 @@ public class CreateGraph extends JFrame {
                 if(MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==false) {
                     datasetRadon.addSeries(Ch1_Series);
                     datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
+                    SERIES_COUNT -= 1; //We are not including averages for diagnostic mode on photodiode failure, so we must remove the expected average series from SERIES_COUNT.
                 } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch2==true && photodiodeFailure_Ch1==false) {
                     datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
                     datasetRadon.addSeries(Ch2_Series);
+                    SERIES_COUNT -= 1; //We are not including averages for diagnostic mode on photodiode failure, so we must remove the expected average series from SERIES_COUNT.
                 } else if (MainMenuUI.photodiodeFailureRecovery==true && photodiodeFailure_Ch1==true && photodiodeFailure_Ch2==true) {
                     datasetRadon.addSeries((rawCountsExist ? Ch1_Raw : Ch1_Series));
                     datasetRadon.addSeries((rawCountsExist ? Ch2_Raw : Ch2_Series));
