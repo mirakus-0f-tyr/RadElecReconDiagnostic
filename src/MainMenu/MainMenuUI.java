@@ -106,7 +106,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String strLoadedFilePath = "Unknown";
     
     //Troubleshooting Variables
-    public static int ConsecutiveZeroLimit = 5; //If this number of consecutive zeros is met (or exceeded) by a chamber when creating a TXT or loading a file, we will alert the user to a potential photodiode failure.
+    public static double ConsecutiveZeroLimit = 5; //If this number of consecutive zeros is met (or exceeded) by a chamber when creating a TXT or loading a file, we will alert the user to a potential photodiode failure.
     /**
      * Creates new form MainMenuUI
      */

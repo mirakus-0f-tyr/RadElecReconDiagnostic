@@ -369,7 +369,11 @@ public class CreateGraph extends JFrame {
                     
                     //Keep an eye out for potential photodiode failure...
                     if(Ch1Counts==0) {
-                        consecutiveZeroTally_Ch1++;
+                        if(Ch2Counts<5) { //If the other chamber is also measuring low counts, then it's possible we're in an extremely low radon environment...
+                            consecutiveZeroTally_Ch1 += .1; //Therefore we should "weight" this encounter less.
+                        } else {
+                            consecutiveZeroTally_Ch1++; //If the other chamber counts are 5 or greater, then let's count this as a solid clue for potential photodiode failure...
+                        }
                         if(consecutiveZeroTally_Ch1>=MainMenuUI.ConsecutiveZeroLimit && photodiodeFailure_Ch1==false) {
                             if(MainMenuUI.photodiodeFailureRecovery==true) {
                                 JOptionPane.showMessageDialog(null, "Potential photodiode failure has been detected in chamber 1. The software will attempt to construct the graph and report using chamber 2.", "Potential Failure in Chamber #1", JOptionPane.INFORMATION_MESSAGE);
@@ -383,7 +387,11 @@ public class CreateGraph extends JFrame {
                         consecutiveZeroTally_Ch1 = 0;
                     }
                     if(Ch2Counts==0) {
-                        consecutiveZeroTally_Ch2++;
+                        if(Ch1Counts<5) { //If the other chamber is also measuring low counts, then it's possible we're in an extremely low radon environment...
+                            consecutiveZeroTally_Ch2 += .1; //Therefore we should "weight" this encounter less.
+                        } else {
+                            consecutiveZeroTally_Ch2++; //If the other chamber counts are 5 or greater, then let's count this as a solid clue for potential photodiode failure...
+                        }
                         if(consecutiveZeroTally_Ch2>=MainMenuUI.ConsecutiveZeroLimit && photodiodeFailure_Ch2==false) {
                             if(MainMenuUI.photodiodeFailureRecovery==true) {
                                 JOptionPane.showMessageDialog(null, "Potential photodiode failure has been detected in chamber 2. The software will attempt to construct the graph and report using chamber 1.", "Potential Failure in Chamber #2", JOptionPane.INFORMATION_MESSAGE);

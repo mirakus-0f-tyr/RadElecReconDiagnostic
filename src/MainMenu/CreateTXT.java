@@ -148,7 +148,7 @@ public class CreateTXT {
                     if(ch1Counter==0) {
                         consecutiveZeroTally_Ch1++;
                         if(consecutiveZeroTally_Ch1>=MainMenuUI.ConsecutiveZeroLimit) {
-                            Logging.main("WARNING: " + Integer.toString(MainMenuUI.ConsecutiveZeroLimit) + " consecutive zero counts read on Chamber 1!");
+                            Logging.main("WARNING: " + Double.toString(MainMenuUI.ConsecutiveZeroLimit) + " consecutive zero counts read on Chamber 1!");
                             photodiodeFailure_Ch1 = true;
                         }
                     } else {
@@ -157,7 +157,7 @@ public class CreateTXT {
                     if(ch2Counter==0) {
                         consecutiveZeroTally_Ch2++;
                         if(consecutiveZeroTally_Ch2>=MainMenuUI.ConsecutiveZeroLimit) {
-                            Logging.main("WARNING: " + Integer.toString(MainMenuUI.ConsecutiveZeroLimit) + " consecutive zero counts read on Chamber 2!");
+                            Logging.main("WARNING: " + Double.toString(MainMenuUI.ConsecutiveZeroLimit) + " consecutive zero counts read on Chamber 2!");
                             photodiodeFailure_Ch2 = true;
                         }
                     } else {
