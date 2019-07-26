@@ -476,9 +476,9 @@ public class CreatePDF {
                     //Radon
                     contents.moveTextPositionByAmount(115, 0);
                     if(MainMenuUI.photodiodeFailureRecovery==true && CreateGraph.photodiodeFailure_Ch1==true && CreateGraph.photodiodeFailure_Ch2==false) {
-                        textLine = HourlyReconData.get(arrayCounter).get(8);
+                        textLine = HourlyReconData.get(arrayCounter).get(10);
                     } else if (MainMenuUI.photodiodeFailureRecovery==true && CreateGraph.photodiodeFailure_Ch2==true && CreateGraph.photodiodeFailure_Ch1==false) {
-                        textLine = HourlyReconData.get(arrayCounter).get(7);
+                        textLine = HourlyReconData.get(arrayCounter).get(9);
                     } else {
                         textLine = HourlyReconData.get(arrayCounter).get(2);
                     }
@@ -1177,7 +1177,8 @@ public class CreatePDF {
                 contents.setFont(font,fontSize+4);
                 contents.newLineAtOffset(((page.getMediaBox().getWidth()+page.getMediaBox().getWidth())/2 - marginSide)/2 + textDateWidth + 30 + textWidth/2, marginBottom+5);
                 contents.showText(textLine);
-                contents.endText();   
+                contents.endText();  
+                Logging.main("Successful CreatePDF::DrawDigitalSignature()!");
             }    
         } catch (Exception ex) {
             Logging.main("CreatePDF::DrawDigitalSignature ERROR! Unable to draw digital signature!");
@@ -1233,6 +1234,7 @@ public class CreatePDF {
             return false;
         }
     }
+    
     public static Dimension getScaledDimension(Dimension imgSize, Dimension boundary) {
         int original_width = imgSize.width;
         int original_height = imgSize.height;

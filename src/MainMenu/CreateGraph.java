@@ -348,17 +348,17 @@ public class CreateGraph extends JFrame {
                         if(rawCountsExist==false) rawCountsExist=true;
                         if((LoadedReconTXTFile.get(arrayCounter).get(26)).contains("false")) { //Check to see if count limiter proc'ed for Ch1...
                             rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10)); //If it didn't, then we pull the Ch1 counts from their normal place.
+                        } else if((LoadedReconTXTFile.get(arrayCounter).get(26)).contains("true(") && (LoadedReconTXTFile.get(arrayCounter).get(26)).contains(")")) { //If it did, then we need to pull the raw value...
+                            rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(26).replaceAll("[^0-9]", ""));
                         } else {
-                            if((LoadedReconTXTFile.get(arrayCounter).get(26)).contains("true(") && (LoadedReconTXTFile.get(arrayCounter).get(26)).contains(")")) { //If it did, then we need to pull the raw value...
-                                rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(26).replaceAll("[^0-9]", ""));
-                            }
+                            rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10));
                         }
                         if((LoadedReconTXTFile.get(arrayCounter).get(27)).contains("false")) { //Check to see if count limiter proc'ed for Ch2...
                             rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(11)); //If it didn't, then we pull the Ch2 counts from their normal place.
+                        } else if((LoadedReconTXTFile.get(arrayCounter).get(27)).contains("true(") && (LoadedReconTXTFile.get(arrayCounter).get(27)).contains(")")) { //If it did, then we need to pull the raw value...
+                            rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(27).replaceAll("[^0-9]", ""));
                         } else {
-                            if((LoadedReconTXTFile.get(arrayCounter).get(27)).contains("true(") && (LoadedReconTXTFile.get(arrayCounter).get(27)).contains(")")) { //If it did, then we need to pull the raw value...
-                                rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(27).replaceAll("[^0-9]", ""));
-                            }
+                            rawCh2Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(11));
                         }
                     } else {
                         rawCh1Counts = Long.parseLong(LoadedReconTXTFile.get(arrayCounter).get(10));
@@ -457,8 +457,10 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(4, formatTenth.format(hourlyAvgPress / avgCounter)); //Hourly Avg Pressure (in mbar) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
                                 arrLine.add(6, formatZero.format(Math.round(hourlyMovement))); //Movement/Tilt Index = 6
-                                arrLine.add(7, formatSI_RnC.format(((tempCounts_Ch1/LoadedReconCF1)*37))); //Hourly Chamber 1 radon concentration Index = 7
-                                arrLine.add(8, formatSI_RnC.format(((tempCounts_Ch2/LoadedReconCF2)*37))); //Hourly Chamber 2 radon concentration Index = 8
+                                arrLine.add(7, (formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1*37)))); //Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(8, (formatUS_RnC.format((tempCounts_Ch2/LoadedReconCF2*37)))); //Hourly Chamber 2 radon concentration Index = 8
+                                arrLine.add(9, (rawCountsExist ? formatSI_RnC.format((rawTempCounts_Ch1/LoadedReconCF1)*37) : formatSI_RnC.format((tempCounts_Ch1/LoadedReconCF1)*37))); //Raw Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(10, (rawCountsExist ? formatSI_RnC.format((rawTempCounts_Ch2/LoadedReconCF2)*37) : formatSI_RnC.format((tempCounts_Ch2/LoadedReconCF2)*37))); //Raw Hourly Chamber 2 radon concentration Index = 8
                                 
                             } else {
                                 Ch1_Series.add(hourCounter, tempCounts_Ch1/LoadedReconCF1);
@@ -488,8 +490,11 @@ public class CreateGraph extends JFrame {
                                 arrLine.add(4, formatTenth.format((hourlyAvgPress / avgCounter)*0.02952998751)); //Hourly Avg Pressure (in inHg) Index = 4
                                 arrLine.add(5, formatZero.format(hourlyAvgHumidity / avgCounter)); //Humidity Index = 5
                                 arrLine.add(6, formatZero.format(Math.round(hourlyMovement))); //Movement/Tilt Index = 6
-                                arrLine.add(7, formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1))); //Hourly Chamber 1 radon concentration Index = 7
-                                arrLine.add(8, formatUS_RnC.format((tempCounts_Ch2/LoadedReconCF2))); //Hourly Chamber 2 radon concentration Index = 8
+                                arrLine.add(7, (formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1)))); //Hourly Chamber 1 radon concentration Index = 7
+                                arrLine.add(8, (formatUS_RnC.format((tempCounts_Ch2/LoadedReconCF2)))); //Hourly Chamber 2 radon concentration Index = 8
+                                arrLine.add(9, (rawCountsExist ? formatUS_RnC.format((rawTempCounts_Ch1/LoadedReconCF1)) : formatUS_RnC.format((tempCounts_Ch1/LoadedReconCF1)))); //Raw hourly Chamber 1 radon concentration Index = 9
+                                arrLine.add(10, (rawCountsExist ? formatUS_RnC.format((rawTempCounts_Ch2/LoadedReconCF2)) : formatUS_RnC.format((tempCounts_Ch2/LoadedReconCF2)))); //Raw Hourly Chamber 2 radon concentration Index = 10
+                                System.out.println(arrLine);
                             }
                             
                             //Finalize HourlyReconData line, and add it to the ArrayList
