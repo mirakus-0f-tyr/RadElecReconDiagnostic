@@ -26,7 +26,7 @@ public class CountLimiter {
         long lastCount_1 = MainMenuUI.LastCount_Ch1; //Assign current last counts (Ch1) to local variable
         long lastCount_2 = MainMenuUI.LastCount_Ch2; //Assign current last counts (Ch2) to local variable
         
-        int length_DeviceResponse = 30;
+        int length_DeviceResponse = 28;
         
         String[] DeviceResponse = new String[length_DeviceResponse];
         System.arraycopy(DeviceResponse_parsed, 0, DeviceResponse, 0, 26);
