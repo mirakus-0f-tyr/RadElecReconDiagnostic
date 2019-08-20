@@ -400,8 +400,8 @@ public class FlagForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnApplySpecial;
-    private javax.swing.JButton btnFlagDefaults;
+    private static javax.swing.JButton btnApplySpecial;
+    private static javax.swing.JButton btnFlagDefaults;
     private javax.swing.JComboBox<String> cboDualChamberSelect;
     private javax.swing.JComboBox<String> cboPressureSelect;
     private javax.swing.JComboBox<String> cboRadonUnitSelect;
@@ -461,4 +461,8 @@ public class FlagForm extends javax.swing.JFrame {
 	displayPreferenceNoAvg = "Hourly";
     }
 
+    public static void EnableAllButtons(boolean boolEnableButtons) {
+	btnApplySpecial.setEnabled(boolEnableButtons);
+	btnFlagDefaults.setEnabled(boolEnableButtons);
+    }
 }

@@ -1443,7 +1443,7 @@ public void EnableAllButtons(boolean boolEnableButtons) {
     Window[] progWindows = Window.getWindows();
     for (Window window : progWindows) {
 	if (window.getClass().toString().contains("Config.FlagForm")) {
-            FlagForm.btnApplySpecial.setEnabled(boolEnableButtons);
+            FlagForm.EnableAllButtons(boolEnableButtons);
         }
     }
 }
