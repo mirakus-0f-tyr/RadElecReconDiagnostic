@@ -24,10 +24,12 @@
   <Layout>
     <DimensionLayout dim="0">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="1" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="btnApplySpecial" min="-2" max="-2" attributes="0"/>
-              <EmptySpace min="-2" pref="168" max="-2" attributes="0"/>
+              <Component id="btnFlagDefaults" min="-2" pref="96" max="-2" attributes="0"/>
+              <EmptySpace type="unrelated" max="-2" attributes="0"/>
+              <Component id="btnApplySpecial" min="-2" pref="96" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="108" max="-2" attributes="0"/>
           </Group>
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
@@ -138,9 +140,12 @@
               <Component id="lblDisplayedReadingInterval" min="-2" max="-2" attributes="0"/>
               <EmptySpace type="separate" max="-2" attributes="0"/>
               <Component id="cboToggleNoAveraging" min="-2" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="7" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="3" attributes="0">
+                  <Component id="btnApplySpecial" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="btnFlagDefaults" alignment="3" max="32767" attributes="0"/>
+              </Group>
               <EmptySpace max="32767" attributes="0"/>
-              <Component id="btnApplySpecial" min="-2" max="-2" attributes="0"/>
-              <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -301,6 +306,14 @@
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="14.6 pCi/L"/>
       </Properties>
+    </Component>
+    <Component class="javax.swing.JButton" name="btnFlagDefaults">
+      <Properties>
+        <Property name="text" type="java.lang.String" value="Defaults"/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnFlagDefaultsActionPerformed"/>
+      </Events>
     </Component>
   </SubComponents>
 </Form>

@@ -62,6 +62,7 @@ public class ScanComm {
     //7 = synchronize Recon time to PC
     //8 = write flag to Recon (display options)
     //9 = clear tamper flag
+    //10 = read Recon options flag (display options)
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
         Logging.main("Beginning to scan Comm ports...");
@@ -150,6 +151,7 @@ public class ScanComm {
 			ReconCommand.SetReconTimeFromPC();
 			MainMenuUI.displayProgressLabel("Time synchronization complete.");
 		    } else if (OptArgs == 8) {
+			    Logging.main("ScanComm: Connecting to set options bitmask.");
 			if (ReconCommand.SetOptionFlag()) {
 			    Logging.main("Display options saved to unit.");
 			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
@@ -161,6 +163,9 @@ public class ScanComm {
 		    	Logging.main("Clearing tamper flag.");
 			ReconCommand.ClearTamperFlag();
 			MainMenuUI.displayProgressLabel("Tamper flag cleared.");
+		    } else if (OptArgs == 10) {
+			Logging.main("ScanComm: Connecting to parse options bitmask.");
+			ReconCommand.ParseOptionFlag();
 		    }
                 }
             scannedPort.closePort();

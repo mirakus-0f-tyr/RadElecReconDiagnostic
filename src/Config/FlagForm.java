@@ -26,12 +26,44 @@ public class FlagForm extends javax.swing.JFrame {
      * Creates new form FlagForm
      */
     public FlagForm() {
-	displayPreferencePres = "mBar";
-	displayPreferenceTemp = "F";
-	displayPreferenceDual = "no";
-	displayPreferenceUnits = "pCi/L";
-	displayPreferenceNoAvg = "Hourly";
-        initComponents();
+	initComponents();
+
+	// Get the current Recon settings...
+	try {
+	    ScanComm.run(10);
+	}
+
+	catch (Exception ex) {
+	    Logging.main(ex.toString());
+	}
+
+	// set the combo boxes based on the current settings
+	if (displayPreferencePres == "mBar")
+	    cboPressureSelect.setSelectedItem("mBar");
+	else
+	    cboPressureSelect.setSelectedItem("inHG");
+
+	if (displayPreferenceTemp == "F")
+	    cboTemperatureSelect.setSelectedItem("F");
+	else
+	    cboTemperatureSelect.setSelectedItem("C");
+
+	if (displayPreferenceDual == "no")
+	    cboDualChamberSelect.setSelectedItem("No");
+	else
+	    cboDualChamberSelect.setSelectedItem("Yes");
+
+	if (displayPreferenceUnits == "pCi/L")
+	    cboRadonUnitSelect.setSelectedItem("pCi/L");
+	else if (displayPreferenceUnits == "Bq/m3")
+	    cboRadonUnitSelect.setSelectedItem("Bq/m3");
+	else if (displayPreferenceUnits == "CPH")
+	    cboRadonUnitSelect.setSelectedItem("CPH");
+
+	if (displayPreferenceNoAvg == "Hourly")
+	    cboToggleNoAveraging.setSelectedItem("Hourly");
+	else
+	    cboToggleNoAveraging.setSelectedItem("Ten Mins.");
     }
 
     /**
@@ -47,12 +79,12 @@ public class FlagForm extends javax.swing.JFrame {
         lblTemperature = new javax.swing.JLabel();
         lblDualChamber = new javax.swing.JLabel();
         lblExposureUnits = new javax.swing.JLabel();
-        cboPressureSelect = new javax.swing.JComboBox<String>();
-        cboTemperatureSelect = new javax.swing.JComboBox<String>();
-        cboDualChamberSelect = new javax.swing.JComboBox<String>();
-        cboRadonUnitSelect = new javax.swing.JComboBox<String>();
+        cboPressureSelect = new javax.swing.JComboBox<>();
+        cboTemperatureSelect = new javax.swing.JComboBox<>();
+        cboDualChamberSelect = new javax.swing.JComboBox<>();
+        cboRadonUnitSelect = new javax.swing.JComboBox<>();
         btnApplySpecial = new javax.swing.JButton();
-        cboToggleNoAveraging = new javax.swing.JComboBox<String>();
+        cboToggleNoAveraging = new javax.swing.JComboBox<>();
         lblDisplayedReadingInterval = new javax.swing.JLabel();
         lblPreviewRun = new javax.swing.JLabel();
         lblPreviewRuntime = new javax.swing.JLabel();
@@ -61,6 +93,7 @@ public class FlagForm extends javax.swing.JFrame {
         lblPreviewPres = new javax.swing.JLabel();
         lblPreviewCh1 = new javax.swing.JLabel();
         lblPreviewCh2 = new javax.swing.JLabel();
+        btnFlagDefaults = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -73,28 +106,28 @@ public class FlagForm extends javax.swing.JFrame {
 
         lblExposureUnits.setText("Radon Unit");
 
-        cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "mBar", "inHG" }));
+        cboPressureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "mBar", "inHG" }));
         cboPressureSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboPressureSelectActionPerformed(evt);
             }
         });
 
-        cboTemperatureSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "F", "C" }));
+        cboTemperatureSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "F", "C" }));
         cboTemperatureSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboTemperatureSelectActionPerformed(evt);
             }
         });
 
-        cboDualChamberSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "No", "Yes" }));
+        cboDualChamberSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No", "Yes" }));
         cboDualChamberSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboDualChamberSelectActionPerformed(evt);
             }
         });
 
-        cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "pCi/L", "Bq/m3", "CPH" }));
+        cboRadonUnitSelect.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "pCi/L", "Bq/m3", "CPH" }));
         cboRadonUnitSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboRadonUnitSelectActionPerformed(evt);
@@ -108,7 +141,7 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
-        cboToggleNoAveraging.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Hourly", "Ten Mins." }));
+        cboToggleNoAveraging.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Hourly", "Ten Mins." }));
         cboToggleNoAveraging.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 cboToggleNoAveragingActionPerformed(evt);
@@ -138,14 +171,23 @@ public class FlagForm extends javax.swing.JFrame {
         lblPreviewCh2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPreviewCh2.setText("14.6 pCi/L");
 
+        btnFlagDefaults.setText("Defaults");
+        btnFlagDefaults.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFlagDefaultsActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+            .addGroup(layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnApplySpecial)
-                .addGap(168, 168, 168))
+                .addComponent(btnFlagDefaults, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(btnApplySpecial, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(108, 108, 108))
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -228,9 +270,11 @@ public class FlagForm extends javax.swing.JFrame {
                 .addComponent(lblDisplayedReadingInterval)
                 .addGap(18, 18, 18)
                 .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnApplySpecial)
-                .addContainerGap())
+                .addGap(7, 7, 7)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnApplySpecial)
+                    .addComponent(btnFlagDefaults, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         pack();
@@ -315,6 +359,11 @@ public class FlagForm extends javax.swing.JFrame {
 	    displayPreferenceNoAvg = "Hourly";
     }//GEN-LAST:event_cboToggleNoAveragingActionPerformed
 
+    private void btnFlagDefaultsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFlagDefaultsActionPerformed
+        // TODO add your handling code here:
+	SetLabelsToDefault();
+    }//GEN-LAST:event_btnFlagDefaultsActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -351,7 +400,8 @@ public class FlagForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    public static javax.swing.JButton btnApplySpecial;
+    private javax.swing.JButton btnApplySpecial;
+    private javax.swing.JButton btnFlagDefaults;
     private javax.swing.JComboBox<String> cboDualChamberSelect;
     private javax.swing.JComboBox<String> cboPressureSelect;
     private javax.swing.JComboBox<String> cboRadonUnitSelect;
@@ -397,4 +447,18 @@ public class FlagForm extends javax.swing.JFrame {
 		lblPreviewCh1.setText("87 CPH");
 	}
     }
+
+    private void SetLabelsToDefault() {
+	cboPressureSelect.setSelectedItem("inHG");
+        cboTemperatureSelect.setSelectedItem("F");
+        cboDualChamberSelect.setSelectedItem("No");
+        cboRadonUnitSelect.setSelectedItem("pCi/L");
+        cboToggleNoAveraging.setSelectedItem("Hourly");
+	displayPreferencePres = "inHG";
+	displayPreferenceTemp = "F";
+	displayPreferenceDual = "no";
+	displayPreferenceUnits = "pCi/L";
+	displayPreferenceNoAvg = "Hourly";
+    }
+
 }

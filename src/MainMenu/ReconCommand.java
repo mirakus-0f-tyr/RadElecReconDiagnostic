@@ -1,6 +1,6 @@
 package MainMenu;
 
-// ReconCommandSet class
+// ReconCommand class
 // Class which holds strings for the Recon commands, as well
 // as other methods which will simplify getting the data from the returned strings
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +28,8 @@ class ReconCommand {
     public static String ReadCalibrationFactors = ":RL\r\n";
     public static String ReadTime = ":RT\r\n";
     public static String ResetTamperFlag = ":WX\r\n";
+    public static String WriteOptionsFlag = ":WF";
+    public static String ReadOptionsFlag = ":RF\r\n";
 
     public static String DeviceResponse;
     public static String[] DeviceResponse_parsed;
@@ -185,30 +187,9 @@ class ReconCommand {
 	filenameXLS = new String(XLS_name);
     }
 
+    // This method reads the preferences from FlagForm and will write an appropriate bitmask
+    // value to the Recon.
     public static boolean SetOptionFlag() {
-	// OPTIONS TO BE SET WITH FLAG VARIABLE
-	// Pressure----------------------
-	// InHG		0000 0000
-	// mBar		0000 0001
-	// Temperature-------------------
-	// F		0000 0000
-	// C		0000 0100
-	// Blind Flag--------------------
-	// Show all	0000 0000
-	// Show none	0000 1000
-	// Dual Chamber------------------
-	// Combine	0000 0000
-	// Show both	0001 0000
-	// Exposure Units----------------
-	// pCi/L	0000 0000
-	// Bq/m3	0010 0000
-	// CPH		0100 0000
-	// ------------------------------
-	// No average (i.e. displayed reading is representative of last ten minutes)
-	// ON		1000 0000
-	// ------------------------------
-	// Process: add all of the options the user wants, convert to hex and write that value to the unit.
-
 	String flagResponse = null; // value read from unit to verify success
 	short flag = 0; // binary number we will be writing to the unit
 	short comp = 9999; // comparison value - 0 may be a valid setting, so we use another number
@@ -227,7 +208,7 @@ class ReconCommand {
 	    flag += 0b10000000;
 
 	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
-	WriteComm.main(ScanComm.scannedPort, ":WF" + Integer.toHexString(flag) + "\r\n");
+	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\r\n");
 
 	// do not ask the Recon for a response for two seconds...
 	try {
@@ -259,6 +240,63 @@ class ReconCommand {
 	    Logging.main("flagResponse is null! Cannot compare written value.");
 
 	return (flag == comp);
+    }
+
+    // This method is responsible for both reading the options bitmask from the Recon
+    // as well as setting the preference variables in the flag form based on that bitmask.
+    public static void ParseOptionFlag() {
+	// - issue :RF to get the flag
+	WriteComm.main(ScanComm.scannedPort, ReadOptionsFlag);
+
+	try {
+	    Thread.sleep(125);
+
+	    String parsedFlag = ReadComm.main(ScanComm.scannedPort, 19);
+	    parsedFlag = parsedFlag.replaceAll("[\\n\\r+]", ""); // strip line feeds
+	    parsedFlag = parsedFlag.replaceAll("=RF", "");	     // get :RF out of the value
+	    Logging.main("ParseOptionFlag(): Parsed flag value is: " + parsedFlag);
+
+	    // get a number we can work with
+	    int flagValue = Integer.parseInt(parsedFlag, 16);
+
+	    // - derive temperature setting
+	    if ((flagValue & 0b00000100) == 0)
+		FlagForm.displayPreferenceTemp = "F";
+	    else
+		FlagForm.displayPreferenceTemp = "C";
+
+	    // - derive pressure setting
+	    if ((flagValue & 0b00000001) == 0)
+		FlagForm.displayPreferencePres = "inHG";
+	    else
+		FlagForm.displayPreferencePres = "mBar";
+
+	    if (((flagValue & 0b00100000) == 0) && ((flagValue & 0b01000000) == 0))
+		FlagForm.displayPreferenceUnits = "pCi/L";
+	    else if ((flagValue & 0b00100000) != 0)
+		FlagForm.displayPreferenceUnits = "Bq/m3";
+	    else if ((flagValue & 0b01000000) != 0)
+		FlagForm.displayPreferenceUnits = "CPH";
+
+	    // - derive dual chamber
+	    if ((flagValue & 0b00010000) == 0)
+		FlagForm.displayPreferenceDual = "no";
+	    else
+		FlagForm.displayPreferenceDual = "yes";
+
+	    // - derive reporting interval
+	    if ((flagValue & 0b10000000) == 0)
+		FlagForm.displayPreferenceNoAvg = "Hourly";
+	    else
+		FlagForm.displayPreferenceNoAvg = "Ten Mins.";
+
+	}
+
+	catch (Exception anyEx) {
+	    Logging.main(anyEx.toString());
+	}
+
+	return;
     }
 
     public static void ClearTamperFlag() {
