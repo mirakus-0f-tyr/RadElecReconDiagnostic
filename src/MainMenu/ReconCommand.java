@@ -195,17 +195,17 @@ class ReconCommand {
 	short comp = 9999; // comparison value - 0 may be a valid setting, so we use another number
 
 	if (FlagForm.displayPreferencePres == "mBar")
-	    flag += 0b00000001;
+	    flag += 0x01;
 	if (FlagForm.displayPreferenceTemp == "C")
-	    flag += 0b00000100;
+	    flag += 0x04;
 	if (FlagForm.displayPreferenceDual == "yes")
-	    flag += 0b00010000;
+	    flag += 0x10;
 	if (FlagForm.displayPreferenceUnits == "Bq/m3")
-	    flag += 0b00100000;
+	    flag += 0x20;
 	if (FlagForm.displayPreferenceUnits == "CPH")
-	    flag += 0b01000000;
+	    flag += 0x40;
 	if (FlagForm.displayPreferenceNoAvg == "Ten Mins.")
-	    flag += 0b10000000;
+	    flag += 0x80;
 
 	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\r\n");
@@ -260,32 +260,32 @@ class ReconCommand {
 	    int flagValue = Integer.parseInt(parsedFlag, 16);
 
 	    // - derive temperature setting
-	    if ((flagValue & 0b00000100) == 0)
+	    if ((flagValue & 0x04) == 0)
 		FlagForm.displayPreferenceTemp = "F";
 	    else
 		FlagForm.displayPreferenceTemp = "C";
 
 	    // - derive pressure setting
-	    if ((flagValue & 0b00000001) == 0)
+	    if ((flagValue & 0x01) == 0)
 		FlagForm.displayPreferencePres = "inHG";
 	    else
 		FlagForm.displayPreferencePres = "mBar";
 
-	    if (((flagValue & 0b00100000) == 0) && ((flagValue & 0b01000000) == 0))
+	    if (((flagValue & 0x20) == 0) && ((flagValue & 0x40) == 0))
 		FlagForm.displayPreferenceUnits = "pCi/L";
-	    else if ((flagValue & 0b00100000) != 0)
+	    else if ((flagValue & 0x20) != 0)
 		FlagForm.displayPreferenceUnits = "Bq/m3";
-	    else if ((flagValue & 0b01000000) != 0)
+	    else if ((flagValue & 0x40) != 0)
 		FlagForm.displayPreferenceUnits = "CPH";
 
 	    // - derive dual chamber
-	    if ((flagValue & 0b00010000) == 0)
+	    if ((flagValue & 0x10) == 0)
 		FlagForm.displayPreferenceDual = "no";
 	    else
 		FlagForm.displayPreferenceDual = "yes";
 
 	    // - derive reporting interval
-	    if ((flagValue & 0b10000000) == 0)
+	    if ((flagValue & 0x80) == 0)
 		FlagForm.displayPreferenceNoAvg = "Hourly";
 	    else
 		FlagForm.displayPreferenceNoAvg = "Ten Mins.";
