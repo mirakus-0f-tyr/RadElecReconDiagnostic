@@ -210,9 +210,9 @@ class ReconCommand {
 	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\r\n");
 
-	// do not ask the Recon for a response for two seconds...
+	// do not ask the Recon for a response for one second...
 	try {
-	    Thread.sleep(2000);
+	    Thread.sleep(1000);
 	}
 	catch (InterruptedException ex) {
             StringWriter swEx = new StringWriter();
