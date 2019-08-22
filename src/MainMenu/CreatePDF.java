@@ -76,7 +76,7 @@ public class CreatePDF {
     float PDF_Y = 0;
     SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MMM-yyyy");
     SimpleDateFormat dateDetailedReport = new SimpleDateFormat("MMM-dd-yyyy HH:mm");
-    SimpleDateFormat dateArrayCounter = new SimpleDateFormat("yyyy-mm-dd HH:mm");
+    SimpleDateFormat dateArrayCounter = new SimpleDateFormat("yyyy-MM-dd HH:mm");
     static String validDate = "MM/dd/yyyy";
     static String validDateTimeForPDF = "yyyy-mm-dd HH:mm";
     SimpleDateFormat dateFormatCalibration = new SimpleDateFormat("MM/dd/yyyy");
