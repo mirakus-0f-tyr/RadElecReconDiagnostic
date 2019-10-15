@@ -16,20 +16,20 @@ import java.io.StringWriter;
 
 class ReconCommand {
 
-    public static String ReconConfirm = ":RV\r\n";
-    public static String ReadProtocol = ":RP\r\n";
-    public static String CheckNewRecord = ":RB\r\n";
-    public static String ReadNextRecord = ":RN\r\n";
-    public static String ReadFirstRecord = ":RN0\r\n";
-    public static String ReadNextDiagnosticRecord = ":DN\r\n";
-    public static String ReadFirstDiagnosticRecord = ":DN0\r\n";
-    public static String ClearMemoryCommand = ":CM\r\n";
-    public static String ClearSessionCommand = ":CD\r\n";
-    public static String ReadCalibrationFactors = ":RL\r\n";
-    public static String ReadTime = ":RT\r\n";
-    public static String ResetTamperFlag = ":WX\r\n";
+    public static String ReconConfirm = ":RV\n";
+    public static String ReadProtocol = ":RP\n";
+    public static String CheckNewRecord = ":RB\n";
+    public static String ReadNextRecord = ":RN\n";
+    public static String ReadFirstRecord = ":RN0\n";
+    public static String ReadNextDiagnosticRecord = ":DN\n";
+    public static String ReadFirstDiagnosticRecord = ":DN0\n";
+    public static String ClearMemoryCommand = ":CM\n";
+    public static String ClearSessionCommand = ":CD\n";
+    public static String ReadCalibrationFactors = ":RL\n";
+    public static String ReadTime = ":RT\n";
+    public static String ResetTamperFlag = ":WX\n";
     public static String WriteOptionsFlag = ":WF";
-    public static String ReadOptionsFlag = ":RF\r\n";
+    public static String ReadOptionsFlag = ":RF\n";
 
     public static String DeviceResponse;
     public static String[] DeviceResponse_parsed;
@@ -62,7 +62,7 @@ class ReconCommand {
     }
 
     public static void LoadSpecifiedRecord(String number) {
-	WriteComm.main(ScanComm.scannedPort, ":RN" + number + "\r\n");
+	WriteComm.main(ScanComm.scannedPort, ":RN" + number + "\n");
 	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
 	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
 	DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
@@ -79,7 +79,7 @@ class ReconCommand {
 
 	// issue :WT
 	Logging.main("Issuing :WT instruction to write time...");
-	WriteComm.main(ScanComm.scannedPort, ":WT," + strCurrentTime + "\r\n");
+	WriteComm.main(ScanComm.scannedPort, ":WT," + strCurrentTime + "\n");
     }
 
     // download Recon session into memory, making data available for multitude of data exporters
@@ -208,7 +208,7 @@ class ReconCommand {
 	    flag += 0x80;
 
 	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
-	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\r\n");
+	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\n");
 
 	// do not ask the Recon for a response for one second...
 	try {
@@ -221,7 +221,7 @@ class ReconCommand {
             Logging.main(strEx);
         }
 
-	WriteComm.main(ScanComm.scannedPort, ":RF\r\n"); // load the written value so we can double-check
+	WriteComm.main(ScanComm.scannedPort, ":RF\n"); // load the written value so we can double-check
 	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
 	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
 
