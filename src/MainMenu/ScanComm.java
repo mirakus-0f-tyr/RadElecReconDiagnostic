@@ -249,7 +249,7 @@ public class ScanComm {
 
 	    if (ReconCommand.DownloadReconSessionToRAM()) {
 		// create the files
-		if (MainMenuUI.diagnosticMode) {
+		if ((MainMenuUI.diagnosticMode) || (MainMenuUI.createXLS)) {
 		    CreateTXT.main();
 		    CreateXLS.main();
 		}

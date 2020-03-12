@@ -1,14 +1,10 @@
 package MainMenu;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.text.DecimalFormat;
-import java.time.Duration;
-
-import org.apache.commons.lang3.StringUtils;
 
 import jxl.Workbook;
 import jxl.format.Alignment;
@@ -239,22 +235,24 @@ public class CreateXLS {
                         sheet.addCell(Recon_CF2);
                     }
                     
-                    //At least for now, let's temporarily highlight any chamber counts that have had their count values limited by CountLimiter.
+                    //When in diagnostic mode, let's highlight any chamber counts that have had their count values limited by CountLimiter.
                     //This should be backwards compatible with previous files, as it will only proc if the array length is 28.
-                    if(ReconCommand.reconSession.get(sessionCounter).length == 28) {
-                        if(ReconCommand.reconSession.get(sessionCounter)[26].contains("true")) {
-                            WritableCell Ch1Cell = sheet.getWritableCell(9, rows_total);
-                            WritableCellFormat Ch1CellFormat = new WritableCellFormat(Ch1Cell.getCellFormat());
-                            Ch1CellFormat.setBackground(Colour.YELLOW);
-                            Ch1CellFormat.setAlignment(Alignment.CENTRE);
-                            Ch1Cell.setCellFormat(Ch1CellFormat);
-                        }
-                        if(ReconCommand.reconSession.get(sessionCounter)[27].contains("true")) {
-                            WritableCell Ch2Cell = sheet.getWritableCell(12, rows_total);
-                            WritableCellFormat Ch2CellFormat = new WritableCellFormat(Ch2Cell.getCellFormat());
-                            Ch2CellFormat.setBackground(Colour.YELLOW);
-                            Ch2CellFormat.setAlignment(Alignment.CENTRE);
-                            Ch2Cell.setCellFormat(Ch2CellFormat);
+                    if(MainMenuUI.diagnosticMode) {
+                        if(ReconCommand.reconSession.get(sessionCounter).length == 28) {
+                            if(ReconCommand.reconSession.get(sessionCounter)[26].contains("true")) {
+                                WritableCell Ch1Cell = sheet.getWritableCell(9, rows_total);
+                                WritableCellFormat Ch1CellFormat = new WritableCellFormat(Ch1Cell.getCellFormat());
+                                Ch1CellFormat.setBackground(Colour.YELLOW);
+                                Ch1CellFormat.setAlignment(Alignment.CENTRE);
+                                Ch1Cell.setCellFormat(Ch1CellFormat);
+                            }
+                            if(ReconCommand.reconSession.get(sessionCounter)[27].contains("true")) {
+                                WritableCell Ch2Cell = sheet.getWritableCell(12, rows_total);
+                                WritableCellFormat Ch2CellFormat = new WritableCellFormat(Ch2Cell.getCellFormat());
+                                Ch2CellFormat.setBackground(Colour.YELLOW);
+                                Ch2CellFormat.setAlignment(Alignment.CENTRE);
+                                Ch2Cell.setCellFormat(Ch2CellFormat);
+                            }
                         }
                     }
                     

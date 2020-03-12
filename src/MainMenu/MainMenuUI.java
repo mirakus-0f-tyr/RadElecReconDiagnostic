@@ -88,6 +88,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean dataPathOverride = false;
     public static String specifiedDataDir;
     public static boolean photodiodeFailureRecovery=true; //Attempts to reconstruct graph/PDF using the other chamber when photodiode failure is detected.
+    public static boolean createXLS = false; //Generate an end-user XLS spreadsheet alongside the TXT file
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -980,6 +981,8 @@ public static void parseConfigTXT() {
                 }
             } else if(strLine.contains("AutoLoadFile=")) {
                 autoLoadFile = !strLine.contains("0");
+            } else if(strLine.contains("CreateXLS=")) {
+                createXLS = !strLine.contains("0");    
             }
 	      else if(strLine.contains("DataDir=")) {
 		dataPathOverride = true;
