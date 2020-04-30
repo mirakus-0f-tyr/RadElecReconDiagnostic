@@ -28,9 +28,20 @@ public class FlagForm extends javax.swing.JFrame {
     public FlagForm() {
 	initComponents();
 
-	// Get the current Recon settings...
 	try {
-	    ScanComm.run(10);
+	    if (ScanComm.run(1)[0] == "false") {
+		cboPressureSelect.setEnabled(false);
+		cboTemperatureSelect.setEnabled(false);
+		cboDualChamberSelect.setEnabled(false);
+		cboRadonUnitSelect.setEnabled(false);
+		cboToggleNoAveraging.setEnabled(false);
+		btnApplySpecial.setEnabled(false);
+		btnFlagDefaults.setEnabled(false);
+
+		JOptionPane.showMessageDialog(this, "You must connect a Recon to use this feature.\r\nPlug in the USB cable, turn the key to the middle\r\nposition, and reopen the Display Options window.");
+	    }
+	    else // get current Recon settings...
+		ScanComm.run(10);
 	}
 
 	catch (Exception ex) {
@@ -64,6 +75,7 @@ public class FlagForm extends javax.swing.JFrame {
 	    cboToggleNoAveraging.setSelectedItem("Hourly");
 	else
 	    cboToggleNoAveraging.setSelectedItem("Ten Mins.");
+
     }
 
     /**
