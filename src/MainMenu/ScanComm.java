@@ -152,13 +152,10 @@ public class ScanComm {
 			MainMenuUI.displayProgressLabel("Time synchronization complete.");
 		    } else if (OptArgs == 8) {
 			    Logging.main("ScanComm: Connecting to set options bitmask.");
-			if (ReconCommand.SetOptionFlag()) {
+			    ReconCommand.SetOptionFlag();
 			    Logging.main("Display options saved to unit.");
 			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
 			    FlagForm.displayOptionsWriteSuccess = true;
-			}
-			else
-			    Logging.main("ERROR: Display options flag NOT written successfully.");
 		    } else if (OptArgs == 9) {
 		    	Logging.main("Clearing tamper flag.");
 			ReconCommand.ClearTamperFlag();

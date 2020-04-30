@@ -189,10 +189,8 @@ class ReconCommand {
 
     // This method reads the preferences from FlagForm and will write an appropriate bitmask
     // value to the Recon.
-    public static boolean SetOptionFlag() {
-	String flagResponse = null; // value read from unit to verify success
+    public static void SetOptionFlag() {
 	short flag = 0; // binary number we will be writing to the unit
-	short comp = 9999; // comparison value - 0 may be a valid setting, so we use another number
 
 	if (FlagForm.displayPreferencePres == "mBar")
 	    flag += 0x01;
@@ -210,36 +208,7 @@ class ReconCommand {
 	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\n");
 
-	// do not ask the Recon for a response for one second...
-	try {
-	    Thread.sleep(1000);
-	}
-	catch (InterruptedException ex) {
-            StringWriter swEx = new StringWriter();
-            ex.printStackTrace(new PrintWriter(swEx));
-            String strEx = swEx.toString();
-            Logging.main(strEx);
-        }
-
-	WriteComm.main(ScanComm.scannedPort, ":RF\n"); // load the written value so we can double-check
-	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
-	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", ""); // strip line feeds
-
-	// search device response until we've found the part we're interested in
-	for (int c = 0; c < DeviceResponse.length(); c++) {
-	    if (DeviceResponse.charAt(c) == '0' && (DeviceResponse.charAt(c+1) == '0')) {
-	        flagResponse = DeviceResponse.substring(c);
-		break;
-	    }
-	}
-
-	// parse number contained in string as hexadecimal value for purposes of comparison
-	if (flagResponse != null)
-	    comp = Short.parseShort(flagResponse, 16);
-	else
-	    Logging.main("flagResponse is null! Cannot compare written value.");
-
-	return (flag == comp);
+	return;
     }
 
     // This method is responsible for both reading the options bitmask from the Recon
