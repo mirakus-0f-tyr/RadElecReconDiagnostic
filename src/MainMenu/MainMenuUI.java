@@ -838,7 +838,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static javax.swing.JLabel lblVersion;
     private javax.swing.JLabel limiterLabel;
     public static javax.swing.JTextArea txtCustomerInfo;
-    private javax.swing.JTextField txtLocation;
+    public static javax.swing.JTextField txtLocation;
     public static javax.swing.JTextArea txtTestSiteInfo;
     // End of variables declaration//GEN-END:variables
 

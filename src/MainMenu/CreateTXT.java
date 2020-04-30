@@ -240,7 +240,7 @@ public class CreateTXT {
                 writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
-		writer.println("Room: " + MainMenu.MainMenuUI.strRoomDeployed);
+		writer.println("Location: " + MainMenu.MainMenuUI.txtLocation.getText());
                 writer.println(newline);
                 writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
@@ -283,7 +283,7 @@ public class CreateTXT {
                 writer.println("Weather: " + MainMenu.MainMenuUI.strWeather);
                 writer.println("Mitigation: " + MainMenu.MainMenuUI.strMitigation);
                 writer.println("Comment: " + MainMenu.MainMenuUI.strComment);
-		writer.println("Room: " + MainMenu.MainMenuUI.strRoomDeployed);
+		writer.println("Location: " + MainMenu.MainMenuUI.txtLocation.getText());
                 writer.println(newline);
                 writer.println("Analyzed By: " + MainMenu.MainMenuUI.strAnalyzedBy);
                 writer.println("Deployed By: " + MainMenu.MainMenuUI.strDeployedBy);
