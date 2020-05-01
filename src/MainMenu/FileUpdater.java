@@ -84,6 +84,9 @@ public class FileUpdater {
 			for (int k = 0; k < testSiteLineCounter; k++)
 			    workingFile.remove(i);
 		    }
+
+		    if (workingFile.get(i).contains("Location:"))
+			    workingFile.remove(i);
 		}
 	    }
 
@@ -98,6 +101,9 @@ public class FileUpdater {
 
 		if (currentLine.contains("Test site information:"))
 		    bw.write(MainMenuUI.txtTestSiteInfo.getText() + newline + newline);
+
+		if (workingFile.get(i).contains("Comment:"))
+		    bw.write("Location: " + MainMenuUI.txtLocation.getText() + newline);
 	    }
 
 	    bw.close();

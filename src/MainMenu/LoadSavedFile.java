@@ -31,6 +31,7 @@ public class LoadSavedFile {
     public static ArrayList<Double> LoadedReconTXTFile_Ch2RnC; //This array will store Ch2RnC
     public static String strTestSiteInfo = "";
     public static String strCustomerInfo = "";
+    public static String strLocation = "";
     public static String strStartDate = "Unknown Start Date";
     public static String strEndDate = "Unknown End Date";
     public static String strUnitSystem = "US";
@@ -59,6 +60,7 @@ public class LoadSavedFile {
 	// clear customer and test site strings every time a new file is opened
 	strTestSiteInfo = "";
 	strCustomerInfo = "";
+	strLocation = "";
         
         try {
             
@@ -133,8 +135,8 @@ public class LoadSavedFile {
                         strReportMitigation = strLine.substring(11).trim(); //Should robustly parse mitigation.
                     } else if(strLine.length() > 7 && strLine.substring(0,8).contains("Comment:")) {
                         strReportComment = strLine.substring(8).trim(); //Should robustly parse comment.
-                    } else if(strLine.length() > 4 && strLine.substring(0,5).contains("Room:")) {
-		        strRoomDeployed = strLine.substring(5).trim();
+                    } else if(strLine.length() > 8 && strLine.substring(0,9).contains("Location:")) {
+		        strRoomDeployed = strLine.substring(10).trim();
 		    }
                     //BEGIN: Test Site Parsing Block
                     if(testSiteFlag) {
@@ -174,9 +176,18 @@ public class LoadSavedFile {
                     }
                     //END: Customer Info Parsing Block
 
+		    //BEGIN: Parse test Location string
+		    if(strLine.contains("Location:") && strLine.length() > 11) {
+			strLocation = strLine;
+			strLocation = strLocation.trim();
+			strLocation = strLocation.substring(10);
+		    }
+		    //END: Parse test Location string
+
 		    // reload customer and test site info in MainMenuUI in case user wants to re-edit
 		    MainMenu.MainMenuUI.txtCustomerInfo.setText(strCustomerInfo);
 		    MainMenu.MainMenuUI.txtTestSiteInfo.setText(strTestSiteInfo);
+		    MainMenu.MainMenuUI.txtLocation.setText(strLocation);
 
                     //Display Main Menu Console label
                     MainMenu.MainMenuUI.lblSystemConsole.setText("File successfully loaded.");
