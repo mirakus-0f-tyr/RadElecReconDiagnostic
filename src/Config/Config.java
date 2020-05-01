@@ -12,7 +12,6 @@ import static MainMenu.MainMenuUI.strMitigation;
 import static MainMenu.MainMenuUI.strProtocol;
 import static MainMenu.MainMenuUI.strTampering;
 import static MainMenu.MainMenuUI.strWeather;
-import static MainMenu.MainMenuUI.strRoomDeployed;
 import static MainMenu.InitDirs.configDir;
 import java.io.*;
 
@@ -98,9 +97,9 @@ public class Config extends javax.swing.JFrame {
         cboDisplaySig = new javax.swing.JComboBox();
         lblDisplaySignature = new java.awt.Label();
         lblPDFFolder = new javax.swing.JLabel();
-        cboPDFFolder = new javax.swing.JComboBox<String>();
+        cboPDFFolder = new javax.swing.JComboBox<>();
         lblClearOldTest = new javax.swing.JLabel();
-        cboClearOldTests = new javax.swing.JComboBox<String>();
+        cboClearOldTests = new javax.swing.JComboBox<>();
         btnOpenFlagSelect = new javax.swing.JButton();
         sliderTilts = new javax.swing.JSlider();
         lblTiltSlider = new javax.swing.JLabel();
@@ -126,8 +125,6 @@ public class Config extends javax.swing.JFrame {
         lblMitigation = new java.awt.Label();
         txtComment = new java.awt.TextField();
         lblComment = new java.awt.Label();
-        lblRoomDeployed = new javax.swing.JLabel();
-        txtRoomDeployed = new java.awt.TextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Config");
@@ -219,14 +216,14 @@ public class Config extends javax.swing.JFrame {
         lblPDFFolder.setText("Open PDF Folder");
         lblPDFFolder.setToolTipText("");
 
-        cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Yes", "No" }));
+        cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
 
         lblClearOldTest.setBackground(new java.awt.Color(255, 255, 255));
         lblClearOldTest.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         lblClearOldTest.setForeground(new java.awt.Color(0, 0, 0));
         lblClearOldTest.setText("Clear Old Tests From Recon");
 
-        cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Never", "Prompt", "Always" }));
+        cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Never", "Prompt", "Always" }));
         cboClearOldTests.setToolTipText("Clear old tests from Recon as you download them?");
 
         btnOpenFlagSelect.setText("Display Options");
@@ -461,13 +458,6 @@ public class Config extends javax.swing.JFrame {
         lblComment.setName(""); // NOI18N
         lblComment.setText("Comment:");
 
-        lblRoomDeployed.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        lblRoomDeployed.setText("Room:");
-
-        txtRoomDeployed.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
-        txtRoomDeployed.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        txtRoomDeployed.setName(""); // NOI18N
-
         javax.swing.GroupLayout pnlSettings2Layout = new javax.swing.GroupLayout(pnlSettings2);
         pnlSettings2.setLayout(pnlSettings2Layout);
         pnlSettings2Layout.setHorizontalGroup(
@@ -475,26 +465,20 @@ public class Config extends javax.swing.JFrame {
             .addGroup(pnlSettings2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(pnlSettings2Layout.createSequentialGroup()
-                        .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblMitigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblTampering, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblWeather, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(lblProtocol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(lblComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED))
-                    .addGroup(pnlSettings2Layout.createSequentialGroup()
-                        .addComponent(lblRoomDeployed)
-                        .addGap(45, 45, 45)))
+                    .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(lblMitigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblTampering, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblWeather, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(lblProtocol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(lblComment, javax.swing.GroupLayout.DEFAULT_SIZE, 72, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(txtProtocol, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtTampering, javax.swing.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE)
                     .addComponent(txtWeather, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtMitigation, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtRoomDeployed, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(50, Short.MAX_VALUE))
+                    .addComponent(txtComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(54, Short.MAX_VALUE))
         );
         pnlSettings2Layout.setVerticalGroup(
             pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -519,11 +503,7 @@ public class Config extends javax.swing.JFrame {
                 .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(lblRoomDeployed)
-                    .addComponent(txtRoomDeployed, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(104, Short.MAX_VALUE))
+                .addContainerGap(136, Short.MAX_VALUE))
         );
 
         tabConfig.addTab("Deployment", pnlSettings2);
@@ -979,7 +959,6 @@ public class Config extends javax.swing.JFrame {
             pw.print("Weather: " + txtWeather.getText() + "\n");
             pw.print("Mitigation: " + txtMitigation.getText() + "\n");
             pw.print("Comment: " + txtComment.getText() + "\n");
-	    pw.print("Room: " + txtRoomDeployed.getText() + "\n");
 
             pw.close();
         
@@ -995,7 +974,6 @@ public class Config extends javax.swing.JFrame {
         txtWeather.setText(strWeather);
         txtMitigation.setText(strMitigation);
         txtComment.setText(strComment);
-	txtRoomDeployed.setText(strRoomDeployed);
     }
     
     public String getCustomReportText() {
@@ -1058,7 +1036,6 @@ public class Config extends javax.swing.JFrame {
     private java.awt.Label lblProtocol;
     private java.awt.Label lblReportText;
     private java.awt.Label lblRetrievedBy;
-    private javax.swing.JLabel lblRoomDeployed;
     private java.awt.Label lblTampering;
     private javax.swing.JLabel lblTiltSlider;
     private java.awt.Label lblUnits;
@@ -1080,7 +1057,6 @@ public class Config extends javax.swing.JFrame {
     private java.awt.TextField txtProtocol;
     private javax.swing.JTextArea txtReportText;
     private java.awt.TextField txtRetrievedBy;
-    private java.awt.TextField txtRoomDeployed;
     private java.awt.TextField txtTampering;
     private java.awt.TextField txtWeather;
     // End of variables declaration//GEN-END:variables
