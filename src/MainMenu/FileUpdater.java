@@ -85,7 +85,7 @@ public class FileUpdater {
 			    workingFile.remove(i);
 		    }
 
-		    if (workingFile.get(i).contains("Location:"))
+		    if (workingFile.get(i).contains("Location:") || workingFile.get(i).contains("Room:")
 			    workingFile.remove(i);
 		}
 	    }
