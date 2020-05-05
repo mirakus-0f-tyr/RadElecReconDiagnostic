@@ -203,6 +203,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblFinalAvg = new javax.swing.JLabel();
         lblLocation = new javax.swing.JLabel();
         txtLocation = new javax.swing.JTextField();
+        txtNewFileName = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Download Tool");
@@ -441,6 +442,9 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
+        txtNewFileName.setText("<Enter Filename Here>");
+        txtNewFileName.setToolTipText("Enter preferred filename for the downloaded test. Do not include an extension.");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -469,7 +473,9 @@ public class MainMenuUI extends javax.swing.JFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnCloseProgram, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(txtNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addContainerGap())
@@ -593,7 +599,10 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addGap(2, 2, 2)
                         .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(txtNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -603,7 +612,7 @@ public class MainMenuUI extends javax.swing.JFrame {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtLocation, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(btnCloseProgram, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(35, 35, 35))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         limiterLabel.getAccessibleContext().setAccessibleName("limiterLabel");
@@ -824,7 +833,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     public static javax.swing.JLabel lblDataSessions;
-    private static javax.swing.JLabel lblFinalAvg;
+    public static javax.swing.JLabel lblFinalAvg;
     public static javax.swing.JLabel lblFirmwareVersion;
     public static javax.swing.JLabel lblLoadedFile;
     public static javax.swing.JLabel lblLoadedFileName;
@@ -838,6 +847,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JLabel limiterLabel;
     public static javax.swing.JTextArea txtCustomerInfo;
     public static javax.swing.JTextField txtLocation;
+    public static javax.swing.JTextField txtNewFileName;
     public static javax.swing.JTextArea txtTestSiteInfo;
     // End of variables declaration//GEN-END:variables
 

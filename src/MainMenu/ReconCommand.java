@@ -152,37 +152,75 @@ class ReconCommand {
     // in CreateTXT and CreateXLS individually
     public static void DetermineFileName() {
 
-	String TXT_name = null;
-        File TXT_file = null;
-        long fileIteration = 1;
-        boolean DoesReconFileExist = true;
-        boolean TXT_exists = false;
-	String XLS_name = null;
-        File XLS_file = null;
-	boolean XLS_exists = false;
+	String TXT_name = null;			// filename we want to use for the txt
+	String XLS_name = null;			// filename we want to use for the xls
+	long fileIteration = 1;			// digit to be added to end of filename if the file exists
+	boolean DoesReconFileExist = true;	// used to control the loop below
+	boolean TXT_exists = false;		// self explanatory
+	boolean XLS_exists = false;		// self explanatory
+	File TXT_file = null;			// File object for determining if txt exists
+	File XLS_file = null;			// File object for determining if xls exists
+	int loopCounter = 0;			// count how many times we've gone through the loop
 
-	// get serial number and populate strings we will be searching for values
+	// Get serial number and start date in case we need to use the default filename:
 	String ConfirmSN = ReconCommand.GetSerialNumber();
 	LoadNewRecord();
 	LoadNextRecord();
 
-	//This while loop will determine the file iteration in the naming process, so that we're not overwriting previously
-        //created files. This will basically append -x to the end of a file name, where x is the long file iteration counter.
+	// Get the first line of txtTestSiteInfo in case we need it:
+	String[] tempArray = MainMenu.MainMenuUI.txtTestSiteInfo.getText().split("\\r?\\n");
+
+	//This while loop will check for user input and determine if we need to tack a number onto the end of the filename to avoid overwrites.
         while(DoesReconFileExist==true) {
-            TXT_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
-            XLS_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
+
+	    // First check the filename text box for a valid name
+	    if (MainMenu.MainMenuUI.txtNewFileName.getText().length() > 0 && !MainMenu.MainMenuUI.txtNewFileName.getText().contains("<Enter Filename Here>")) {
+		// Don't tack on the digit if the files don't already exist
+		if (loopCounter > 0) {
+		    TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".txt";
+		    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".xls";
+		}
+		else {
+		    TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".txt";
+		    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".xls";
+		}
+	    }
+	    // If there is nothing there, use the first line of Test Site Info
+	    else if (MainMenu.MainMenuUI.txtTestSiteInfo.getText().length() > 0) {
+		// Don't tack on the digit if the files don't already exist
+		if (loopCounter > 0) {
+		    TXT_name = InitDirs.dataDir + File.separator + tempArray[0] + "-" + fileIteration + ".txt";
+		    XLS_name = InitDirs.dataDir + File.separator + tempArray[0] + "-" + fileIteration + ".xls";
+		}
+		else {
+		    TXT_name = InitDirs.dataDir + File.separator + tempArray[0] + ".txt";
+		    XLS_name = InitDirs.dataDir + File.separator + tempArray[0] + ".xls";
+		}
+	    }
+	    // Otherwise, use the old method...
+	    else {
+		TXT_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
+		XLS_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
+	    }
+
+	    // Determine if the files exist with the names we want to use.
             TXT_file = new File(TXT_name);
             XLS_file = new File(XLS_name);
             TXT_exists = TXT_file.exists();
             XLS_exists = XLS_file.exists();
+
+	    // If nothing exists, we're done. Break the loop.
             if(!((TXT_exists==true)||(XLS_exists==true))) {
                 DoesReconFileExist = false;
             }
+	    // Or increment our end digit if we have to.
             if(DoesReconFileExist==true) {
-                fileIteration++;
+		fileIteration++;
+		loopCounter++;
             }
         }
 
+	// Finally, set the names that are going to be used.
 	filenameTXT = new String(TXT_name);
 	filenameXLS = new String(XLS_name);
     }
