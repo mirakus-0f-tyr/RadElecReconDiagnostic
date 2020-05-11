@@ -163,6 +163,9 @@ public class ScanComm {
 		    } else if (OptArgs == 10) {
 			Logging.main("ScanComm: Connecting to parse options bitmask.");
 			ReconCommand.ParseOptionFlag();
+		    } else if (OptArgs == 11) {
+			Logging.main("ScanComm: Connecting to determine default file name.");
+			ReconCommand.SetDefaultFilename();
 		    }
                 }
             scannedPort.closePort();

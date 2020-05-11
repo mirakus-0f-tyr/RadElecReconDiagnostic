@@ -107,6 +107,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Troubleshooting Variables
     public static double ConsecutiveZeroLimit = 5; //If this number of consecutive zeros is met (or exceeded) by a chamber when creating a TXT or loading a file, we will alert the user to a potential photodiode failure.
+
     /**
      * Creates new form MainMenuUI
      */
@@ -158,6 +159,9 @@ public class MainMenuUI extends javax.swing.JFrame {
 
 	if (countLimiter)
 	    limiterLabel.setVisible(false);
+
+	// disable file naming options until we have verified valid data is ready to be downloaded
+	EnableFileNaming(false);
     }
 
     /**
@@ -204,6 +208,7 @@ public class MainMenuUI extends javax.swing.JFrame {
         lblLocation = new javax.swing.JLabel();
         txtLocation = new javax.swing.JTextField();
         txtNewFileName = new javax.swing.JTextField();
+        chkUseStreetAddressForFilename = new javax.swing.JCheckBox();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Rad Elec Recon Download Tool");
@@ -442,8 +447,10 @@ public class MainMenuUI extends javax.swing.JFrame {
             }
         });
 
-        txtNewFileName.setText("<Enter Filename Here>");
         txtNewFileName.setToolTipText("Enter preferred filename for the downloaded test. Do not include an extension.");
+
+        chkUseStreetAddressForFilename.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
+        chkUseStreetAddressForFilename.setText("Use street address?");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -475,7 +482,9 @@ public class MainMenuUI extends javax.swing.JFrame {
                                     .addGroup(layout.createSequentialGroup()
                                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                             .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                            .addComponent(txtNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                                .addComponent(chkUseStreetAddressForFilename)
+                                                .addComponent(txtNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 169, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                         .addComponent(btnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 92, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                         .addContainerGap())
@@ -601,7 +610,9 @@ public class MainMenuUI extends javax.swing.JFrame {
                     .addComponent(btnConfig, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(txtNewFileName, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(18, 18, 18)
+                        .addGap(1, 1, 1)
+                        .addComponent(chkUseStreetAddressForFilename)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblLoadedFile, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -829,6 +840,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private javax.swing.JButton btnOpenSavedFile;
     private javax.swing.JButton btnSyncTime;
     public static javax.swing.JButton btnUpdateTXTFile;
+    public static javax.swing.JCheckBox chkUseStreetAddressForFilename;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
@@ -886,6 +898,14 @@ public static void displayFirmwareVersion(String FirmwareVersion) {
 public static void displayDataSessions(String NumSessions) {
     lblDataSessions.setVisible(true);
     lblDataSessions.setText("Data Sessions: " + NumSessions);
+}
+
+// Get the data sessions as was recorded in the lblDataSessions variable.
+public static int getDataSessions() {
+	// This will FAIL if we ever change the Data Sessions: wording!
+	String sessionString = lblDataSessions.getText().substring(15);
+	sessionString = sessionString.trim();
+	return Integer.parseInt(sessionString);
 }
 
 public static double convertFirmwareVersionToNumber() {
@@ -1322,9 +1342,21 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
             }
 
 	    btnSyncTime.setVisible(true);
+
+	    if (getDataSessions() > 0) {
+		EnableFileNaming(true);
+		ScanComm.run(11);
+		txtNewFileName.setText(ReconCommand.defaultFilename);
+		txtNewFileName.requestFocus();
+		txtNewFileName.selectAll();
+	    }
+	    else
+		EnableFileNaming(false);
         }
-	else
+	else {
 	    btnSyncTime.setVisible(false); // disable the sync time button if no Recon is connected
+	    EnableFileNaming(false);
+	}
 
         EnableAllButtons(true);
 	lblFinalAvg.setText("");
@@ -1363,7 +1395,17 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       Logging.main("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       EnableAllButtons(true);
-      
+
+      if (getDataSessions() > 0) {
+	  EnableFileNaming(true);
+	  ScanComm.run(11);
+	  txtNewFileName.setText(ReconCommand.defaultFilename);
+	  txtNewFileName.requestFocus();
+	  txtNewFileName.selectAll();
+      }
+      else
+	  EnableFileNaming(false);
+
       return null;
     }
 }
@@ -1375,6 +1417,7 @@ private class ClearReconMemory extends SwingWorker<Void, Void>{
       Logging.main("Clear Session button pressed.");
       CRM_Parameters = ScanComm.run(4);
       EnableAllButtons(true);
+      EnableFileNaming(false);
       
       return null;
     }
@@ -1488,6 +1531,14 @@ public void EnableAllButtons(boolean boolEnableButtons) {
             FlagForm.EnableAllButtons(boolEnableButtons);
         }
     }
+}
+
+public void EnableFileNaming(boolean boolWantToEnable) {
+    txtNewFileName.setEnabled(boolWantToEnable);
+    txtNewFileName.setVisible(boolWantToEnable);
+    chkUseStreetAddressForFilename.setEnabled(boolWantToEnable);
+    chkUseStreetAddressForFilename.setVisible(boolWantToEnable);
+    return;
 }
 
 }

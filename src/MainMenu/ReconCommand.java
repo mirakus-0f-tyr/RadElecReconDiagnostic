@@ -37,6 +37,7 @@ class ReconCommand {
     public static LinkedList<String[]> reconSession; // container to hold Recon samples
     public static String filenameTXT;
     public static String filenameXLS;
+    public static String defaultFilename;
     public static boolean longTermMode;
 
     public static String GetSerialNumber() {
@@ -148,6 +149,16 @@ class ReconCommand {
 	return true;
     }
 
+    public static void SetDefaultFilename() {
+	// Get serial number and start date in case we need to use the default filename:
+	String ConfirmSN = GetSerialNumber();
+	LoadNewRecord();
+	LoadNextRecord();
+
+	defaultFilename = "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3];
+	return;
+    }
+
     // Loads filenames into strings here so that it does not need to be done
     // in CreateTXT and CreateXLS individually
     public static void DetermineFileName() {
@@ -162,31 +173,14 @@ class ReconCommand {
 	File XLS_file = null;			// File object for determining if xls exists
 	int loopCounter = 0;			// count how many times we've gone through the loop
 
-	// Get serial number and start date in case we need to use the default filename:
-	String ConfirmSN = ReconCommand.GetSerialNumber();
-	LoadNewRecord();
-	LoadNextRecord();
-
 	// Get the first line of txtTestSiteInfo in case we need it:
 	String[] tempArray = MainMenu.MainMenuUI.txtTestSiteInfo.getText().split("\\r?\\n");
 
 	//This while loop will check for user input and determine if we need to tack a number onto the end of the filename to avoid overwrites.
         while(DoesReconFileExist==true) {
 
-	    // First check the filename text box for a valid name
-	    if (MainMenu.MainMenuUI.txtNewFileName.getText().length() > 0 && !MainMenu.MainMenuUI.txtNewFileName.getText().contains("<Enter Filename Here>")) {
-		// Don't tack on the digit if the files don't already exist
-		if (loopCounter > 0) {
-		    TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".txt";
-		    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".xls";
-		}
-		else {
-		    TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".txt";
-		    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".xls";
-		}
-	    }
-	    // If there is nothing there, use the first line of Test Site Info
-	    else if (MainMenu.MainMenuUI.txtTestSiteInfo.getText().length() > 0) {
+	    // See if the checkbox is selected, and if so, use the first line of Test Site Info...
+	    if (MainMenu.MainMenuUI.chkUseStreetAddressForFilename.isSelected() && MainMenu.MainMenuUI.txtTestSiteInfo.getText().length() > 0) {
 		// Don't tack on the digit if the files don't already exist
 		if (loopCounter > 0) {
 		    TXT_name = InitDirs.dataDir + File.separator + tempArray[0] + "-" + fileIteration + ".txt";
@@ -197,10 +191,29 @@ class ReconCommand {
 		    XLS_name = InitDirs.dataDir + File.separator + tempArray[0] + ".xls";
 		}
 	    }
-	    // Otherwise, use the old method...
+	    // Otherwise, use the contents of the name text box
 	    else {
-		TXT_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".txt";
-		XLS_name = InitDirs.dataDir + File.separator + "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3] + "-" + fileIteration + ".xls";
+		// First, make sure the user hasn't clobbered the default text.
+		if (MainMenu.MainMenuUI.txtNewFileName.getText().length() > 0) {
+		    if (loopCounter > 0) {
+			TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".xls";
+		    }
+		    else {
+		        TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".xls";
+		    }
+		} // If the box has inadvertently been cleared, use the default from the variable
+		else {
+		    if (loopCounter > 0) {
+			TXT_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".xls";
+		    }
+		    else {
+			TXT_name = InitDirs.dataDir + File.separator + defaultFilename + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + defaultFilename + ".xls";
+		    }
+		}
 	    }
 
 	    // Determine if the files exist with the names we want to use.
