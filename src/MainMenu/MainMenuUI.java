@@ -56,7 +56,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     
     //Rad Elec Recon Variables
     String[] CRM_Parameters;
-    public static String version = "v0.9.9.31";
+    public static String version = "v0.9.9.32";
     public static String lastReconCommand = "";
     public static long LastCount_Ch1 = 0;
     public static long LastCount_Ch2 = 0;
@@ -451,6 +451,7 @@ public class MainMenuUI extends javax.swing.JFrame {
 
         chkUseStreetAddressForFilename.setFont(new java.awt.Font("Calibri", 1, 14)); // NOI18N
         chkUseStreetAddressForFilename.setText("Use street address?");
+        chkUseStreetAddressForFilename.setToolTipText("Check to use the first line of Test Site Information.");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -1263,7 +1264,7 @@ public static void checkAutoLoadFile() {
             strSplitFileName = ReconCommand.filenameTXT.split(Pattern.quote(File.separator));
 
 	     for (splitIterator = 0; splitIterator < strSplitFileName.length; splitIterator++) {
-		 if (strSplitFileName[splitIterator].startsWith("Recon_"))
+		 if (strSplitFileName[splitIterator].endsWith(".txt"))
 		     break;
 	     }
 	     strSimpleFileName = strSplitFileName[splitIterator];
@@ -1342,16 +1343,7 @@ private class MySwingWorker extends SwingWorker<Void, Void>{
             }
 
 	    btnSyncTime.setVisible(true);
-
-	    if (getDataSessions() > 0) {
-		EnableFileNaming(true);
-		ScanComm.run(11);
-		txtNewFileName.setText(ReconCommand.defaultFilename);
-		txtNewFileName.requestFocus();
-		txtNewFileName.selectAll();
-	    }
-	    else
-		EnableFileNaming(false);
+	    RefreshDefaultFileName();
         }
 	else {
 	    btnSyncTime.setVisible(false); // disable the sync time button if no Recon is connected
@@ -1395,16 +1387,7 @@ private class ClearCurrentSession extends SwingWorker<Void, Void>{
       Logging.main("Clear Current Session button pressed.");
       CRM_Parameters = ScanComm.run(3);
       EnableAllButtons(true);
-
-      if (getDataSessions() > 0) {
-	  EnableFileNaming(true);
-	  ScanComm.run(11);
-	  txtNewFileName.setText(ReconCommand.defaultFilename);
-	  txtNewFileName.requestFocus();
-	  txtNewFileName.selectAll();
-      }
-      else
-	  EnableFileNaming(false);
+      RefreshDefaultFileName();
 
       return null;
     }
@@ -1430,6 +1413,7 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       Logging.main("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
       EnableAllButtons(true);
+      RefreshDefaultFileName();
 
       return null;
     }
@@ -1533,12 +1517,33 @@ public void EnableAllButtons(boolean boolEnableButtons) {
     }
 }
 
-public void EnableFileNaming(boolean boolWantToEnable) {
+public static void EnableFileNaming(boolean boolWantToEnable) {
     txtNewFileName.setEnabled(boolWantToEnable);
     txtNewFileName.setVisible(boolWantToEnable);
     chkUseStreetAddressForFilename.setEnabled(boolWantToEnable);
     chkUseStreetAddressForFilename.setVisible(boolWantToEnable);
     return;
+}
+
+// Queries the Recon for information for the next session
+// and provides the "default filename" to MainMenuUI.
+private static void RefreshDefaultFileName() {
+    try {
+	if (getDataSessions() > 0) {
+	    EnableFileNaming(true);
+	    ScanComm.run(11);
+	    txtNewFileName.setText(ReconCommand.defaultFilename);
+	    txtNewFileName.requestFocus();
+	    txtNewFileName.selectAll();
+	}
+	else
+	    EnableFileNaming(false);
+    }
+
+    catch (Exception anyEx) {
+	Logging.main("ERROR: Exception thrown in RefreshDefaultFileName()!");
+	Logging.main(anyEx.toString());
+    }
 }
 
 }
