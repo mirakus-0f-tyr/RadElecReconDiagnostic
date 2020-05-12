@@ -89,9 +89,9 @@ public class ScanComm {
                 MainMenuUI.displayProgressLabel("Searching for Rad Elec Recon...");
                 scannedPort.openPort();//Open serial port
                 scannedPort.setParams(scannedPort.BAUDRATE_9600,
-                                 scannedPort.DATABITS_8,
-                                 scannedPort.STOPBITS_1,
-                                 scannedPort.PARITY_NONE);//Set params. Also you can set params by this string: serialPort.setParams(9600, 8, 1, 0);
+			             scannedPort.DATABITS_8,
+			             scannedPort.STOPBITS_1,
+			             scannedPort.PARITY_NONE);//Set params. Also you can set params by this string: serialPort.setParams(9600, 8, 1, 0);
                 Thread.sleep(125);
                 WriteComm.main(scannedPort, ReconCommand.ReconConfirm); //Test command to see if the device responds appropriately
                 Thread.sleep(125);
@@ -99,89 +99,126 @@ public class ScanComm {
                 String DeviceResponse_targeted = StringUtils.left(DeviceResponse,8);
                 if(StringUtils.equals(DeviceResponse_targeted,"=DV,CRM,")) {
                     foundRecon = true;
-                    if(OptArgs == 1){
-                        Logging.main("Rad Elec Recon CRM found!");
-                        MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!");
-                        String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
-                        //A bit of error-handling, just in case the serial number doesn't exist.
-                        if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
-                        {
-                            Logging.main("Recon CRM Serial #" + DeviceResponse_parsed[3]);
+                    
+		    switch (OptArgs) {
+
+		    	case 1:
+			    Logging.main("Rad Elec Recon CRM found!");
+			    MainMenuUI.displayProgressLabel("Recon CRM found on " + portNames[i] + "!");
+			    String[] DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
+			    
+			    //A bit of error-handling, just in case the serial number doesn't exist.
+			    if(DeviceResponse_parsed.length > 3 && DeviceResponse_parsed[3] != null)
+			    {
+			        Logging.main("Recon CRM Serial #" + DeviceResponse_parsed[3]);
 			     MainMenuUI.displaySerialNumber(DeviceResponse_parsed[3]);
-                        } else {
-                            Logging.main("Unable to determine Recon CRM Serial#. Rogue instrument detected.");
-                        }
-                        if(DeviceResponse_parsed.length > 2 && DeviceResponse_parsed[2] != null)
-                        {
-                            Logging.main("Firmware v" + DeviceResponse_parsed[2]);
-                            ReconFirmwareVersion = DeviceResponse_parsed[2];
+			    }
+			    else
+			        Logging.main("Unable to determine Recon CRM Serial#. Rogue instrument detected.");
+			    
+			    if(DeviceResponse_parsed.length > 2 && DeviceResponse_parsed[2] != null)
+			    {
+			        Logging.main("Firmware v" + DeviceResponse_parsed[2]);
+			        ReconFirmwareVersion = DeviceResponse_parsed[2];
 			     MainMenuUI.displayFirmwareVersion(ReconFirmwareVersion);
-                        } else {
-                            Logging.main("Unknown Firmware Version! Probably not good...");
-                        }
-                        //Let's get the number of data sessions while we're connecting.
-                        CheckReconProtocol(scannedPort);
-                    } else if(OptArgs == 2) {
-                        Logging.main("Checking for records...");
-                        MainMenuUI.displayProgressLabel("Checking for records...");
-                        if(CheckForNewRecords(scannedPort)==true) {
-                            Logging.main("Beginning TXT/XLS file dump...");
-                            DownloadNewRecord(scannedPort);
-                        }
-                    } else if(OptArgs == 3) {
-                        Logging.main("Clearing Current Session via :CD command...");
-                        ClearSessionMemory(scannedPort);
-                        CheckReconProtocol(scannedPort);
-                    } else if(OptArgs == 4) {
-                        ClearReconMemory(scannedPort);
-                        CheckReconProtocol(scannedPort);
-                    } else if(OptArgs == 5) {
-                        Logging.main("Clearing memory and dumping all data...");
-                        DumpAllData(scannedPort);
-                        CheckReconProtocol(scannedPort);
-                    } else if(OptArgs == 6) {
-		        Logging.main("Checking for records...");
-			MainMenuUI.displayProgressLabel("Checking for records...");
-			if(CheckForNewRecords(scannedPort)==true) {
-			    Logging.main("Begin downloading session...");
-			    DownloadNewRecord(scannedPort);
-			}
-		    } else if (OptArgs == 7) {
-		        Logging.main("Setting Recon time...");
-			ReconCommand.SetReconTimeFromPC();
-			MainMenuUI.displayProgressLabel("Time synchronization complete.");
-		    } else if (OptArgs == 8) {
+			    }
+			    else
+			        Logging.main("Unknown Firmware Version! Probably not good...");
+			    
+			    //Let's get the number of data sessions while we're connecting.
+			    CheckReconProtocol(scannedPort);
+			    break;
+
+                    	case 2:
+			    Logging.main("Checking for records...");
+			    MainMenuUI.displayProgressLabel("Checking for records...");
+
+			    if(CheckForNewRecords(scannedPort)==true) {
+			        Logging.main("Beginning TXT/XLS file dump...");
+			        DownloadNewRecord(scannedPort);
+			    }
+			    break;
+
+                    	case 3:
+			    Logging.main("Clearing Current Session via :CD command...");
+			    ClearSessionMemory(scannedPort);
+			    CheckReconProtocol(scannedPort);
+			    break;
+
+                    	case 4:
+			    ClearReconMemory(scannedPort);
+			    CheckReconProtocol(scannedPort);
+			    break;
+
+                    	case 5:
+			    Logging.main("Clearing memory and dumping all data...");
+			    DumpAllData(scannedPort);
+			    CheckReconProtocol(scannedPort);
+			    break;
+
+                    	case 6:
+		            Logging.main("Checking for records...");
+			    MainMenuUI.displayProgressLabel("Checking for records...");
+			    
+			    if(CheckForNewRecords(scannedPort)==true) {
+			    	Logging.main("Begin downloading session...");
+			    	DownloadNewRecord(scannedPort);
+			    }
+			    break;
+
+		    	case 7:
+		            Logging.main("Setting Recon time...");
+			    ReconCommand.SetReconTimeFromPC();
+			    MainMenuUI.displayProgressLabel("Time synchronization complete.");
+			    break;
+
+		    	case 8:
 			    Logging.main("ScanComm: Connecting to set options bitmask.");
 			    ReconCommand.SetOptionFlag();
 			    Logging.main("Display options saved to unit.");
 			    MainMenuUI.displayProgressLabel("Display options saved to unit.");
 			    FlagForm.displayOptionsWriteSuccess = true;
-		    } else if (OptArgs == 9) {
-		    	Logging.main("Clearing tamper flag.");
-			ReconCommand.ClearTamperFlag();
-			MainMenuUI.displayProgressLabel("Tamper flag cleared.");
-		    } else if (OptArgs == 10) {
-			Logging.main("ScanComm: Connecting to parse options bitmask.");
-			ReconCommand.ParseOptionFlag();
-		    } else if (OptArgs == 11) {
-			Logging.main("ScanComm: Connecting to determine default file name.");
-			ReconCommand.SetDefaultFilename();
-		    }
-                }
+			    break;
+
+		    	case 9:
+		    	    Logging.main("Clearing tamper flag.");
+			    ReconCommand.ClearTamperFlag();
+			    MainMenuUI.displayProgressLabel("Tamper flag cleared.");
+			    break;
+
+		    	case 10:
+			    Logging.main("ScanComm: Connecting to parse options bitmask.");
+			    ReconCommand.ParseOptionFlag();
+			    break;
+
+		    	case 11:
+			    Logging.main("ScanComm: Connecting to determine default file name.");
+			    ReconCommand.SetDefaultFilename();
+			    break;
+
+			default:
+			    break;
+		    } // end switch
+                } // end if Recon found
+
             scannedPort.closePort();
-            }   
+            } // end try
+
             catch (SerialPortException ex) {
                 StringWriter swEx = new StringWriter();
                 ex.printStackTrace(new PrintWriter(swEx));
                 String strEx = swEx.toString();
                 Logging.main(strEx);
             }
-        }
+
+        } // end for each port
+
         if(foundRecon == true) {
             //DecimalFormat TwoDecimalFormat = new DecimalFormat("#.00");
             //return new String[] { ScoutSN, refinedCF, totalError, TwoDecimalFormat.format(ScoutNewCF), totalDays, calStartDate, calEndDate };
             return new String[] { "true" };
-        } else {
+        }
+	else {
             MainMenuUI.displayProgressLabel("No Recon CRM found...");
             return new String[] { "false" };
         }
