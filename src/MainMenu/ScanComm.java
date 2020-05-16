@@ -63,6 +63,8 @@ public class ScanComm {
     //8 = write flag to Recon (display options)
     //9 = clear tamper flag
     //10 = read Recon options flag (display options)
+    //11 = read Recon to get filename data
+    //12 = read Recon to get pointer table find start addresses
     public static String[] run(Integer OptArgs) throws InterruptedException, FileNotFoundException, UnsupportedEncodingException, ParseException, IOException, WriteException, BiffException {
         boolean foundRecon = false;
         Logging.main("Beginning to scan Comm ports...");
@@ -193,7 +195,16 @@ public class ScanComm {
 
 		    	case 11:
 			    Logging.main("ScanComm: Connecting to determine default file name.");
-			    ReconCommand.SetDefaultFilename();
+			    ReconCommand.SetDefaultFilename(ReconCommand.sessionAddresses.get(ReconCommand.currentSession));
+			    break;
+
+			case 12:
+			    Logging.main("ScanComm: Connecting to read pointer table.");
+			    ReconCommand.GetPointerTable();
+
+			    for (int z = 0; z < MainMenuUI.getDataSessions(); z++) {
+				MainMenuUI.sessionStrings.add(ReconCommand.GetSessionDescription(ReconCommand.sessionAddresses.get(z)));
+			    }
 			    break;
 
 			default:

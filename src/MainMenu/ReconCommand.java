@@ -30,11 +30,15 @@ class ReconCommand {
     public static String ResetTamperFlag = ":WX\n";
     public static String WriteOptionsFlag = ":WF";
     public static String ReadOptionsFlag = ":RF\n";
+    public static String ReadPointerTable = ":CN\n";
 
     public static String DeviceResponse;
     public static String[] DeviceResponse_parsed;
 
     public static LinkedList<String[]> reconSession; // container to hold Recon samples
+    public static LinkedList<Integer> sessionAddresses = new LinkedList();
+    public static int currentSession; 	// index into sessionAddresses, based on UI combo box selection
+    public static String[] pointerTable_raw;
     public static String filenameTXT;
     public static String filenameXLS;
     public static String defaultFilename;
@@ -69,6 +73,13 @@ class ReconCommand {
 	DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
     }
 
+    public static void LoadSpecifiedRecord(int number) {
+	WriteComm.main(ScanComm.scannedPort, ":RN" + Integer.toString(number) + "\n");
+	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
+	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", "");
+	DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
+    }
+
     // set the computer system time to the Recon
     public static void SetReconTimeFromPC() {
 	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yy,MM,dd,HH,mm,ss");
@@ -83,6 +94,52 @@ class ReconCommand {
 	WriteComm.main(ScanComm.scannedPort, ":WT," + strCurrentTime + "\n");
     }
 
+    // get the pointer table from the recon as well as start points of valid sessions
+    public static void GetPointerTable() {
+	// reset pointer table variables
+	pointerTable_raw = new String[16];
+	sessionAddresses.clear();
+
+	// read pointer table
+	WriteComm.main(ScanComm.scannedPort, ReadPointerTable);
+	DeviceResponse = ReadComm.main(ScanComm.scannedPort, 19);
+	DeviceResponse = DeviceResponse.replaceAll("[\\n\\r+]", "");
+	DeviceResponse_parsed = StringUtils.split(DeviceResponse, ",");
+
+	// get array index to start of oldest session
+	String oldestSessionString = DeviceResponse_parsed[1];
+	oldestSessionString = oldestSessionString.trim();
+	int oldestSession = Integer.parseInt(oldestSessionString);
+
+	int numSessions = MainMenu.MainMenuUI.getDataSessions();
+
+	// clean the pointer table, eliminating the =OK and the two indices
+	int rawAddressIndex = 0;
+	for (int i = 0; i < 19; i++) {
+	    if (i < 3)
+		continue;
+
+	    pointerTable_raw[rawAddressIndex] = DeviceResponse_parsed[i];
+	    rawAddressIndex++;
+	}
+
+	rawAddressIndex = oldestSession;
+	for (int j = 0; j < numSessions; j++) {
+	    // We can only use indices 0-15, so check it
+
+	    // access the beginning of the table if we're at the end
+	    if (rawAddressIndex == 16)
+		rawAddressIndex = 0;
+
+	    String tempString = pointerTable_raw[rawAddressIndex];
+	    tempString = tempString.trim();
+	    sessionAddresses.add(Integer.parseInt(tempString));
+	    rawAddressIndex++;
+	}
+
+	return;
+    }
+
     // download Recon session into memory, making data available for multitude of data exporters
     public static boolean DownloadReconSessionToRAM() throws InterruptedException {
 	int numDataRecords = (Float.parseFloat(ScanComm.ReconFirmwareVersion) >= 1.34) ? 6043 : 6143;
@@ -93,8 +150,8 @@ class ReconCommand {
 	else
 	    reconSession = new LinkedList();
 
-	// run :RB and check ST/LT mode
-	LoadNewRecord();
+	// load first record and check ST/LT mode
+	LoadSpecifiedRecord(sessionAddresses.get(currentSession));
 
 	if (DeviceResponse_parsed.length == 1) {
 	    Logging.main("Session pointer pointing to null record. Aborting download.");
@@ -149,14 +206,26 @@ class ReconCommand {
 	return true;
     }
 
-    public static void SetDefaultFilename() {
+    public static void SetDefaultFilename(int sessionIndex) {
 	// Get serial number and start date in case we need to use the default filename:
 	String ConfirmSN = GetSerialNumber();
-	LoadNewRecord();
-	LoadNextRecord();
+	LoadSpecifiedRecord(sessionIndex + 1);
 
 	defaultFilename = "Recon_" + ConfirmSN + "_" + DeviceResponse_parsed[4] + DeviceResponse_parsed[5] + DeviceResponse_parsed[3];
 	return;
+    }
+
+    public static String GetSessionDescription(int sessionStartPoint) {
+	if (sessionStartPoint < 6043)
+	    LoadSpecifiedRecord(sessionStartPoint + 1);
+	else
+	    LoadSpecifiedRecord(0);
+
+	// add US/international preference at a later time
+	String description = DeviceResponse_parsed[4] + "/" + DeviceResponse_parsed[5] + "/" + DeviceResponse_parsed[3]
+	+ " @ " + DeviceResponse_parsed[6] + ":" + DeviceResponse_parsed[7] + ":" + DeviceResponse_parsed[8];
+
+	return description;
     }
 
     // Loads filenames into strings here so that it does not need to be done

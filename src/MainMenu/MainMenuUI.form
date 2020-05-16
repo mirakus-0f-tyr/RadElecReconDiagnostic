@@ -60,9 +60,10 @@
                                   <Group type="102" attributes="0">
                                       <Group type="103" groupAlignment="1" attributes="0">
                                           <Component id="lblLoadedFile" min="-2" pref="181" max="-2" attributes="0"/>
-                                          <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                          <Group type="103" alignment="1" groupAlignment="0" max="-2" attributes="0">
                                               <Component id="chkUseStreetAddressForFilename" min="-2" max="-2" attributes="0"/>
-                                              <Component id="txtNewFileName" min="-2" pref="169" max="-2" attributes="0"/>
+                                              <Component id="txtNewFileName" pref="169" max="32767" attributes="0"/>
+                                              <Component id="cboSessionSelect" alignment="0" max="32767" attributes="0"/>
                                           </Group>
                                       </Group>
                                       <EmptySpace max="32767" attributes="0"/>
@@ -226,7 +227,7 @@
                       </Group>
                   </Group>
               </Group>
-              <EmptySpace min="-2" pref="24" max="-2" attributes="0"/>
+              <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="1" attributes="0">
                   <Group type="102" attributes="0">
                       <Component id="lblTestSiteInfo" min="-2" pref="17" max="-2" attributes="0"/>
@@ -234,7 +235,9 @@
                       <Component id="jScrollPane1" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="btnConfig" min="-2" pref="40" max="-2" attributes="0"/>
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="1" attributes="0">
+                      <Component id="cboSessionSelect" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                       <Component id="txtNewFileName" min="-2" pref="27" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="1" max="-2" attributes="0"/>
                       <Component id="chkUseStreetAddressForFilename" min="-2" max="-2" attributes="0"/>
@@ -254,7 +257,7 @@
                   </Group>
                   <Component id="btnCloseProgram" alignment="0" min="-2" pref="40" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace pref="29" max="32767" attributes="0"/>
+              <EmptySpace pref="26" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
@@ -709,6 +712,9 @@
           <Font name="Calibri" size="24" style="1"/>
         </Property>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JLabel" name="lblLocation">
       <Properties>
@@ -722,12 +728,17 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtLocationActionPerformed"/>
       </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JTextField" name="txtNewFileName">
       <Properties>
-        <Property name="text" type="java.lang.String" value="&lt;Enter Filename Here&gt;"/>
         <Property name="toolTipText" type="java.lang.String" value="Enter preferred filename for the downloaded test. Do not include an extension."/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
     <Component class="javax.swing.JCheckBox" name="chkUseStreetAddressForFilename">
       <Properties>
@@ -735,7 +746,29 @@
           <Font name="Calibri" size="14" style="1"/>
         </Property>
         <Property name="text" type="java.lang.String" value="Use street address?"/>
+        <Property name="toolTipText" type="java.lang.String" value="Check to use the first line of Test Site Information."/>
       </Properties>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
+    </Component>
+    <Component class="javax.swing.JComboBox" name="cboSessionSelect">
+      <Properties>
+        <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+          <Font name="Calibri" size="14" style="1"/>
+        </Property>
+        <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+          <StringArray count="0"/>
+        </Property>
+        <Property name="toolTipText" type="java.lang.String" value="Select a data session to download."/>
+      </Properties>
+      <Events>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cboSessionSelectActionPerformed"/>
+      </Events>
+      <AuxValues>
+        <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
+        <AuxValue name="JavaCodeGenerator_VariableModifier" type="java.lang.Integer" value="9"/>
+      </AuxValues>
     </Component>
   </SubComponents>
 </Form>
