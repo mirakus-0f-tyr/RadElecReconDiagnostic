@@ -14,6 +14,10 @@ import Config.FlagForm;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+// for verifying sanity of filenames
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
+
 class ReconCommand {
 
     public static String ReconConfirm = ":RV\n";
@@ -241,39 +245,26 @@ class ReconCommand {
 	File TXT_file = null;			// File object for determining if txt exists
 	File XLS_file = null;			// File object for determining if xls exists
 	int loopCounter = 0;			// count how many times we've gone through the loop
+	Pattern acceptableFilenameChars = Pattern.compile("[a-zA-Z0-9\\-\\_\\.]*");
+	Matcher patternMatcher;
 
 	// Get the first line of txtTestSiteInfo in case we need it:
-	String[] tempArray = MainMenu.MainMenuUI.txtTestSiteInfo.getText().split("\\r?\\n");
+	String[] testSiteArray = MainMenu.MainMenuUI.txtTestSiteInfo.getText().split("\\r?\\n");
+	String testSite = testSiteArray[0];
+	testSite = testSite.replaceAll("[\\n\\r+]", "");
 
 	//This while loop will check for user input and determine if we need to tack a number onto the end of the filename to avoid overwrites.
         while(DoesReconFileExist==true) {
 
 	    // See if the checkbox is selected, and if so, use the first line of Test Site Info...
 	    if (MainMenu.MainMenuUI.chkUseStreetAddressForFilename.isSelected() && MainMenu.MainMenuUI.txtTestSiteInfo.getText().length() > 0) {
-		// Don't tack on the digit if the files don't already exist
-		if (loopCounter > 0) {
-		    TXT_name = InitDirs.dataDir + File.separator + tempArray[0] + "-" + fileIteration + ".txt";
-		    XLS_name = InitDirs.dataDir + File.separator + tempArray[0] + "-" + fileIteration + ".xls";
-		}
-		else {
-		    TXT_name = InitDirs.dataDir + File.separator + tempArray[0] + ".txt";
-		    XLS_name = InitDirs.dataDir + File.separator + tempArray[0] + ".xls";
-		}
-	    }
-	    // Otherwise, use the contents of the name text box
-	    else {
-		// First, make sure the user hasn't clobbered the default text.
-		if (MainMenu.MainMenuUI.txtNewFileName.getText().length() > 0) {
-		    if (loopCounter > 0) {
-			TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".txt";
-			XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".xls";
-		    }
-		    else {
-		        TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".txt";
-			XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".xls";
-		    }
-		} // If the box has inadvertently been cleared, use the default from the variable
-		else {
+
+		// check for invalid characters in TestSiteInfo
+		patternMatcher = acceptableFilenameChars.matcher(testSite);
+		if (!patternMatcher.matches()) {
+		    MainMenu.MainMenuUI.invalidFilename = true;
+
+		    // use the default this time
 		    if (loopCounter > 0) {
 			TXT_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".txt";
 			XLS_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".xls";
@@ -281,6 +272,65 @@ class ReconCommand {
 		    else {
 			TXT_name = InitDirs.dataDir + File.separator + defaultFilename + ".txt";
 			XLS_name = InitDirs.dataDir + File.separator + defaultFilename + ".xls";
+		    }
+		}
+		else {
+		    // Don't tack on the digit if the files don't already exist
+		    if (loopCounter > 0) {
+			TXT_name = InitDirs.dataDir + File.separator + testSite + "-" + fileIteration + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + testSite + "-" + fileIteration + ".xls";
+			MainMenu.MainMenuUI.invalidFilename = false;
+		    }
+		    else {
+			TXT_name = InitDirs.dataDir + File.separator + testSite + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + testSite + ".xls";
+			MainMenu.MainMenuUI.invalidFilename = false;
+		    }
+		}
+	    }
+	    // Otherwise, use the contents of the name text box
+	    else {
+
+		//check for invalid characters in file naming text box
+		patternMatcher = acceptableFilenameChars.matcher(MainMenu.MainMenuUI.txtNewFileName.getText());
+		if (!patternMatcher.matches()) {
+		    MainMenu.MainMenuUI.invalidFilename = true;
+
+		    // use the default this time
+		    if (loopCounter > 0) {
+			TXT_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".xls";
+		    }
+		    else {
+			TXT_name = InitDirs.dataDir + File.separator + defaultFilename + ".txt";
+			XLS_name = InitDirs.dataDir + File.separator + defaultFilename + ".xls";
+		    }
+		}
+		else {
+		    // First, make sure the user hasn't clobbered the default text.
+		    if (MainMenu.MainMenuUI.txtNewFileName.getText().length() > 0) {
+			if (loopCounter > 0) {
+			    TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".txt";
+			    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".xls";
+			    MainMenu.MainMenuUI.invalidFilename = false;
+			}
+			else {
+		            TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".txt";
+			    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".xls";
+			    MainMenu.MainMenuUI.invalidFilename = false;
+			}
+		    } // If the box has inadvertently been cleared, use the default from the variable
+		    else {
+			if (loopCounter > 0) {
+			    TXT_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".txt";
+			    XLS_name = InitDirs.dataDir + File.separator + defaultFilename + "-" + fileIteration + ".xls";
+			    MainMenu.MainMenuUI.invalidFilename = false;
+		        }
+		        else {
+			    TXT_name = InitDirs.dataDir + File.separator + defaultFilename + ".txt";
+			    XLS_name = InitDirs.dataDir + File.separator + defaultFilename + ".xls";
+			    MainMenu.MainMenuUI.invalidFilename = false;
+			}
 		    }
 		}
 	    }

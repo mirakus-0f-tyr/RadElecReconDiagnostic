@@ -105,6 +105,9 @@ public class MainMenuUI extends javax.swing.JFrame {
     //Loaded File Variables
     public static String strLoadedFilePath = "Unknown";
 
+    //Warn the user if they've entered an invalid filename?
+    public static boolean invalidFilename = true;
+
     //"Download any session" variables
     public static LinkedList<String> sessionStrings = new LinkedList();
     
@@ -1352,6 +1355,11 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       EnableAllButtons(false);
       Logging.main("CreateTXT/XLS button pressed.");
       CRM_Parameters = ScanComm.run(2);
+
+      // draw message box informating user of invalid file naming
+      if (invalidFilename)
+	  JOptionPane.showMessageDialog(null, "Invalid characters detected in filename. Default filename used.");
+
       EnableAllButtons(true);
       
       return null;
@@ -1403,6 +1411,11 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       EnableAllButtons(false);
       Logging.main("Download Session button pressed.");
       CRM_Parameters = ScanComm.run(6);
+
+      // draw message box informating user of invalid file naming
+      if (invalidFilename)
+	  JOptionPane.showMessageDialog(null, "Invalid characters detected in filename. Default filename used.");
+
       EnableAllButtons(true);
       RefreshSessionList();
       RefreshDefaultFileName();
