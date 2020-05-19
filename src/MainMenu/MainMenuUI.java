@@ -807,6 +807,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     private void cboSessionSelectActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboSessionSelectActionPerformed
        MainMenu.ReconCommand.currentSession = cboSessionSelect.getSelectedIndex();
        RefreshDefaultFileName();
+       chkUseStreetAddressForFilename.setSelected(false);
     }//GEN-LAST:event_cboSessionSelectActionPerformed
 
     /**
