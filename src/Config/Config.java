@@ -50,14 +50,12 @@ public class Config extends javax.swing.JFrame {
             String strUnitSystem;
             String strDisplaySig;
 	    String strPDFWindow;
-	    String strTestClearMode;
             boolean boolAutoLoadFile;
             int intTiltSensitivity;
             strAppMode = findAppMode();
             strUnitSystem = findUnitSystem();
             strDisplaySig = findDisplaySig();
 	    strPDFWindow = findPDFWindow();
-	    strTestClearMode = findTestClearMode();
             intTiltSensitivity = findTiltSensitivity();
             boolAutoLoadFile = findAutoLoadFile();
             LoadReportTXT();
@@ -66,7 +64,6 @@ public class Config extends javax.swing.JFrame {
             cboUnitSystem.setSelectedItem(strUnitSystem);
             cboDisplaySig.setSelectedItem(strDisplaySig);
 	    cboPDFFolder.setSelectedItem(strPDFWindow);
-	    cboClearOldTests.setSelectedItem(strTestClearMode);
             sliderTilts.setValue(intTiltSensitivity);
             chkboxAutoLoadFile.setSelected(boolAutoLoadFile);
         } catch (IOException e) {
@@ -98,8 +95,6 @@ public class Config extends javax.swing.JFrame {
         lblDisplaySignature = new java.awt.Label();
         lblPDFFolder = new javax.swing.JLabel();
         cboPDFFolder = new javax.swing.JComboBox<>();
-        lblClearOldTest = new javax.swing.JLabel();
-        cboClearOldTests = new javax.swing.JComboBox<>();
         btnOpenFlagSelect = new javax.swing.JButton();
         sliderTilts = new javax.swing.JSlider();
         lblTiltSlider = new javax.swing.JLabel();
@@ -218,14 +213,6 @@ public class Config extends javax.swing.JFrame {
 
         cboPDFFolder.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Yes", "No" }));
 
-        lblClearOldTest.setBackground(new java.awt.Color(255, 255, 255));
-        lblClearOldTest.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
-        lblClearOldTest.setForeground(new java.awt.Color(0, 0, 0));
-        lblClearOldTest.setText("Clear Old Tests From Recon");
-
-        cboClearOldTests.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Never", "Prompt", "Always" }));
-        cboClearOldTests.setToolTipText("Clear old tests from Recon as you download them?");
-
         btnOpenFlagSelect.setText("Display Options");
         btnOpenFlagSelect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -264,15 +251,9 @@ public class Config extends javax.swing.JFrame {
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(lblClearOldTest, javax.swing.GroupLayout.PREFERRED_SIZE, 185, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
-                                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(cboClearOldTests, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(62, 62, 62)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 64, Short.MAX_VALUE)
+                            .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -301,19 +282,14 @@ public class Config extends javax.swing.JFrame {
                         .addComponent(lblPDFFolder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlSettingsLayout.createSequentialGroup()
-                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(pnlSettingsLayout.createSequentialGroup()
-                                .addGap(22, 22, 22)
-                                .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(12, 12, 12)
-                        .addComponent(lblClearOldTest)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboClearOldTests, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(18, 18, 18)
+                    .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(pnlSettingsLayout.createSequentialGroup()
+                            .addGap(22, 22, 22)
+                            .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20)
                 .addComponent(chkboxAutoLoadFile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                         .addComponent(lblTiltSlider)
@@ -681,36 +657,6 @@ public class Config extends javax.swing.JFrame {
         return "OpenPDFWindow";
     }
 
-    private String findTestClearMode() {
-        String config_info = configDir + File.separator + "config.txt";
-	try {
-            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
-            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
-            //Although this means that the order of the configuration parameters is unimportant, a single blank
-            //line will terminate the for loop (and halt the parsing process).
-            //For unexpected values in TestClearMode value (or if it's missing), we default to an TestClearMode=2.
-            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
-                if(strLine.contains("TestClearMode=")) {
-                    //Cool, we've found what we're looking for...
-                    if(strLine.endsWith("0")) {
-                        br.close();
-                        return "Never";
-                    } else if (strLine.endsWith("1")) {
-                        br.close();
-                        return "Prompt";
-                    } else if (strLine.endsWith("2")) {
-		        br.close();
-			return "Always";
-		    }
-                }
-            }
-            br.close();
-        } catch (IOException e) {
-            Logging.main("ERROR: Unable to parse config.txt in order to find TestClearMode. There was a problem loading the settings.");
-        }
-	return "TestClearMode";
-    }
-    
     public int findTiltSensitivity() {
         String config_info = configDir + File.separator + "config.txt";
         String[] strSplitTiltSensitivity;
@@ -877,15 +823,6 @@ public class Config extends javax.swing.JFrame {
 	        strInput = strInput.replace("OpenPDFWindow=1", "OpenPDFWindow=0");
 	    }
 
-	    // handling clear-old-tests preference
-	    if (cboClearOldTests.getSelectedItem().equals("Never")) {
-	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=0");
-	    } else if (cboClearOldTests.getSelectedItem().equals("Prompt")) {
-	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=1");
-	    } else if (cboClearOldTests.getSelectedItem().equals("Always")) {
-	        strInput = strInput.replaceAll("TestClearMode=\\d", "TestClearMode=2");
-	    }
-            
             //Handle Tilt Sensitivity value
             if(strInput.contains("TiltSensitivity=10")) { //This is hacky, but it works for now. We have to be sure to replace an extra character for "10" values.
                 strInput = strInput.replaceAll("TiltSensitivity=\\w\\w", "TiltSensitivity="+Integer.toString(sliderTilts.getValue())); 
@@ -1018,14 +955,12 @@ public class Config extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnOpenFlagSelect;
-    private javax.swing.JComboBox<String> cboClearOldTests;
     private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox<String> cboPDFFolder;
     private javax.swing.JComboBox cboUnitSystem;
     private javax.swing.JCheckBox chkboxAutoLoadFile;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
-    private javax.swing.JLabel lblClearOldTest;
     private java.awt.Label lblComment;
     private java.awt.Label lblCompanyAddress;
     private java.awt.Label lblCompanyName;

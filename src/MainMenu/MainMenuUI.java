@@ -83,7 +83,6 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean displayStatus = false;
     public static int displaySig = 1;
     public static int openPDFWind = 1;
-    public static int testClearMode = 2; // 0 = no action; 1 = prompt for action; 2 = clear tests/sessions automatically
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     public static boolean autoLoadFile = true;
     public static boolean dataPathOverride = false;
@@ -981,7 +980,6 @@ public static void createConfigTXT() {
             pw.print("UnitType=US" + newline);
             pw.print("DisplaySig=1" + newline);
 	    pw.print("OpenPDFWindow=1" + newline);
-	    pw.print("TestClearMode=2" + newline);
             pw.print("TiltSensitivity=5" + newline);
             pw.print("AutoLoadFile=1" + newline);
             pw.close();
@@ -1048,8 +1046,6 @@ public static void parseConfigTXT() {
             }
 	      else if(strLine.contains("OpenPDFWindow=")) {
 	        openPDFWind = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse opening reports folder preference
-            } else if(strLine.contains("TestClearMode=")) {
-	        testClearMode = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse preference for session clear mode
 	    } else if(strLine.contains("TiltSensitivity=")) {
                 String[] strSplitTiltSensitivity = strLine.split("=");
                 if(strLine.length() < 17) {
@@ -1241,36 +1237,6 @@ public static void checkFilesWrittenSuccessfully() {
 	    Logging.main("Error: Problem saving TXT file.");
 	}
     }
-}
-
-// This method will determine how to proceed with clearing a session based on user preference.
-// The assumption is that a user who is in diagnostic mode will always manage their sessions
-// manually, so this method checks the mode before actually doing anything.
-public static void HandleSessionClear() {
-    if (diagnosticMode || testClearMode == 0)
-	return;
-
-    try {
-	if (testClearMode == 1) {
-	    // prompt user and either issue :CD or do nothing
-	    int response = JOptionPane.showConfirmDialog(null, "Recon data has been saved to " + ReconCommand.filenameTXT + ". Clear this test from the unit?", "Clear test from Recon?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
-
-	    if (response == JOptionPane.NO_OPTION)
-	        return;
-	    else if (response == JOptionPane.YES_OPTION) {
-	        ScanComm.ClearSessionMemory(ScanComm.scannedPort);
-		ScanComm.CheckReconProtocol(ScanComm.scannedPort);
-	    }
-	    else if (response == JOptionPane.CLOSED_OPTION)
-	        return;
-        }
-        else if (testClearMode == 2) {
-	    ScanComm.ClearSessionMemory(ScanComm.scannedPort);
-	    ScanComm.CheckReconProtocol(ScanComm.scannedPort);
-	}
-    }
-
-    catch (Exception ex) {}
 }
 
 public static void checkAutoLoadFile() {

@@ -305,7 +305,6 @@ public class ScanComm {
 		    CreateTXT.main();
 
 		MainMenuUI.checkFilesWrittenSuccessfully();
-		MainMenuUI.HandleSessionClear();
 		MainMenuUI.checkAutoLoadFile();
 	    }
 	    else {
