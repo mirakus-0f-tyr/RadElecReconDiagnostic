@@ -72,7 +72,8 @@ public class FileUpdater {
 		    testSiteInfoFound = true;
 	    }
 
-	    // Let's go through one final time to trim the lines...
+	    // Let's go through one final time to remove the customer and test site lines...
+	    // Let's also add whatever deployment and technician values are presently set in Config
 	    for (int i = 0; i < workingFile.size(); i++) {
 		if (i > 0) {
 		    if (workingFile.get(i - 1).contains("Customer info")) {
@@ -85,25 +86,73 @@ public class FileUpdater {
 			    workingFile.remove(i);
 		    }
 
-		    if (workingFile.get(i).contains("Location:") || workingFile.get(i).contains("Room:"))
+		    if (workingFile.get(i).contains("Location:") || workingFile.get(i).contains("Room:") && MainMenuUI.txtLocation.getText().length() > 0) {
 			    workingFile.remove(i);
+			    workingFile.add(i, "Location: " + MainMenuUI.txtLocation.getText());
+		    }
+
+		    if (workingFile.get(i).contains("Protocol:")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Protocol: " + MainMenuUI.strProtocol);
+		    }
+
+		    if (workingFile.get(i).contains("Tampering:")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Tampering: " + MainMenuUI.strTampering);
+		    }
+
+		    if (workingFile.get(i).contains("Weather:")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Weather: " + MainMenuUI.strWeather);
+		    }
+
+		    if (workingFile.get(i).contains("Mitigation:")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Mitigation: " + MainMenuUI.strMitigation);
+		    }
+
+		    if (workingFile.get(i).contains("Comment:")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Comment: " + MainMenuUI.strComment);
+		    }
+
+		    if (workingFile.get(i).contains("Analyzed By")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Analyzed By: " + MainMenuUI.strAnalyzedBy);
+		    }
+
+		    if (workingFile.get(i).contains("Deployed By")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Deployed By: " + MainMenuUI.strDeployedBy);
+		    }
+
+		    if (workingFile.get(i).contains("Retrieved By")) {
+			workingFile.remove(i);
+			workingFile.add(i, "Retrieved By: " + MainMenuUI.strRetrievedBy);
+		    }
 		}
 	    }
 
 	    bw = new BufferedWriter(new FileWriter(new File(updatedFileName)));
 
+	    // Write out to new file.
 	    for (int i = 0; i < workingFile.size(); i++) {
 		currentLine = workingFile.get(i);
 		bw.write(currentLine + newline);
 
-		if (currentLine.contains("Customer information:"))
-		    bw.write(MainMenuUI.txtCustomerInfo.getText() + newline + newline);
+		if (currentLine.contains("Customer information:")) {
+		    if (MainMenuUI.txtCustomerInfo.getText().length() > 0)
+			bw.write(MainMenuUI.txtCustomerInfo.getText() + newline + newline + newline);
+		    else
+			bw.write(newline + newline + newline);
+		}
 
-		if (currentLine.contains("Test site information:"))
-		    bw.write(MainMenuUI.txtTestSiteInfo.getText() + newline + newline);
-
-		if (workingFile.get(i).contains("Comment:"))
-		    bw.write("Location: " + MainMenuUI.txtLocation.getText() + newline);
+		if (currentLine.contains("Test site information:")) {
+		    if (MainMenuUI.txtTestSiteInfo.getText().length() > 0)
+			bw.write(MainMenuUI.txtTestSiteInfo.getText() + newline + newline + newline);
+		    else
+			bw.write(newline + newline + newline);
+		}
 	    }
 
 	    bw.close();

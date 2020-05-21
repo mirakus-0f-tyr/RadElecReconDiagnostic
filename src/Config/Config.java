@@ -520,6 +520,8 @@ public class Config extends javax.swing.JFrame {
             MainMenuUI.parseConfigTXT();
             //Let's reload our deployment settings
             MainMenuUI.parseDeploymentTXT();
+            //also reload report.txt since that contains DeployedBy, etc
+            MainMenuUI.parseReportTXT();
             //Setting button enabled...
             MainMenuUI.btnConfig.setEnabled(true);
         } catch (IOException e) {
