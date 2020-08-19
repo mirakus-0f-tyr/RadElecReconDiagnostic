@@ -13,6 +13,7 @@ import static MainMenu.MainMenuUI.strProtocol;
 import static MainMenu.MainMenuUI.strTampering;
 import static MainMenu.MainMenuUI.strWeather;
 import static MainMenu.InitDirs.configDir;
+import javax.swing.JOptionPane;
 import java.io.*;
 
 /**
@@ -63,9 +64,10 @@ public class Config extends javax.swing.JFrame {
             //cboAppMode.setSelectedItem(strAppMode);
             cboUnitSystem.setSelectedItem(strUnitSystem);
             cboDisplaySig.setSelectedItem(strDisplaySig);
-	    cboPDFFolder.setSelectedItem(strPDFWindow);
+            cboPDFFolder.setSelectedItem(strPDFWindow);
             sliderTilts.setValue(intTiltSensitivity);
             chkboxAutoLoadFile.setSelected(boolAutoLoadFile);
+            chkEnableDiagnosticMode.setSelected(findDiagnosticMode());
         } catch (IOException e) {
             Logging.main("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
         }
@@ -99,6 +101,7 @@ public class Config extends javax.swing.JFrame {
         sliderTilts = new javax.swing.JSlider();
         lblTiltSlider = new javax.swing.JLabel();
         chkboxAutoLoadFile = new javax.swing.JCheckBox();
+        chkEnableDiagnosticMode = new javax.swing.JCheckBox();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -242,6 +245,14 @@ public class Config extends javax.swing.JFrame {
             }
         });
 
+        chkEnableDiagnosticMode.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        chkEnableDiagnosticMode.setText("Diagnostic Mode");
+        chkEnableDiagnosticMode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkEnableDiagnosticModeActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -259,7 +270,8 @@ public class Config extends javax.swing.JFrame {
                             .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblPDFFolder)
                             .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(chkboxAutoLoadFile))
+                            .addComponent(chkboxAutoLoadFile)
+                            .addComponent(chkEnableDiagnosticMode))
                         .addGap(23, 23, 23))
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -282,14 +294,15 @@ public class Config extends javax.swing.JFrame {
                         .addComponent(lblPDFFolder)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(pnlSettingsLayout.createSequentialGroup()
-                            .addGap(22, 22, 22)
-                            .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addGap(22, 22, 22)
+                        .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(20, 20, 20)
                 .addComponent(chkboxAutoLoadFile)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 54, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
+                .addComponent(chkEnableDiagnosticMode)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                         .addComponent(lblTiltSlider)
@@ -544,6 +557,10 @@ public class Config extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_chkboxAutoLoadFileActionPerformed
 
+    private void chkEnableDiagnosticModeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkEnableDiagnosticModeActionPerformed
+	JOptionPane.showMessageDialog(this, "Important: Close the config and main windows of the Recon Download Tool\nand restart the program for this setting to take effect.");
+    }//GEN-LAST:event_chkEnableDiagnosticModeActionPerformed
+
     private String findAppMode() {
         String config_info = configDir + File.separator + "config.txt";
         try {
@@ -714,6 +731,29 @@ public class Config extends javax.swing.JFrame {
         return AutoLoadFile;        
     }
 
+    public boolean findDiagnosticMode() {
+	String config_info = configDir + File.separator + "config.txt";
+	String[] strSplitDiagMode;
+	try {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+	    for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+		if(strLine.contains("DiagMode=")) {
+		    strSplitDiagMode = strLine.split("=");
+		    if (strSplitDiagMode[1].equals("0011"))
+			return true;
+		    else
+			return false;
+		}
+	    }
+	    br.close();
+	}
+	catch (IOException e) {
+	    Logging.main("ERROR: Unable to parse config.txt in order to find the DiagnosticMode option. There was a problem loading the settings.");
+	    return false;
+	}
+	return false;
+    }
+
     public void LoadReportTXT() {
         //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
         //technicians, and everything after that is dedicated to the report text.
@@ -844,6 +884,14 @@ public class Config extends javax.swing.JFrame {
                 int isAutoLoadSelected = chkboxAutoLoadFile.isSelected() ? 1 : 0;
                 strInput += "AutoLoadFile=" + Integer.toString(isAutoLoadSelected) + "\n";
             }
+
+	    //Updating for diagnostic mode preference change
+	    if(chkEnableDiagnosticMode.isSelected()) {
+		strInput = strInput.replaceAll("DiagMode=\\w\\w\\w\\w", "DiagMode=0011");
+	    }
+	    else {
+		strInput = strInput.replaceAll("DiagMode=\\w\\w\\w\\w", "DiagMode=0000");
+	    }
             
             FileOutputStream fileOut = new FileOutputStream(config_info);
             fileOut.write(strInput.getBytes());
@@ -960,6 +1008,7 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox<String> cboPDFFolder;
     private javax.swing.JComboBox cboUnitSystem;
+    private javax.swing.JCheckBox chkEnableDiagnosticMode;
     private javax.swing.JCheckBox chkboxAutoLoadFile;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;

@@ -16,7 +16,8 @@ import java.awt.Desktop;
 import java.awt.Window;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -983,9 +984,10 @@ public static void createConfigTXT() {
             PrintWriter pw = new PrintWriter(configTXT);
             pw.print("UnitType=US" + newline);
             pw.print("DisplaySig=1" + newline);
-	    pw.print("OpenPDFWindow=1" + newline);
+            pw.print("OpenPDFWindow=1" + newline);
             pw.print("TiltSensitivity=5" + newline);
             pw.print("AutoLoadFile=1" + newline);
+            pw.print("DiagMode=0000");
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create config.txt file!");
@@ -995,6 +997,7 @@ public static void createConfigTXT() {
 public static void parseConfigTXT() {
     // set name of config text file
     String configTextFile = configDir + File.separator + "config.txt";
+    boolean diagModeConfigOptionFound = false;
     
     // try to parse the config file
     try {
@@ -1004,6 +1007,9 @@ public static void parseConfigTXT() {
         BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(configTextFile)));
    
         for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+	    // check for existence of DiagMode setting which didn't exist by default in earlier config files...
+	    if (strLine.contains("DiagMode="))
+		diagModeConfigOptionFound = true;
 
 	    // first, check for commented lines
 	    if (strLine.charAt(0) == '#')
@@ -1080,6 +1086,10 @@ public static void parseConfigTXT() {
 
 	// cleanup buffered reader
 	br.close();
+
+	// If we didn't find the diag mode config option, we need to rewrite the file.
+	if (!diagModeConfigOptionFound)
+	    AddDiagnosticOptionToConfig();
     }
 
     // if error, print error and show stack trace
@@ -1088,6 +1098,23 @@ public static void parseConfigTXT() {
         createConfigTXT();
     }
     
+}
+
+// This adds the DiagMode= option to config.txt when it doesn't already exist.
+// This allows a user of an older version to change the program mode without deleting
+// their existing config file, or walking him/her through adding it manually.
+public static void AddDiagnosticOptionToConfig() {
+    String filename = configDir + File.separator + "config.txt";
+
+    try {
+	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
+	writer.write("DiagMode=0000");
+	writer.newLine();
+	writer.close();
+    }
+    catch (Exception anyEx) {
+	Logging.main(anyEx.toString());
+    }
 }
 
 public static void createDeploymentTXT() {
