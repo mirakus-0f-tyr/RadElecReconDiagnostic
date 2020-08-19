@@ -987,7 +987,8 @@ public static void createConfigTXT() {
             pw.print("OpenPDFWindow=1" + newline);
             pw.print("TiltSensitivity=5" + newline);
             pw.print("AutoLoadFile=1" + newline);
-            pw.print("DiagMode=0000");
+            pw.print("DiagMode=0000" + newline);
+            pw.print("IncludeFirstFourHoursInAverage=0" + newline);
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create config.txt file!");
@@ -998,6 +999,7 @@ public static void parseConfigTXT() {
     // set name of config text file
     String configTextFile = configDir + File.separator + "config.txt";
     boolean diagModeConfigOptionFound = false;
+    boolean includeFirstFourOptionFound = false;
     
     // try to parse the config file
     try {
@@ -1010,6 +1012,8 @@ public static void parseConfigTXT() {
 	    // check for existence of DiagMode setting which didn't exist by default in earlier config files...
 	    if (strLine.contains("DiagMode="))
 		diagModeConfigOptionFound = true;
+	    if (strLine.contains("IncludeFirstFourHoursInAverage="))
+		includeFirstFourOptionFound = true;
 
 	    // first, check for commented lines
 	    if (strLine.charAt(0) == '#')
@@ -1081,6 +1085,8 @@ public static void parseConfigTXT() {
 		dataPathOverride = true;
 		specifiedDataDir = strLine.substring(8);
 		Logging.main("Data directory overridden. New location is " + specifiedDataDir);
+	    } else if (strLine.contains("IncludeFirstFourHoursInAverage=")) {
+		excludeFirst4Hours = strLine.contains("0");
 	    }
         }
 
@@ -1090,6 +1096,9 @@ public static void parseConfigTXT() {
 	// If we didn't find the diag mode config option, we need to rewrite the file.
 	if (!diagModeConfigOptionFound)
 	    AddDiagnosticOptionToConfig();
+
+	if (!includeFirstFourOptionFound)
+	    AddFirstFourOptionToConfig();
     }
 
     // if error, print error and show stack trace
@@ -1109,6 +1118,20 @@ public static void AddDiagnosticOptionToConfig() {
     try {
 	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
 	writer.write("DiagMode=0000");
+	writer.newLine();
+	writer.close();
+    }
+    catch (Exception anyEx) {
+	Logging.main(anyEx.toString());
+    }
+}
+
+public static void AddFirstFourOptionToConfig() {
+    String filename = configDir + File.separator + "config.txt";
+
+    try {
+	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
+	writer.write("IncludeFirstFourHoursInAverage=0");
 	writer.newLine();
 	writer.close();
     }

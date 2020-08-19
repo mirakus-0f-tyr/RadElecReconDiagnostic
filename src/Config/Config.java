@@ -68,6 +68,7 @@ public class Config extends javax.swing.JFrame {
             sliderTilts.setValue(intTiltSensitivity);
             chkboxAutoLoadFile.setSelected(boolAutoLoadFile);
             chkEnableDiagnosticMode.setSelected(findDiagnosticMode());
+            chkIncludeFirstFourHours.setSelected(findFirstFourHoursOption());
         } catch (IOException e) {
             Logging.main("ERROR: Unable to parse config.txt or company.txt. There was a problem loading the settings.");
         }
@@ -102,6 +103,7 @@ public class Config extends javax.swing.JFrame {
         lblTiltSlider = new javax.swing.JLabel();
         chkboxAutoLoadFile = new javax.swing.JCheckBox();
         chkEnableDiagnosticMode = new javax.swing.JCheckBox();
+        chkIncludeFirstFourHours = new javax.swing.JCheckBox();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -253,6 +255,14 @@ public class Config extends javax.swing.JFrame {
             }
         });
 
+        chkIncludeFirstFourHours.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        chkIncludeFirstFourHours.setText("Include First Four Hours in Avg");
+        chkIncludeFirstFourHours.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkIncludeFirstFourHoursActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -260,11 +270,12 @@ public class Config extends javax.swing.JFrame {
             .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 126, Short.MAX_VALUE)
+                            .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(chkIncludeFirstFourHours))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -277,7 +288,7 @@ public class Config extends javax.swing.JFrame {
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblTiltSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(sliderTilts, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
                         .addComponent(btnOpenFlagSelect)
                         .addContainerGap())))
         );
@@ -298,11 +309,13 @@ public class Config extends javax.swing.JFrame {
                         .addGap(22, 22, 22)
                         .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(20, 20, 20)
-                .addComponent(chkboxAutoLoadFile)
+                .addGap(19, 19, 19)
+                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(chkboxAutoLoadFile)
+                    .addComponent(chkIncludeFirstFourHours))
                 .addGap(18, 18, 18)
                 .addComponent(chkEnableDiagnosticMode)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlSettingsLayout.createSequentialGroup()
                         .addComponent(lblTiltSlider)
@@ -561,6 +574,10 @@ public class Config extends javax.swing.JFrame {
 	JOptionPane.showMessageDialog(this, "Important: Close the config and main windows of the Recon Download Tool\nand restart the program for this setting to take effect.");
     }//GEN-LAST:event_chkEnableDiagnosticModeActionPerformed
 
+    private void chkIncludeFirstFourHoursActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkIncludeFirstFourHoursActionPerformed
+        JOptionPane.showMessageDialog(this, "Important: Close the config window to save this setting before\ndownloading the test and generating your PDF.");
+    }//GEN-LAST:event_chkIncludeFirstFourHoursActionPerformed
+
     private String findAppMode() {
         String config_info = configDir + File.separator + "config.txt";
         try {
@@ -754,6 +771,28 @@ public class Config extends javax.swing.JFrame {
 	return false;
     }
 
+    public boolean findFirstFourHoursOption() {
+	String config_info = configDir + File.separator + "config.txt";
+	String[] strSplitFourHours;
+	try {
+	    BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+	    for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+		if(strLine.contains("IncludeFirstFourHoursInAverage=")) {
+		    strSplitFourHours = strLine.split("=");
+		    if (strSplitFourHours[1].contains("1"))
+			return true;
+		    else
+			return false;
+		}
+	    }
+	}
+	catch (IOException e) {
+	    Logging.main("ERROR: Unable to parse config.txt when searching for the option to include first four hours.");
+	    return false;
+	}
+	return false;
+    }
+
     public void LoadReportTXT() {
         //Report.txt is not as robust as the previous config files -- the first three lines are dedicated to the
         //technicians, and everything after that is dedicated to the report text.
@@ -892,6 +931,14 @@ public class Config extends javax.swing.JFrame {
 	    else {
 		strInput = strInput.replaceAll("DiagMode=\\w\\w\\w\\w", "DiagMode=0000");
 	    }
+
+	    //Update include first four hours preference
+	    if(chkIncludeFirstFourHours.isSelected()) {
+		strInput = strInput.replaceAll("IncludeFirstFourHoursInAverage=\\w", "IncludeFirstFourHoursInAverage=1");
+	    }
+	    else {
+		strInput = strInput.replaceAll("IncludeFirstFourHoursInAverage=\\w", "IncludeFirstFourHoursInAverage=0");
+	    }
             
             FileOutputStream fileOut = new FileOutputStream(config_info);
             fileOut.write(strInput.getBytes());
@@ -1009,6 +1056,7 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> cboPDFFolder;
     private javax.swing.JComboBox cboUnitSystem;
     private javax.swing.JCheckBox chkEnableDiagnosticMode;
+    private javax.swing.JCheckBox chkIncludeFirstFourHours;
     private javax.swing.JCheckBox chkboxAutoLoadFile;
     private javax.swing.JScrollPane jScrollPane1;
     private java.awt.Label lblAnalyzedBy;
