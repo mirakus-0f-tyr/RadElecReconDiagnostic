@@ -592,6 +592,9 @@ public class CreatePDF {
             
             contents.close();
             
+            //Now that the document is more or less complete, let's call draw the footer information (and page numbers).
+            drawFooterInfo(doc);
+            
             Logging.main("End PDF generation stage. Writing to file...");
             
 	    if (InitDirs.reportsDir.exists() && InitDirs.reportsDir.isDirectory())
@@ -602,11 +605,7 @@ public class CreatePDF {
 		doc.save(InitDirs.reportsDir + File.separator + PDF_Name);
 	    }
             
-            //Draw the footer info (page #, version, etc.)
-            //It's a bit shoddy, but because we're appending, we need to have already saved it
-            //and then re-open the file.
             File ReconPDF = new File(InitDirs.reportsDir + File.separator + PDF_Name);
-            drawFooterInfo(ReconPDF, InitDirs.reportsDir + File.separator + PDF_Name);
             
 	    if (ReconPDF.exists()) {
 		Logging.main(PDF_Name + " has been created.");
@@ -1187,9 +1186,8 @@ public class CreatePDF {
     }
         
     //Write page numbers and version numbers in lower right margin
-    private void drawFooterInfo(File ReconPDF, String FileName) {
+    private void drawFooterInfo(PDDocument doc) {
         try {
-            PDDocument doc = PDDocument.load(ReconPDF);
             File fontCalibri = new File(InitDirs.fontsDir + File.separator + "calibri.ttf");
             PDFont fontDefault = fontCalibri.exists() ? PDType0Font.load(doc, new File(InitDirs.fontsDir + File.separator + "calibri.ttf")) : PDType1Font.HELVETICA; //Truetype fonts are easier to utilize when it comes to margins, etc.
             if(doc.getNumberOfPages() >= 1) {
@@ -1206,7 +1204,6 @@ public class CreatePDF {
                     contents.endText();
                     contents.close();
                 }
-                doc.save(FileName); //Only save if we've actually made changes
             }
         } catch (IOException ex) {
             Logging.main("Could not write page footer lines!");
