@@ -135,8 +135,9 @@ public class CreatePDF {
             Logging.main("Analyst signature found as JPEG!");
         }
         
-        if (boolFoundSignatureBMP == false || boolFoundSignaturePNG == false || boolFoundSignatureJPG == false || boolFoundSignatureJPEG == false) {
+        if (boolFoundSignatureBMP == true || boolFoundSignaturePNG == true || boolFoundSignatureJPG == true || boolFoundSignatureJPEG == true) {
             boolFoundSignature = true;
+        } else {
             Logging.main("No digital signature (as BMP/PNG/JPG/JPEG) found for PDF... ignoring.");
         }
         
@@ -1216,7 +1217,7 @@ public class CreatePDF {
                     if (!fileSignatureAnalyst.exists()) {
                         fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.jpg");
                         if (!fileSignatureAnalyst.exists()) {
-                            fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.jpg");
+                            fileSignatureAnalyst = new File(InitDirs.configDir + File.separator + "signature.jpeg");
                         } else {
                             Logging.main("CreatePDF::DrawDigitalSignature ERROR: Signature file not found!");
                         }
