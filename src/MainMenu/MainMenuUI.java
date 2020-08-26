@@ -1002,6 +1002,7 @@ public static void parseConfigTXT() {
     String configTextFile = configDir + File.separator + "config.txt";
     boolean diagModeConfigOptionFound = false;
     boolean includeFirstFourOptionFound = false;
+    boolean displayLogoOptionFound = false;
     
     // try to parse the config file
     try {
@@ -1016,6 +1017,8 @@ public static void parseConfigTXT() {
 		diagModeConfigOptionFound = true;
 	    if (strLine.contains("IncludeFirstFourHoursInAverage="))
 		includeFirstFourOptionFound = true;
+            if (strLine.contains("DisplayLogo="))
+                displayLogoOptionFound = true;
 
 	    // first, check for commented lines
 	    if (strLine.charAt(0) == '#')
@@ -1103,6 +1106,9 @@ public static void parseConfigTXT() {
 
 	if (!includeFirstFourOptionFound)
 	    AddFirstFourOptionToConfig();
+        
+        if (!displayLogoOptionFound)
+            AddDisplayLogoToConfig();
     }
 
     // if error, print error and show stack trace
@@ -1136,6 +1142,20 @@ public static void AddFirstFourOptionToConfig() {
     try {
 	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
 	writer.write("IncludeFirstFourHoursInAverage=0");
+	writer.newLine();
+	writer.close();
+    }
+    catch (Exception anyEx) {
+	Logging.main(anyEx.toString());
+    }
+}
+
+public static void AddDisplayLogoToConfig() {
+    String filename = configDir + File.separator + "config.txt";
+
+    try {
+	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
+	writer.write("DisplayLogo=0");
 	writer.newLine();
 	writer.close();
     }
