@@ -82,7 +82,8 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static int waitTime = 0;
     public static int testDuration = 48;
     public static boolean displayStatus = false;
-    public static int displaySig = 1;
+    public static int displayLogo = 0; //0 = no, 1 = yes
+    public static int displaySig = 1; //0 = no, 1 = signature line only, 2 = signature line + digital signature
     public static int openPDFWind = 1;
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     public static boolean autoLoadFile = true;
@@ -983,6 +984,7 @@ public static void createConfigTXT() {
         try {
             PrintWriter pw = new PrintWriter(configTXT);
             pw.print("UnitType=US" + newline);
+            pw.print("DisplayLogo=0" + newline);
             pw.print("DisplaySig=1" + newline);
             pw.print("OpenPDFWindow=1" + newline);
             pw.print("TiltSensitivity=5" + newline);
@@ -1055,6 +1057,8 @@ public static void parseConfigTXT() {
                 }
             } else if(strLine.contains("DispRes=")) {
                 displayStatus = strLine.endsWith("1");
+            } else if(strLine.contains("DisplayLogo=")) {
+                displayLogo = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplayLogo
             } else if(strLine.contains("DisplaySig=")) {
                 displaySig = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplaySig
             }
