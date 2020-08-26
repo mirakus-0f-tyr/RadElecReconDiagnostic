@@ -177,7 +177,7 @@ public class CreatePDF {
             
             //Company Info Block
             GetCompanyInfo(); //pull info from the company.txt file, so that we can toss that info onto the PDF.
-            DrawCompanyHeader(contents, page, fontDefault, fontSize);
+            DrawCompanyHeader(contents, page, fontDefault, marginTop);
             
             //Title Block
             DrawTitleHeader(contents, page, "Radon Test Report", fontBold, fontDefault);
