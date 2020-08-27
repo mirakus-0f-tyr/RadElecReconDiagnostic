@@ -962,7 +962,7 @@ public class CreatePDF {
             contents.endText();
             
             //Highlighting
-            if(highlightAverage==1) {
+            if(highlightAverage) {
                 Logging.main("CreatePDF::DrawAverageRadonBanner, Attempting to highight average radon concentration banner...");
                 PDAnnotationTextMarkup highlight = new PDAnnotationTextMarkup(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT);
                 highlight.setRectangle(PDRectangle.A4);

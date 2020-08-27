@@ -74,7 +74,7 @@
                           <Component id="txtAddress2" alignment="0" min="-2" pref="350" max="-2" attributes="0"/>
                           <Component id="txtAddress3" alignment="0" min="-2" pref="350" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="37" max="32767" attributes="0"/>
+                      <EmptySpace pref="83" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -93,7 +93,7 @@
                       <Component id="txtAddress2" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="txtAddress3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="108" max="32767" attributes="0"/>
+                      <EmptySpace pref="119" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -182,30 +182,55 @@
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
                           <Group type="102" attributes="0">
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="cboUnitSystem" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
-                                  <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="chkIncludeFirstFourHours" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Group type="103" groupAlignment="0" attributes="0">
-                                  <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
-                                  <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
-                                  <Component id="chkboxAutoLoadFile" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="chkEnableDiagnosticMode" alignment="0" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
-                          </Group>
-                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="1" max="-2" attributes="0">
                                   <Component id="lblTiltSlider" alignment="0" max="32767" attributes="0"/>
                                   <Component id="sliderTilts" alignment="0" max="32767" attributes="0"/>
+                                  <Component id="chkEnableDiagnosticMode" alignment="0" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace pref="37" max="32767" attributes="0"/>
-                              <Component id="btnOpenFlagSelect" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="0" attributes="0">
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Component id="btnOpenFlagSelect" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <EmptySpace min="-2" pref="115" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="1" attributes="0">
+                                          <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace pref="26" max="32767" attributes="0"/>
+                                  </Group>
+                              </Group>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" attributes="0">
+                                  <Group type="102" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="cboUnitSystem" alignment="0" min="-2" pref="123" max="-2" attributes="0"/>
+                                          <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="chkIncludeFirstFourHours" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboDisplaySig" min="-2" pref="123" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                                  <Group type="102" attributes="0">
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                                      <Component id="chkboxAutoLoadFile" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="1" attributes="0">
+                                      <Component id="chkboxHighlightAverage" min="-2" max="-2" attributes="0"/>
+                                      <EmptySpace max="32767" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblHeaderOptions" min="-2" max="-2" attributes="0"/>
+                                          <Component id="cboHeaderOptions" min="-2" pref="123" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
+                              </Group>
+                              <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
                           </Group>
                       </Group>
                   </Group>
@@ -216,14 +241,10 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
                               <Component id="lblDisplaySignature" min="-2" max="-2" attributes="0"/>
                               <EmptySpace min="-2" pref="0" max="-2" attributes="0"/>
                               <Component id="cboDisplaySig" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="cboPDFFolder" min="-2" max="-2" attributes="0"/>
                           </Group>
                           <Group type="102" alignment="0" attributes="0">
                               <EmptySpace min="22" pref="22" max="-2" attributes="0"/>
@@ -231,20 +252,35 @@
                           </Group>
                           <Component id="lblUnits" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="19" max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="chkboxAutoLoadFile" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="chkIncludeFirstFourHours" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="chkEnableDiagnosticMode" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="13" max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Group type="102" alignment="1" attributes="0">
-                              <Component id="lblTiltSlider" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="10" max="-2" attributes="0"/>
+                              <Component id="lblHeaderOptions" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
-                              <Component id="sliderTilts" min="-2" max="-2" attributes="0"/>
+                              <Component id="cboHeaderOptions" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace max="32767" attributes="0"/>
+                              <Component id="lblPDFFolder" min="-2" max="-2" attributes="0"/>
                           </Group>
+                          <Group type="102" alignment="0" attributes="0">
+                              <EmptySpace min="-2" pref="40" max="-2" attributes="0"/>
+                              <Component id="chkboxHighlightAverage" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="chkIncludeFirstFourHours" min="-2" max="-2" attributes="0"/>
+                          </Group>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="cboPDFFolder" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkEnableDiagnosticMode" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace pref="13" max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Component id="lblTiltSlider" min="-2" max="-2" attributes="0"/>
+                          <Component id="chkboxAutoLoadFile" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Component id="sliderTilts" alignment="1" min="-2" max="-2" attributes="0"/>
                           <Component id="btnOpenFlagSelect" alignment="1" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -386,6 +422,42 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkIncludeFirstFourHoursActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JCheckBox" name="chkboxHighlightAverage">
+              <Properties>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Calibri" size="12" style="0"/>
+                </Property>
+                <Property name="selected" type="boolean" value="true"/>
+                <Property name="text" type="java.lang.String" value="Highlight Average in PDF?"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chkboxHighlightAverageActionPerformed"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JComboBox" name="cboHeaderOptions">
+              <Properties>
+                <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
+                  <StringArray count="2">
+                    <StringItem index="0" value="Text Header"/>
+                    <StringItem index="1" value="Company Logo"/>
+                  </StringArray>
+                </Property>
+              </Properties>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblHeaderOptions">
+              <Properties>
+                <Property name="background" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="cc" green="cc" red="cc" type="rgb"/>
+                </Property>
+                <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+                  <Font name="Calibri" size="12" style="0"/>
+                </Property>
+                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
+                  <Color blue="0" green="0" red="0" type="rgb"/>
+                </Property>
+                <Property name="text" type="java.lang.String" value="Header Options"/>
+              </Properties>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="java.awt.Panel" name="pnlSettings1">
@@ -428,7 +500,7 @@
                                       </Group>
                                   </Group>
                               </Group>
-                              <EmptySpace min="0" pref="14" max="32767" attributes="0"/>
+                              <EmptySpace min="0" pref="60" max="32767" attributes="0"/>
                           </Group>
                           <Component id="lblReportText" alignment="0" max="32767" attributes="0"/>
                       </Group>
@@ -454,7 +526,7 @@
                           <Component id="txtAnalyzedBy" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblAnalyzedBy" alignment="0" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="18" max="32767" attributes="0"/>
+                      <EmptySpace pref="29" max="32767" attributes="0"/>
                       <Component id="lblReportText" min="-2" max="-2" attributes="0"/>
                       <EmptySpace min="-2" pref="2" max="-2" attributes="0"/>
                       <Component id="jScrollPane1" min="-2" pref="138" max="-2" attributes="0"/>
@@ -584,7 +656,7 @@
                               <Component id="lblWeather" alignment="0" max="32767" attributes="0"/>
                               <Component id="lblProtocol" alignment="0" max="32767" attributes="0"/>
                           </Group>
-                          <Component id="lblComment" alignment="0" pref="72" max="32767" attributes="0"/>
+                          <Component id="lblComment" alignment="0" pref="90" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
@@ -594,7 +666,7 @@
                           <Component id="txtMitigation" max="32767" attributes="0"/>
                           <Component id="txtComment" alignment="0" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="54" max="32767" attributes="0"/>
+                      <EmptySpace pref="72" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -626,7 +698,7 @@
                           <Component id="lblComment" max="32767" attributes="0"/>
                           <Component id="txtComment" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace pref="136" max="32767" attributes="0"/>
+                      <EmptySpace pref="141" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>

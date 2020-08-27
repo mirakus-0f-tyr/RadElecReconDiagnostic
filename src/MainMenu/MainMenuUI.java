@@ -84,7 +84,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean displayStatus = false;
     public static int displayLogo = 0; //0 = no, 1 = yes
     public static int displaySig = 1; //0 = no, 1 = signature line only, 2 = signature line + digital signature
-    public static int highlightAverage = 1; //0 = no, 1 = yes
+    public static boolean highlightAverage = true;
     public static int openPDFWind = 1;
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     public static boolean autoLoadFile = true;
@@ -1070,7 +1070,7 @@ public static void parseConfigTXT() {
             } else if(strLine.contains("DisplaySig=")) {
                 displaySig = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplaySig
             } else if(strLine.contains("HighlightAverage=")) {
-                highlightAverage = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the HighlightAverage
+                highlightAverage = !strLine.contains("0");
             } else if(strLine.contains("OpenPDFWindow=")) {
 	        openPDFWind = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse opening reports folder preference
 	    } else if(strLine.contains("TiltSensitivity=")) {
