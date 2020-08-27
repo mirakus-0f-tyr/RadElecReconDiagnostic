@@ -33,6 +33,7 @@ import static MainMenu.LoadSavedFile.strReportComment;
 import static MainMenu.LoadSavedFile.strRoomDeployed;
 import static MainMenu.MainMenuUI.displayLogo;
 import static MainMenu.MainMenuUI.displaySig;
+import static MainMenu.MainMenuUI.highlightAverage;
 
 import static MainMenu.CreateGraph.OverallAvgRnC;
 import static MainMenu.CreateGraph.HourlyReconData;
@@ -57,7 +58,10 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.pdfbox.pdmodel.common.PDRectangle;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.pdfbox.pdmodel.graphics.color.PDColor;
+import org.apache.pdfbox.pdmodel.graphics.color.PDDeviceRGB;
 import org.apache.pdfbox.pdmodel.graphics.image.PDImageXObject;
+import org.apache.pdfbox.pdmodel.interactive.annotation.PDAnnotationTextMarkup;
 
 /**
  *
@@ -922,6 +926,7 @@ public class CreatePDF {
     private void DrawAverageRadonBanner(PDPageContentStream contents, PDPage page, PDFont font, boolean drawTopDoubleLines) {
         try {
             
+            Logging.main("CreatePDF::DrawAverageRadonBanner called for page " + "!");
             String strOverallAvgRnC;
             if(strUnitSystem.equals("SI")) {
                 strOverallAvgRnC = new DecimalFormat("0").format(OverallAvgRnC); //no decimal places for Bq/m3
@@ -955,6 +960,20 @@ public class CreatePDF {
             contents.newLineAtOffset(marginSide,PDF_Y);
             contents.showText(textLine);
             contents.endText();
+            
+            //Highlighting
+            if(highlightAverage==1) {
+                Logging.main("CreatePDF::DrawAverageRadonBanner, Attempting to highight average radon concentration banner...");
+                PDAnnotationTextMarkup highlight = new PDAnnotationTextMarkup(PDAnnotationTextMarkup.SUB_TYPE_HIGHLIGHT);
+                highlight.setRectangle(PDRectangle.A4);
+                float quadPoints[] = {marginSide, PDF_Y + 15, page.getMediaBox().getWidth() - marginSide, PDF_Y + 15, marginSide, PDF_Y - 5, page.getMediaBox().getWidth() - marginSide, PDF_Y - 5};
+                highlight.setQuadPoints(quadPoints);
+                PDColor color_highlight = new PDColor(new float[]{1,1,204/255F}, PDDeviceRGB.INSTANCE);
+                highlight.setColor(color_highlight);
+                List annotations = page.getAnnotations();
+                annotations.add(highlight);
+                Logging.main("CreatePDF::DrawAverageRadonBanner, Highlighting complete!");
+            }
             
             //Another Double-Line (below Average Results Banner)
             PDF_Y -= 0.5f*fontSize;

@@ -84,6 +84,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static boolean displayStatus = false;
     public static int displayLogo = 0; //0 = no, 1 = yes
     public static int displaySig = 1; //0 = no, 1 = signature line only, 2 = signature line + digital signature
+    public static int highlightAverage = 1; //0 = no, 1 = yes
     public static int openPDFWind = 1;
     public static int tiltSensitivity = 5; //Tilt Sensitivity (only applicable when drawing graphs and generating PDFs)
     public static boolean autoLoadFile = true;
@@ -986,6 +987,7 @@ public static void createConfigTXT() {
             pw.print("UnitType=US" + newline);
             pw.print("DisplayLogo=0" + newline);
             pw.print("DisplaySig=1" + newline);
+            pw.print("HighlightAverage=1" + newline);
             pw.print("OpenPDFWindow=1" + newline);
             pw.print("TiltSensitivity=5" + newline);
             pw.print("AutoLoadFile=1" + newline);
@@ -1003,6 +1005,7 @@ public static void parseConfigTXT() {
     boolean diagModeConfigOptionFound = false;
     boolean includeFirstFourOptionFound = false;
     boolean displayLogoOptionFound = false;
+    boolean highlightAverageFound = false;
     
     // try to parse the config file
     try {
@@ -1019,6 +1022,8 @@ public static void parseConfigTXT() {
 		includeFirstFourOptionFound = true;
             if (strLine.contains("DisplayLogo="))
                 displayLogoOptionFound = true;
+            if (strLine.contains("HighlightAverage="))
+                highlightAverageFound = true;
 
 	    // first, check for commented lines
 	    if (strLine.charAt(0) == '#')
@@ -1064,8 +1069,9 @@ public static void parseConfigTXT() {
                 displayLogo = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplayLogo
             } else if(strLine.contains("DisplaySig=")) {
                 displaySig = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the DisplaySig
-            }
-	      else if(strLine.contains("OpenPDFWindow=")) {
+            } else if(strLine.contains("HighlightAverage=")) {
+                highlightAverage = Integer.parseInt(strLine.substring(strLine.length()-1)); //This should parse the HighlightAverage
+            } else if(strLine.contains("OpenPDFWindow=")) {
 	        openPDFWind = Integer.parseInt(strLine.substring(strLine.length()-1)); // parse opening reports folder preference
 	    } else if(strLine.contains("TiltSensitivity=")) {
                 String[] strSplitTiltSensitivity = strLine.split("=");
@@ -1109,6 +1115,9 @@ public static void parseConfigTXT() {
         
         if (!displayLogoOptionFound)
             AddDisplayLogoToConfig();
+        
+        if (!highlightAverageFound)
+            AddHighlightAverageToConfig();
     }
 
     // if error, print error and show stack trace
@@ -1156,6 +1165,20 @@ public static void AddDisplayLogoToConfig() {
     try {
 	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
 	writer.write("DisplayLogo=0");
+	writer.newLine();
+	writer.close();
+    }
+    catch (Exception anyEx) {
+	Logging.main(anyEx.toString());
+    }
+}
+
+public static void AddHighlightAverageToConfig() {
+    String filename = configDir + File.separator + "config.txt";
+
+    try {
+	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
+	writer.write("HighlightAverage=1");
 	writer.newLine();
 	writer.close();
     }
