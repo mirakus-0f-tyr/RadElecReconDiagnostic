@@ -52,6 +52,7 @@ public class InitDirs {
             copySourceFileToUserDirectory("config",configDir,"report.txt");
             copySourceFileToUserDirectory("config",configDir,"signature.png");
             copySourceFileToUserDirectory("config",configDir,"signature.jpg"); //...just in case somebody had added a JPEG.
+            copySourceFileToUserDirectory("config",configDir,"logo.png");
         }
 	if (!dataDir.exists()) {
             Logging.main("Data directory does not exist.  Creating...");
