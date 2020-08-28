@@ -374,6 +374,8 @@ class ReconCommand {
 	    flag += 0x40;
 	if (FlagForm.displayPreferenceNoAvg == "Ten Mins.")
 	    flag += 0x80;
+	if (FlagForm.displayPreferenceAvgFirstFourHours == "Yes")
+	    flag += 0x0100;
 
 	Logging.main("Attempting to write flag: " + Integer.toHexString(flag));
 	WriteComm.main(ScanComm.scannedPort, WriteOptionsFlag + Integer.toHexString(flag) + "\n");
@@ -429,6 +431,11 @@ class ReconCommand {
 	    else
 		FlagForm.displayPreferenceNoAvg = "Ten Mins.";
 
+	    // - derive including first four hours in avg setting
+	    if ((flagValue & 0x0100) == 0)
+		FlagForm.displayPreferenceAvgFirstFourHours = "No";
+	    else
+		FlagForm.displayPreferenceAvgFirstFourHours = "Yes";
 	}
 
 	catch (Exception anyEx) {

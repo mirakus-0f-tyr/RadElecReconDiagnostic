@@ -266,6 +266,7 @@ public class Config extends javax.swing.JFrame {
 
         chkIncludeFirstFourHours.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
         chkIncludeFirstFourHours.setText("Include First Four Hours in Avg");
+        chkIncludeFirstFourHours.setToolTipText("Selecting this option will incorporate the four hour equilibrium period into the final average on your report. Rad Elec recommends against this unless explicitly allowed in your state.");
         chkIncludeFirstFourHours.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 chkIncludeFirstFourHoursActionPerformed(evt);

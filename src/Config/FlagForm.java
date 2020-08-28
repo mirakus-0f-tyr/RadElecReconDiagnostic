@@ -20,6 +20,7 @@ public class FlagForm extends javax.swing.JFrame {
     public static String displayPreferenceDual;
     public static String displayPreferenceUnits;
     public static String displayPreferenceNoAvg;
+    public static String displayPreferenceAvgFirstFourHours;
     public static boolean displayOptionsWriteSuccess;
 
     /**
@@ -35,6 +36,7 @@ public class FlagForm extends javax.swing.JFrame {
 		cboDualChamberSelect.setEnabled(false);
 		cboRadonUnitSelect.setEnabled(false);
 		cboToggleNoAveraging.setEnabled(false);
+		cboDispIncFirstFourHours.setEnabled(false);
 		btnApplySpecial.setEnabled(false);
 		btnFlagDefaults.setEnabled(false);
 
@@ -76,6 +78,11 @@ public class FlagForm extends javax.swing.JFrame {
 	else
 	    cboToggleNoAveraging.setSelectedItem("Ten Mins.");
 
+	if (displayPreferenceAvgFirstFourHours == "Yes")
+	    cboDispIncFirstFourHours.setSelectedItem("Yes");
+	else
+	    cboDispIncFirstFourHours.setSelectedItem("No");
+
     }
 
     /**
@@ -106,6 +113,8 @@ public class FlagForm extends javax.swing.JFrame {
         lblPreviewCh1 = new javax.swing.JLabel();
         lblPreviewCh2 = new javax.swing.JLabel();
         btnFlagDefaults = new javax.swing.JButton();
+        lblDispIncFirstFourHours = new javax.swing.JLabel();
+        cboDispIncFirstFourHours = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setAlwaysOnTop(true);
@@ -160,7 +169,7 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
-        lblDisplayedReadingInterval.setText("Displayed Reading Interval (Firmware 1.29 and later.)");
+        lblDisplayedReadingInterval.setText("Rolling Average");
 
         lblPreviewRun.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPreviewRun.setText("Run:");
@@ -190,58 +199,66 @@ public class FlagForm extends javax.swing.JFrame {
             }
         });
 
+        lblDispIncFirstFourHours.setText("Inc. First Four");
+
+        cboDispIncFirstFourHours.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "No", "Yes" }));
+        cboDispIncFirstFourHours.setToolTipText("Selecting Yes will incorporate the four hour equilibrium period into the final average when ending the test. Rad Elec recommends against this unless explicitly allowed in your state. ");
+        cboDispIncFirstFourHours.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cboDispIncFirstFourHoursActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnFlagDefaults, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(btnApplySpecial, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(108, 108, 108))
-            .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblPressure)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 242, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(lblExposureUnits)
-                                    .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblPreviewTemp)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblPreviewRun)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lblPreviewRuntime))
-                                            .addGroup(layout.createSequentialGroup()
-                                                .addComponent(lblPreviewHum)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                                .addComponent(lblPreviewPres))))
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(lblPreviewCh1)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lblPreviewCh2)))
-                                .addGap(53, 53, 53)))
+                            .addComponent(lblExposureUnits)
+                            .addComponent(cboPressureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboRadonUnitSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 87, Short.MAX_VALUE)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblDualChamber)
-                            .addComponent(lblTemperature)
-                            .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblPreviewTemp)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblPreviewRun)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblPreviewRuntime))
+                                    .addGroup(layout.createSequentialGroup()
+                                        .addComponent(lblPreviewHum)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblPreviewPres))))
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(lblPreviewCh1)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(lblPreviewCh2)))
+                        .addGap(53, 53, 53))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(lblPressure)
                             .addComponent(lblDisplayedReadingInterval)
                             .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnFlagDefaults, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(btnApplySpecial, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(24, 24, 24)))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(cboDualChamberSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDualChamber)
+                    .addComponent(lblTemperature)
+                    .addComponent(cboTemperatureSelect, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblDispIncFirstFourHours)
+                    .addComponent(cboDispIncFirstFourHours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -279,9 +296,13 @@ public class FlagForm extends javax.swing.JFrame {
                             .addComponent(lblPreviewCh1)
                             .addComponent(lblPreviewCh2))))
                 .addGap(18, 18, 18)
-                .addComponent(lblDisplayedReadingInterval)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(lblDisplayedReadingInterval)
+                    .addComponent(lblDispIncFirstFourHours))
                 .addGap(18, 18, 18)
-                .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cboToggleNoAveraging, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(cboDispIncFirstFourHours, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(7, 7, 7)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnApplySpecial)
@@ -351,7 +372,7 @@ public class FlagForm extends javax.swing.JFrame {
 	   if (displayOptionsWriteSuccess) {
 	       selectedOptions = "Temp: " + cboTemperatureSelect.getSelectedItem() + "\r\n" + "Pres: " + cboPressureSelect.getSelectedItem() + "\r\n"
 	       + "Unit: " + cboRadonUnitSelect.getSelectedItem() + "\r\n" + "Dual chamber: " + cboDualChamberSelect.getSelectedItem() + "\r\n" +
-	       "Rdg. updated: " + cboToggleNoAveraging.getSelectedItem() + "\r\n";
+	       "Rdg. updated: " + cboToggleNoAveraging.getSelectedItem() + "\r\n" + "First four hours: " + cboDispIncFirstFourHours.getSelectedItem() + "\r\n";
 
 	       // inform user
 	       JOptionPane.showMessageDialog(this, "Settings saved successfully:\r\n" + selectedOptions + "\r\n");
@@ -375,6 +396,13 @@ public class FlagForm extends javax.swing.JFrame {
         // TODO add your handling code here:
 	SetLabelsToDefault();
     }//GEN-LAST:event_btnFlagDefaultsActionPerformed
+
+    private void cboDispIncFirstFourHoursActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cboDispIncFirstFourHoursActionPerformed
+	if (cboDispIncFirstFourHours.getSelectedItem().equals("No"))
+	    displayPreferenceAvgFirstFourHours = "No";
+	else
+	    displayPreferenceAvgFirstFourHours = "Yes";
+    }//GEN-LAST:event_cboDispIncFirstFourHoursActionPerformed
 
     /**
      * @param args the command line arguments
@@ -414,11 +442,13 @@ public class FlagForm extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private static javax.swing.JButton btnApplySpecial;
     private static javax.swing.JButton btnFlagDefaults;
+    private javax.swing.JComboBox<String> cboDispIncFirstFourHours;
     private javax.swing.JComboBox<String> cboDualChamberSelect;
     private javax.swing.JComboBox<String> cboPressureSelect;
     private javax.swing.JComboBox<String> cboRadonUnitSelect;
     private javax.swing.JComboBox<String> cboTemperatureSelect;
     private javax.swing.JComboBox<String> cboToggleNoAveraging;
+    private javax.swing.JLabel lblDispIncFirstFourHours;
     private javax.swing.JLabel lblDisplayedReadingInterval;
     private javax.swing.JLabel lblDualChamber;
     private javax.swing.JLabel lblExposureUnits;
@@ -462,15 +492,17 @@ public class FlagForm extends javax.swing.JFrame {
 
     private void SetLabelsToDefault() {
 	cboPressureSelect.setSelectedItem("inHG");
-        cboTemperatureSelect.setSelectedItem("F");
-        cboDualChamberSelect.setSelectedItem("No");
-        cboRadonUnitSelect.setSelectedItem("pCi/L");
-        cboToggleNoAveraging.setSelectedItem("Hourly");
+	cboTemperatureSelect.setSelectedItem("F");
+	cboDualChamberSelect.setSelectedItem("No");
+	cboRadonUnitSelect.setSelectedItem("pCi/L");
+	cboToggleNoAveraging.setSelectedItem("Hourly");
+	cboDispIncFirstFourHours.setSelectedItem("No");
 	displayPreferencePres = "inHG";
 	displayPreferenceTemp = "F";
 	displayPreferenceDual = "no";
 	displayPreferenceUnits = "pCi/L";
 	displayPreferenceNoAvg = "Hourly";
+	displayPreferenceAvgFirstFourHours = "No";
     }
 
     public static void EnableAllButtons(boolean boolEnableButtons) {
