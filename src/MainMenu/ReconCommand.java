@@ -245,7 +245,7 @@ class ReconCommand {
 	File TXT_file = null;			// File object for determining if txt exists
 	File XLS_file = null;			// File object for determining if xls exists
 	int loopCounter = 0;			// count how many times we've gone through the loop
-	Pattern acceptableFilenameChars = Pattern.compile("[a-zA-Z0-9\\-\\_\\.]*");
+	Pattern acceptableFilenameChars = Pattern.compile("[a-zA-Z0-9\\-\\_\\.\\s\\,]*");
 	Matcher patternMatcher;
 
 	// Get the first line of txtTestSiteInfo in case we need it:
