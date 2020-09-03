@@ -277,11 +277,21 @@ class ReconCommand {
 		else {
 		    // Don't tack on the digit if the files don't already exist
 		    if (loopCounter > 0) {
+
+			// get rid of any trailing periods or spaces at the end of the filename
+			while (testSite.endsWith(".") || testSite.endsWith(" "))
+				testSite = testSite.substring(0, testSite.length() - 1);
+
 			TXT_name = InitDirs.dataDir + File.separator + testSite + "-" + fileIteration + ".txt";
 			XLS_name = InitDirs.dataDir + File.separator + testSite + "-" + fileIteration + ".xls";
 			MainMenu.MainMenuUI.invalidFilename = false;
 		    }
 		    else {
+
+			// get rid of any trailing periods or spaces at the end of the filename
+			while (testSite.endsWith(".") || testSite.endsWith(" "))
+				testSite = testSite.substring(0, testSite.length() - 1);
+
 			TXT_name = InitDirs.dataDir + File.separator + testSite + ".txt";
 			XLS_name = InitDirs.dataDir + File.separator + testSite + ".xls";
 			MainMenu.MainMenuUI.invalidFilename = false;
@@ -310,11 +320,21 @@ class ReconCommand {
 		    // First, make sure the user hasn't clobbered the default text.
 		    if (MainMenu.MainMenuUI.txtNewFileName.getText().length() > 0) {
 			if (loopCounter > 0) {
+
+			    // get rid of any trailing periods or spaces at the end of the filename
+			    while (MainMenu.MainMenuUI.txtNewFileName.getText().endsWith(".") || MainMenu.MainMenuUI.txtNewFileName.getText().endsWith(" "))
+				MainMenu.MainMenuUI.txtNewFileName.setText(MainMenu.MainMenuUI.txtNewFileName.getText().substring(0, MainMenu.MainMenuUI.txtNewFileName.getText().length() - 1));
+
 			    TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".txt";
 			    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + "-" + fileIteration + ".xls";
 			    MainMenu.MainMenuUI.invalidFilename = false;
 			}
 			else {
+
+			    // get rid of any trailing periods or spaces at the end of the filename
+			    while (MainMenu.MainMenuUI.txtNewFileName.getText().endsWith(".") || MainMenu.MainMenuUI.txtNewFileName.getText().endsWith(" "))
+				MainMenu.MainMenuUI.txtNewFileName.setText(MainMenu.MainMenuUI.txtNewFileName.getText().substring(0, MainMenu.MainMenuUI.txtNewFileName.getText().length() - 1));
+
 		            TXT_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".txt";
 			    XLS_name = InitDirs.dataDir + File.separator + MainMenu.MainMenuUI.txtNewFileName.getText() + ".xls";
 			    MainMenu.MainMenuUI.invalidFilename = false;
