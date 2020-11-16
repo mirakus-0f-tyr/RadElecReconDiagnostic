@@ -212,6 +212,11 @@ public class ScanComm {
 		    } // end switch
                 } // end if Recon found
 
+                else { // Recon not found...stop trying on this port
+                    scannedPort.closePort();
+                    break;
+                }
+
             scannedPort.closePort();
             } // end try
 
