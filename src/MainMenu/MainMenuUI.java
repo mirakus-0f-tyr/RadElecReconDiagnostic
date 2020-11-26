@@ -32,6 +32,7 @@ import javax.swing.JOptionPane;
 
 import static MainMenu.InitDirs.*;
 import java.text.DecimalFormat;
+import org.apache.pdfbox.pdmodel.common.PDRectangle;
 
 /**
  *
@@ -92,6 +93,7 @@ public class MainMenuUI extends javax.swing.JFrame {
     public static String specifiedDataDir;
     public static boolean photodiodeFailureRecovery=true; //Attempts to reconstruct graph/PDF using the other chamber when photodiode failure is detected.
     public static boolean createXLS = false; //Generate an end-user XLS spreadsheet alongside the TXT file
+    public static PDRectangle pageSizePDF = PDRectangle.LETTER; //Size of PDF
     
     //Deployment Variables
     public static String strProtocol = "Closed Building Conditions Met";
@@ -993,6 +995,7 @@ public static void createConfigTXT() {
             pw.print("AutoLoadFile=1" + newline);
             pw.print("DiagMode=0000" + newline);
             pw.print("IncludeFirstFourHoursInAverage=0" + newline);
+            pw.print("PageSize=LETTER"+ newline);
             pw.close();
         } catch (FileNotFoundException ex) {
             Logging.main("ERROR: Unable to create config.txt file!");
@@ -1006,6 +1009,7 @@ public static void parseConfigTXT() {
     boolean includeFirstFourOptionFound = false;
     boolean displayLogoOptionFound = false;
     boolean highlightAverageFound = false;
+    boolean pageSizeFound = false;
     
     // try to parse the config file
     try {
@@ -1024,6 +1028,8 @@ public static void parseConfigTXT() {
                 displayLogoOptionFound = true;
             if (strLine.contains("HighlightAverage="))
                 highlightAverageFound = true;
+            if (strLine.contains("PageSize="))
+                pageSizeFound = true;
 
 	    // first, check for commented lines
 	    if (strLine.charAt(0) == '#')
@@ -1100,7 +1106,21 @@ public static void parseConfigTXT() {
 		Logging.main("Data directory overridden. New location is " + specifiedDataDir);
 	    } else if (strLine.contains("IncludeFirstFourHoursInAverage=")) {
 		excludeFirst4Hours = strLine.contains("0");
-	    }
+	    } else if (strLine.contains("PageSize=")) {
+                if(strLine.length()>8) {
+                    String[] strPageSize = strLine.split("=");
+                    switch(strPageSize[1]) {
+                        case "A4":
+                            pageSizePDF = PDRectangle.A4;
+                        case "LEGAL":
+                            pageSizePDF = PDRectangle.LEGAL;
+                        case "LETTER":
+                            pageSizePDF = PDRectangle.LETTER;
+                        default:
+                            pageSizePDF = PDRectangle.LETTER;
+                    }
+                }
+            }
         }
 
 	// cleanup buffered reader
@@ -1118,6 +1138,9 @@ public static void parseConfigTXT() {
         
         if (!highlightAverageFound)
             AddHighlightAverageToConfig();
+        
+        if (!pageSizeFound)
+            AddPageSizeToConfig();
     }
 
     // if error, print error and show stack trace
@@ -1179,6 +1202,20 @@ public static void AddHighlightAverageToConfig() {
     try {
 	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
 	writer.write("HighlightAverage=1");
+	writer.newLine();
+	writer.close();
+    }
+    catch (Exception anyEx) {
+	Logging.main(anyEx.toString());
+    }
+}
+
+public static void AddPageSizeToConfig() {
+    String filename = configDir + File.separator + "config.txt";
+
+    try {
+	BufferedWriter writer = new BufferedWriter(new FileWriter(filename, true));
+	writer.write("PageSize=LETTER");
 	writer.newLine();
 	writer.close();
     }

@@ -15,6 +15,9 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDFont;
 import org.apache.pdfbox.pdmodel.font.PDType0Font;
 
+import static MainMenu.CreateGraph.OverallAvgRnC;
+import static MainMenu.CreateGraph.HourlyReconData;
+
 import static MainMenu.LoadSavedFile.strTestSiteInfo;
 import static MainMenu.LoadSavedFile.strCustomerInfo;
 import static MainMenu.LoadSavedFile.strUnitSystem;
@@ -31,13 +34,13 @@ import static MainMenu.LoadSavedFile.strReportWeather;
 import static MainMenu.LoadSavedFile.strReportMitigation;
 import static MainMenu.LoadSavedFile.strReportComment;
 import static MainMenu.LoadSavedFile.strRoomDeployed;
+
 import static MainMenu.MainMenuUI.displayLogo;
 import static MainMenu.MainMenuUI.displaySig;
-import static MainMenu.MainMenuUI.highlightAverage;
-
-import static MainMenu.CreateGraph.OverallAvgRnC;
-import static MainMenu.CreateGraph.HourlyReconData;
 import static MainMenu.MainMenuUI.excludeFirst4Hours;
+import static MainMenu.MainMenuUI.highlightAverage;
+import static MainMenu.MainMenuUI.pageSizePDF;
+
 import java.awt.Color;
 import java.awt.Dimension;
 
@@ -116,7 +119,6 @@ public class CreatePDF {
         
         PDDocument doc = new PDDocument();
         
-        
         //Signature Initial Checking
         File fileSignatureAnalystBMP = new File(InitDirs.configDir + File.separator + "signature.bmp");
         if (fileSignatureAnalystBMP.exists()) {
@@ -178,7 +180,7 @@ public class CreatePDF {
         float textHeight;
         
         try {
-            PDPage page = new PDPage(PDRectangle.A4);
+            PDPage page = new PDPage(pageSizePDF);
             doc.addPage(page);
             
             //Check to see if the proper fonts exist.
@@ -265,6 +267,7 @@ public class CreatePDF {
             contents.newLineAtOffset(page.getMediaBox().getWidth()-marginSide-textWidth, PDF_Y_temp);
             contents.showText(textLine);
             contents.endText();
+            Logging.main("CreatePDF:: Calibration dates successfully printed!");
             
             //Analyzed By, Deployed By, Retrieved By Lines
             fontSize = 12;
@@ -314,6 +317,7 @@ public class CreatePDF {
             contents.showText(textLine);
             contents.endText();
             //End Analyzed By, Deployed By, Retrieved By Block
+            Logging.main("CreatePDF:: Analyzed / Deployed / Retrieved By successfully printed!");
             
             //Conditions, Tampering, Weather, etc.
             PDF_Y -= 1f*fontSize;
@@ -396,6 +400,8 @@ public class CreatePDF {
             contents.newLineAtOffset(marginSide+textWidth, PDF_Y);
             contents.showText(textLine);
             contents.endText();
+            
+            Logging.main("CreatePDF:: Protocol, Tampering, Weather, Comments, etc. successfully printed!");
 	    //End Conditions, Weather, Tampering, Mitigation, Comment Block
             
             //Double Line

@@ -52,6 +52,7 @@ public class Config extends javax.swing.JFrame {
             String strDisplayLogo;
             String strDisplaySig;
 	    String strPDFWindow;
+            String strPageSize;
             boolean boolAutoLoadFile;
             boolean boolHighlightAverage;
             int intTiltSensitivity;
@@ -60,6 +61,7 @@ public class Config extends javax.swing.JFrame {
             strDisplayLogo = findDisplayLogo();
             strDisplaySig = findDisplaySig();
 	    strPDFWindow = findPDFWindow();
+            strPageSize = findPageSize();
             intTiltSensitivity = findTiltSensitivity();
             boolAutoLoadFile = findAutoLoadFile();
             boolHighlightAverage = findHighlightAverage();
@@ -70,6 +72,7 @@ public class Config extends javax.swing.JFrame {
             cboHeaderOptions.setSelectedItem(strDisplayLogo);
             cboDisplaySig.setSelectedItem(strDisplaySig);
             cboPDFFolder.setSelectedItem(strPDFWindow);
+            cboPageSize.setSelectedItem(strPageSize);
             sliderTilts.setValue(intTiltSensitivity);
             chkboxAutoLoadFile.setSelected(boolAutoLoadFile);
             chkEnableDiagnosticMode.setSelected(findDiagnosticMode());
@@ -113,6 +116,8 @@ public class Config extends javax.swing.JFrame {
         chkboxHighlightAverage = new javax.swing.JCheckBox();
         cboHeaderOptions = new javax.swing.JComboBox();
         lblHeaderOptions = new javax.swing.JLabel();
+        lblPageSize = new java.awt.Label();
+        cboPageSize = new javax.swing.JComboBox();
         pnlSettings1 = new java.awt.Panel();
         lblDeployedBy = new java.awt.Label();
         txtDeployedBy = new java.awt.TextField();
@@ -203,7 +208,7 @@ public class Config extends javax.swing.JFrame {
                 .addComponent(txtAddress2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtAddress3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(119, Short.MAX_VALUE))
+                .addContainerGap(132, Short.MAX_VALUE))
         );
 
         tabConfig.addTab("Company", pnlCompany);
@@ -289,6 +294,12 @@ public class Config extends javax.swing.JFrame {
         lblHeaderOptions.setForeground(new java.awt.Color(0, 0, 0));
         lblHeaderOptions.setText("Header Options");
 
+        lblPageSize.setFont(new java.awt.Font("Calibri", 0, 12)); // NOI18N
+        lblPageSize.setText("PDF Page Size");
+
+        cboPageSize.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "A4", "LEGAL", "LETTER" }));
+        cboPageSize.setSelectedIndex(2);
+
         javax.swing.GroupLayout pnlSettingsLayout = new javax.swing.GroupLayout(pnlSettings);
         pnlSettings.setLayout(pnlSettingsLayout);
         pnlSettingsLayout.setHorizontalGroup(
@@ -296,6 +307,9 @@ public class Config extends javax.swing.JFrame {
             .addGroup(pnlSettingsLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pnlSettingsLayout.createSequentialGroup()
+                        .addComponent(chkboxHighlightAverage)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                             .addComponent(lblTiltSlider, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -316,9 +330,9 @@ public class Config extends javax.swing.JFrame {
                         .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(pnlSettingsLayout.createSequentialGroup()
                                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(chkIncludeFirstFourHours))
+                                    .addComponent(chkIncludeFirstFourHours)
+                                    .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -327,7 +341,9 @@ public class Config extends javax.swing.JFrame {
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(chkboxAutoLoadFile))
                             .addGroup(pnlSettingsLayout.createSequentialGroup()
-                                .addComponent(chkboxHighlightAverage)
+                                .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cboPageSize, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblPageSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblHeaderOptions)
@@ -342,29 +358,34 @@ public class Config extends javax.swing.JFrame {
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
                         .addComponent(lblDisplaySignature, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, 0)
-                        .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(cboDisplaySig, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(10, 10, 10))
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
-                        .addGap(22, 22, 22)
-                        .addComponent(cboUnitSystem, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblUnits, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(8, 8, 8)))
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
                         .addGap(10, 10, 10)
                         .addComponent(lblHeaderOptions)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(cboHeaderOptions, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 52, Short.MAX_VALUE)
                         .addComponent(lblPDFFolder))
                     .addGroup(pnlSettingsLayout.createSequentialGroup()
-                        .addGap(40, 40, 40)
-                        .addComponent(chkboxHighlightAverage)
+                        .addComponent(lblPageSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(1, 1, 1)
+                        .addComponent(cboPageSize, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
+                        .addComponent(chkboxHighlightAverage)
+                        .addGap(12, 12, 12)
                         .addComponent(chkIncludeFirstFourHours)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cboPDFFolder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(chkEnableDiagnosticMode))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 13, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 6, Short.MAX_VALUE)
                 .addGroup(pnlSettingsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(lblTiltSlider)
                     .addComponent(chkboxAutoLoadFile))
@@ -459,7 +480,7 @@ public class Config extends javax.swing.JFrame {
                 .addGroup(pnlSettings1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(txtAnalyzedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblAnalyzedBy, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 29, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 42, Short.MAX_VALUE)
                 .addComponent(lblReportText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(2, 2, 2)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 138, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -555,7 +576,7 @@ public class Config extends javax.swing.JFrame {
                 .addGroup(pnlSettings2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(lblComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(txtComment, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addContainerGap(141, Short.MAX_VALUE))
+                .addContainerGap(154, Short.MAX_VALUE))
         );
 
         tabConfig.addTab("Deployment", pnlSettings2);
@@ -568,7 +589,7 @@ public class Config extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(tabConfig)
+            .addComponent(tabConfig, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
         );
 
         pack();
@@ -742,7 +763,7 @@ public class Config extends javax.swing.JFrame {
             }
             br.close();
         } catch (IOException e) {
-            Logging.main("ERROR: Unable to parse config.txt in order to find the AppMode. There was a problem loading the settings.");
+            Logging.main("ERROR: Unable to parse config.txt in order to find the Unit System. There was a problem loading the settings.");
         }
         return "US";
     }
@@ -874,7 +895,7 @@ public class Config extends javax.swing.JFrame {
 	return false;
     }
 
-        public boolean findHighlightAverage() {
+    public boolean findHighlightAverage() {
         String config_info = configDir + File.separator + "config.txt";
         String[] strHighlightAverage;
         boolean HighlightAverage = true;
@@ -893,6 +914,44 @@ public class Config extends javax.swing.JFrame {
             Logging.main("ERROR: Unable to parse config.txt in order to find the HighlightAverage option. There was a problem loading the settings.");
         }
         return HighlightAverage;        
+    }
+    
+    public String findPageSize() {
+        String config_info = configDir + File.separator + "config.txt";
+        String[] strPageSize;
+        try {
+            BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(config_info)));
+            //The following loop should iterate throughout the entire config.txt file until it hits an empty line.
+            //Although this means that the order of the configuration parameters is unimportant, a single blank
+            //line will terminate the for loop (and halt the parsing process).
+            //For unexpected values in PageSize= (or if it's missing), we default to LETTER.
+            for (String strLine = br.readLine(); strLine != null; strLine = br.readLine()) {
+                if(strLine.contains("PageSize=")) {
+                    strPageSize = strLine.split("=");
+                    if (strLine.length() < 9) { //If PageType= has no value, default to LETTER.
+                        return "LETTER";
+                    }
+                    switch (strPageSize[1]) {
+                        case "A4":
+                            br.close();
+                            return "A4";
+                        case "LEGAL":
+                            br.close();
+                            return "LEGAL";
+                        case "LETTER":
+                            br.close();
+                            return "LETTER";
+                        default:
+                            br.close();
+                            return "LETTER";
+                    }
+                }
+            }
+            br.close();
+        } catch (IOException e) {
+            Logging.main("ERROR: Unable to parse config.txt in order to find the PageSize. There was a problem loading the settings.");
+        }
+        return "LETTER";
     }
         
     public void LoadReportTXT() {
@@ -1060,6 +1119,11 @@ public class Config extends javax.swing.JFrame {
 		strInput = strInput.replaceAll("IncludeFirstFourHoursInAverage=\\w", "IncludeFirstFourHoursInAverage=0");
 	    }
             
+            //Update PDF Page Size
+            if(!cboPageSize.getSelectedItem().toString().isEmpty()) {
+                strInput = strInput.replaceAll("PageSize=\\S+", "PageSize="+cboPageSize.getSelectedItem().toString().trim());
+            }
+            
             FileOutputStream fileOut = new FileOutputStream(config_info);
             fileOut.write(strInput.getBytes());
             fileOut.close();
@@ -1175,6 +1239,7 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JComboBox cboDisplaySig;
     private javax.swing.JComboBox cboHeaderOptions;
     private javax.swing.JComboBox<String> cboPDFFolder;
+    private javax.swing.JComboBox cboPageSize;
     private javax.swing.JComboBox cboUnitSystem;
     private javax.swing.JCheckBox chkEnableDiagnosticMode;
     private javax.swing.JCheckBox chkIncludeFirstFourHours;
@@ -1190,6 +1255,7 @@ public class Config extends javax.swing.JFrame {
     private javax.swing.JLabel lblHeaderOptions;
     private java.awt.Label lblMitigation;
     private javax.swing.JLabel lblPDFFolder;
+    private java.awt.Label lblPageSize;
     private java.awt.Label lblProtocol;
     private java.awt.Label lblReportText;
     private java.awt.Label lblRetrievedBy;
