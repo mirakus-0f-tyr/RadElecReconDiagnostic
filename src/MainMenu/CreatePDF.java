@@ -181,6 +181,7 @@ public class CreatePDF {
         
         try {
             PDPage page = new PDPage(pageSizePDF);
+            Logging.main("Setting page size to..." + pageSizePDF);
             doc.addPage(page);
             
             //Check to see if the proper fonts exist.
@@ -445,7 +446,7 @@ public class CreatePDF {
             //END FIRST PAGE (SUMMARY)
             
             //BEGIN SECOND PAGE (CHART)
-            PDPage page_chart = new PDPage(PDRectangle.A4);
+            PDPage page_chart = new PDPage(pageSizePDF);
             doc.addPage(page_chart);
             contents = new PDPageContentStream(doc, page_chart);
             PDF_Y = page_chart.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
@@ -471,14 +472,16 @@ public class CreatePDF {
             
 	    //This draws the graph image (graph.png), which was externalized to the file in the CreateGraph class.
 	    PDImageXObject graphPNG = PDImageXObject.createFromFile(InitDirs.boolMacOS==true ? InitDirs.baseDir + File.separator + "graph.png" : "graph.png", doc);
-
-	    PDF_Y -= 400;
+            
+            //LEGAL HEIGHT = 1008, A4 HEIGHT = 842, LETTER HEIGHT = 792
+	    PDF_Y -= (page_chart.getMediaBox().getHeight() - PDF_Y);
+            
 	    contents.drawImage(graphPNG, marginSide*2, PDF_Y);
 	    contents.close();
             //END SECOND PAGE (CHART)
             
             //BEGIN THIRD PAGE (DETAILED)
-            PDPage page_detailed = new PDPage(PDRectangle.A4);
+            PDPage page_detailed = new PDPage(pageSizePDF);
             doc.addPage(page_detailed);
             contents = new PDPageContentStream(doc, page_detailed);
             PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
@@ -567,7 +570,7 @@ public class CreatePDF {
 		    if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
                         //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
                         contents.close();
-                        page_detailed = new PDPage(PDRectangle.A4);
+                        page_detailed = new PDPage(pageSizePDF);
                         doc.addPage(page_detailed);
                         contents = new PDPageContentStream(doc, page_detailed);
                         PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y
@@ -638,7 +641,7 @@ public class CreatePDF {
 		    if((PDF_Y-1.0f*fontSize <= marginBottom) && (arrayCounter < HourlyReconData.size()-1)) { //We need to be able to add a new page for long exposures.
                         //Don't add a new page if we've already drawn our final record! (if arrayCounter < HourlyReconData.size()-1)
                         contents.close();
-                        page_detailed = new PDPage(PDRectangle.A4);
+                        page_detailed = new PDPage(pageSizePDF);
                         doc.addPage(page_detailed);
                         contents = new PDPageContentStream(doc, page_detailed);
                         PDF_Y = page_detailed.getMediaBox().getHeight() - marginTop - textHeight; //Reset PDF_Y

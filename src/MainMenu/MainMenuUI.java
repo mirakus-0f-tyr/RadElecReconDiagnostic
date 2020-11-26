@@ -1109,13 +1109,16 @@ public static void parseConfigTXT() {
 	    } else if (strLine.contains("PageSize=")) {
                 if(strLine.length()>8) {
                     String[] strPageSize = strLine.split("=");
-                    switch(strPageSize[1]) {
+                    switch(strPageSize[1].trim()) {
                         case "A4":
                             pageSizePDF = PDRectangle.A4;
+                            break;
                         case "LEGAL":
                             pageSizePDF = PDRectangle.LEGAL;
+                            break;
                         case "LETTER":
                             pageSizePDF = PDRectangle.LETTER;
+                            break;
                         default:
                             pageSizePDF = PDRectangle.LETTER;
                     }
