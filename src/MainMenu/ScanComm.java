@@ -99,6 +99,13 @@ public class ScanComm {
                 Thread.sleep(125);
                 String DeviceResponse = ReadComm.main(scannedPort, 19);
                 String DeviceResponse_targeted = StringUtils.left(DeviceResponse,8);
+
+                if (DeviceResponse == null) { // whatever is attached to the COM port doesn't respond
+		    Logging.main("Non-communicative device at " + portNames[i]);
+		    scannedPort.closePort();
+		    continue;
+                }
+
                 if(StringUtils.equals(DeviceResponse_targeted,"=DV,CRM,")) {
                     foundRecon = true;
                     
@@ -210,14 +217,17 @@ public class ScanComm {
 			default:
 			    break;
 		    } // end switch
+
+		    // we've found our Recon -- do not scan any further ports (break the loop)
+		    scannedPort.closePort();
+		    break;
                 } // end if Recon found
 
-                else { // Recon not found...stop trying on this port
-                    scannedPort.closePort();
-                    break;
+                else { // device responds but doesn't give expected response for a Recon
+		    Logging.main("Device at " + portNames[i] + " responded but is not a Recon.");
+		    scannedPort.closePort();
+		    continue;
                 }
-
-            scannedPort.closePort();
             } // end try
 
             catch (SerialPortException ex) {
