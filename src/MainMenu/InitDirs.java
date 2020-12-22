@@ -34,6 +34,9 @@ public class InitDirs {
             Logging.createLogFile(); //If no log directory exists, let's create the log file too.
         }
         
+        //Let's log the RDT version at the top of the log file.
+        Logging.main("Recon Download Tool Version = " + MainMenuUI.version);
+        
         //Determine OS before checking for config/data/reports folders...
         findOperatingSystem();
         
