@@ -28,7 +28,7 @@ public class ReadComm {
             Thread.sleep(10);
             String buffer = serialPort.readString();
             Logging.main(buffer);
-            if(buffer == null) {
+            if(buffer == null && ScanComm.connectedDeviceIsRecon) {
                 buffer = NoResponseHandler(serialPort, byteLength);
             }
             return buffer;

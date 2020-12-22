@@ -36,6 +36,8 @@ public class ScanComm {
 
     public static String ReconFirmwareVersion;
 
+    public static boolean connectedDeviceIsRecon = false;
+
     // connected port
     public static SerialPort scannedPort;
 
@@ -108,6 +110,7 @@ public class ScanComm {
 
                 if(StringUtils.equals(DeviceResponse_targeted,"=DV,CRM,")) {
                     foundRecon = true;
+                    connectedDeviceIsRecon = true;
                     
 		    switch (OptArgs) {
 
@@ -219,6 +222,7 @@ public class ScanComm {
 		    } // end switch
 
 		    // we've found our Recon -- do not scan any further ports (break the loop)
+		    connectedDeviceIsRecon = false;
 		    scannedPort.closePort();
 		    break;
                 } // end if Recon found
