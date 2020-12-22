@@ -1335,9 +1335,6 @@ public static void findOperatingSystem() {
     String strOperatingSystem = System.getProperty("os.name");
     Logging.main("Operating System: " + strOperatingSystem);
     boolMacOS = strOperatingSystem.startsWith("Mac");
-    if(boolMacOS) {
-        Logging.main("WARNING: Walled garden detected. Redirecting config/data/reports folders to documents...");
-    }
 }
 
 public static void DisplayAvgRadonLabel(double AvgRnC) {
