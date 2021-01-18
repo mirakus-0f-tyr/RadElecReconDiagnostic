@@ -1195,7 +1195,14 @@ public class Config extends javax.swing.JFrame {
     }
     
     public String getCustomReportText() {
-        return txtReportText.getText();
+        try {
+            Logging.main("Config::getCustomReportText() called!");
+            return txtReportText.getText();
+        } catch (Exception e) {
+            Logging.main("ERROR: Unhandled exception in Config::getCustomReportText()!");
+            Logging.main(e.toString());
+            return "";
+        }
     }
     
     /**
