@@ -702,6 +702,7 @@ public class CreatePDF {
     }
     
     private void WrapMultiLineText(PDPageContentStream contents, PDPage page, float startX, float startY, String textLine, PDFont fontUsed, int fontSize, int marginSide) {
+        Logging.main("CreatePDF::WrapMultiLineText() called!");
         List<String> lines = new ArrayList<>(); //let's create an arraylist of strings, each of which will serve as an individual "auto-wrapped" line.
         int lastSpace = -1;
         try {
@@ -736,12 +737,13 @@ public class CreatePDF {
                 PDF_Y -= 1.1f*fontSize;
             }
             contents.endText();
-            } catch (IOException ex) {
+            } catch (Exception ex) {
+                Logging.main("ERROR: Unhandled exception in CreatePDF::WrapMultiLineText()!");
                 StringWriter swEx = new StringWriter();
                 ex.printStackTrace(new PrintWriter(swEx));
                 String strEx = swEx.toString();
                 Logging.main(strEx);
-        }
+            }
     }
     
     public static void GetCompanyInfo() {
