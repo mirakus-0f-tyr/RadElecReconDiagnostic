@@ -1492,8 +1492,10 @@ private class GenerateTXTDump extends SwingWorker<Void, Void>{
       CRM_Parameters = ScanComm.run(2);
 
       // draw message box informating user of invalid file naming
-      if (invalidFilename)
-	  JOptionPane.showMessageDialog(null, "Invalid characters detected in filename. Default filename used.");
+      if (getDataSessions() > 0) {
+          if (invalidFilename)
+              JOptionPane.showMessageDialog(null, "Invalid characters detected in filename. Default filename used.");
+      }
 
       EnableAllButtons(true);
       
@@ -1548,8 +1550,10 @@ private class DownloadSession extends SwingWorker<Void, Void>{
       CRM_Parameters = ScanComm.run(6);
 
       // draw message box informating user of invalid file naming
-      if (invalidFilename)
-	  JOptionPane.showMessageDialog(null, "Invalid characters detected in filename. Default filename used.");
+      if (getDataSessions() > 0) {
+          if (invalidFilename)
+              JOptionPane.showMessageDialog(null, "Invalid characters detected in filename. Default filename used.");
+      }
 
       EnableAllButtons(true);
       RefreshSessionList();
