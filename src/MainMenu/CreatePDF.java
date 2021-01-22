@@ -721,6 +721,7 @@ public class CreatePDF {
                     lines.add(subString);
                     textLine = textLine.substring(lastSpace).trim(); //get rid of hanging whitespace
                     lastSpace = -1; //reset lastSpace so that we can continue the loop for the next "line"
+                    Logging.main("MultiLine Wrap = " + subString);
                 } else if (spaceIndex == textLine.length()) { //if spaceIndex == length of textLine, then we don't need to wrap anything!
                     lines.add(textLine);
                     textLine = ""; //let's exit out of this loop and write our single line
@@ -739,6 +740,7 @@ public class CreatePDF {
             contents.endText();
             } catch (Exception ex) {
                 Logging.main("ERROR: Unhandled exception in CreatePDF::WrapMultiLineText()!");
+                Logging.main("CreatePDF::WrapMultiLineText() textLine = " + textLine);
                 StringWriter swEx = new StringWriter();
                 ex.printStackTrace(new PrintWriter(swEx));
                 String strEx = swEx.toString();
